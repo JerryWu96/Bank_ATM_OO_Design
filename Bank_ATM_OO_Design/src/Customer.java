@@ -3,10 +3,12 @@ import java.util.ArrayList;
 
 public class Customer extends User {
     private List<Loan> loanList;
+    private int collateral;
 
-    Customer(String name, int userID, int password, String permission) {
-        super(name, userID, password, permission);
+    Customer(String name, int userID, int password) {
+        super(name, userID, password, "Customer");
         this.loanList = new ArrayList<>();
+        this.collateral = 5;
     }
 
     public void makeTransaction() {
