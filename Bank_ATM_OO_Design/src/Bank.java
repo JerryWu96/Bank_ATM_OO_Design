@@ -5,6 +5,8 @@ public class Bank {
     private String bankID;
     private List<SavingsAccount> savings;
     private List<CheckingAccount> checkings;
+    private List<Manager> managerList;
+    private List<Customer> customerList;
 
     public String getBankName() {
         return this.bankName;

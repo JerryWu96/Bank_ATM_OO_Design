@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class BankPortal {
     private int sessionID;
@@ -5,15 +6,16 @@ public class BankPortal {
     private String permission;
     private int day;
     PortalLoginPanel loginPanel;
+    private List<Integer> customerIDList;
+    private List<Integer> mnagerIDList;
 
     BankPortal() {
         this.day = 0; // initial day
         this.sessionID = 0;
-        loginPanel = new PortalLoginPanel();
     }
 
     public void run() {
-
+        loginPanel = new PortalLoginPanel();
     }
 
     public static void main(String[] args) {
