@@ -5,7 +5,7 @@ public class Customer extends User {
     private List<Loan> loanList;
     private int collateral;
 
-    Customer(String name, int userID, int password) {
+    Customer(String name, String userID, String password) {
         super(name, userID, password, "Customer");
         this.loanList = new ArrayList<>();
         this.collateral = 5;

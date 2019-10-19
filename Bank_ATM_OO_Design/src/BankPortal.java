@@ -5,17 +5,18 @@ public class BankPortal {
     private int userID;
     private String permission;
     private int day;
-    PortalLoginPanel loginPanel;
-    private List<Integer> customerIDList;
-    private List<Integer> mnagerIDList;
+    private PortalLoginPanel loginPanel;
+//    private Bank bank;
 
     BankPortal() {
         this.day = 0; // initial day
         this.sessionID = 0;
+//        this.bank = Bank.getInstance();
     }
 
     public void run() {
         loginPanel = new PortalLoginPanel();
+
     }
 
     public static void main(String[] args) {

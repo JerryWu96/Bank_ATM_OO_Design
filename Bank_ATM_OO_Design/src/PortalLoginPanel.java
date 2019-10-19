@@ -4,9 +4,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PortalLoginPanel {
+    private JFrame frame;
+
+    private boolean loginAuth(String userID, String password, String identity) {
+        String response = Bank.getInstance().authenticateUser(userID, password, identity);
+        JOptionPane.showMessageDialog(frame, "Response:" + response);
+        switch(response) {
+            case "NotExist":
+                JOptionPane.showMessageDialog(frame, "User does not exist!");
+                return false;
+            case "WrongPass":
+                JOptionPane.showMessageDialog(frame, "Wrong password!");
+                return false;
+            case "Error":
+                JOptionPane.showMessageDialog(frame, "Unexpected Error!");
+            default:
+                return true;
+        }
+    }
+
     public PortalLoginPanel() {
-        JFrame frame = new JFrame();
-        frame.setTitle("Bank Portal Login Panel");
+        this.frame = new JFrame();
+        frame.setTitle("Bank Login Panel");
         frame.setBounds(100, 500, 600, 100);
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(null);
@@ -51,10 +70,14 @@ public class PortalLoginPanel {
                 } else if (password.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please fill in your password.");
                 } else if (radioButton_1.isSelected()) {
-                    JOptionPane.showMessageDialog(frame, "Welcome Manager " + userID);
+                    if (loginAuth(userID, password, radioButton_1.getText())) {
+                        JOptionPane.showMessageDialog(frame, "Welcome " + radioButton_1.getText() + " " + userID + "!");
+                    }
                 } else if (radioButton_2.isSelected()) {
-                    JOptionPane.showMessageDialog(frame, "Welcome Customer " + userID);
-                } else {
+                    if (loginAuth(userID, password, radioButton_2.getText())) {
+                        JOptionPane.showMessageDialog(frame, "Welcome " + radioButton_2.getText() + " " + userID + "!");
+                    }
+                } else if (!radioButton_1.isSelected() && !radioButton_2.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Please select your identity. Manager/Customer?");
                 }
             }
@@ -71,8 +94,10 @@ public class PortalLoginPanel {
                     JOptionPane.showMessageDialog(frame, "Please fill in your password.");
                 } else if (radioButton_1.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Manager " + userID + ", you have successfully signed up!");
+                    Bank.getInstance().addUser(userID, password, null, radioButton_1.getText());
                 } else if (radioButton_2.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Customer " + userID + ", you have successfully signed up!");
+                    Bank.getInstance().addUser(userID, password, null, radioButton_2.getText());
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please select your identity. Manager/Customer?");
                 }
