@@ -1,7 +1,6 @@
 public class BankPortal {
     private int sessionID;
     private int userID;
-    private String permission;
     private int day;
     private welcomePanel welcomePanel;
 //    private Bank bank;

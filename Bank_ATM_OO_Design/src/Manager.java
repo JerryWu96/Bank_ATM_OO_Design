@@ -1,12 +1,8 @@
-public class Manager extends User{
+public class Manager extends User {
     private String bankID;
 
     Manager(String name, String userID, String password, String bankID) {
-        super(name, userID, password, "Manager");
+        super(name, userID, password);
         this.bankID = bankID;
     }
-
-//    public void checkReport(Report dailyReport) {
-//
-//    }
 }

@@ -59,6 +59,8 @@ public class welcomePanel {
 
         JLabel userLoginIDLabel = new JLabel("ID:");
         JLabel userSignupIDLabel = new JLabel("ID:");
+        JLabel userSignupPhoneLabel = new JLabel("Phone:");
+        JTextField userSignupPhoneField = new JTextField("10");
 //        userLoginIDLabel.setBounds(50, 90, 100, 20);
         JPasswordField userLoginPassField = new JPasswordField(12);
         JPasswordField userSignupPassField = new JPasswordField(12);
@@ -104,11 +106,14 @@ public class welcomePanel {
                 String userID = userSignupIDField.getText();
                 String password = new String(userSignupPassField.getPassword());
                 String userName = userSignupNameField.getText();
+                String userPhone = userSignupPhoneField.getText();
                 System.out.println("Name = " + userName + " ID = " + userID + " Pass = " + password);
                 if (userID.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please fill in your ID.");
                 } else if (password.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please fill in your password.");
+                } else if (userPhone.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please fill in your phone.");
                 } else if (userName.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please fill in your name.");
                 } else if (signupRadioBtn_manager.isSelected()) {
@@ -130,6 +135,9 @@ public class welcomePanel {
         signupPanel.add(userSignupPassField);
         signupPanel.add(userSignupNameLabel);
         signupPanel.add(userSignupNameField);
+        signupPanel.add(userSignupPhoneLabel);
+        signupPanel.add(userSignupPhoneField);
+
         signupPanel.add(signupRadioBtn_manager);
         signupPanel.add(signupRadioBtn_customer);
         signupPanel.add(registerButton);
