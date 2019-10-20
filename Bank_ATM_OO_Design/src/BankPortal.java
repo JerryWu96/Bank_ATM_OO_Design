@@ -1,11 +1,9 @@
-import java.util.List;
-
 public class BankPortal {
     private int sessionID;
     private int userID;
     private String permission;
     private int day;
-    private PortalLoginPanel loginPanel;
+    private welcomePanel welcomePanel;
 //    private Bank bank;
 
     BankPortal() {
@@ -15,8 +13,7 @@ public class BankPortal {
     }
 
     public void run() {
-        loginPanel = new PortalLoginPanel();
-
+        welcomePanel = new welcomePanel();
     }
 
     public static void main(String[] args) {
