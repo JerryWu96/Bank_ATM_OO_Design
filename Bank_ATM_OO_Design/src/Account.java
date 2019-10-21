@@ -1,12 +1,12 @@
 public class Account {
     private String accountID;
-    private int bankID;
-    private int userID;
+    private String bankID;
+    private String userID;
     private double balance;
-    private boolean status;
+    private boolean isActive;
 
-    Account(double balance, int bankID, int userID) {
-        this.accountID = bankID + "_" + userID;
+    Account(String accountID, double balance, String bankID, String userID) {
+        this.accountID = accountID;
         this.bankID = bankID;
         this.userID = userID;
         this.balance = balance;
@@ -16,11 +16,11 @@ public class Account {
         return this.accountID;
     }
 
-    public int getBankID() {
+    public String getBankID() {
         return this.bankID;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return this.userID;
     }
 
@@ -28,12 +28,16 @@ public class Account {
         return this.balance;
     }
 
+    public void setBalance(double difference) {
+        this.balance += difference;
+    }
+
     public boolean getStatus() {
-        return this.status;
+        return this.isActive;
     }
 
     public void close() {
-        this.status = false;
+        this.isActive = false;
     }
 
 }

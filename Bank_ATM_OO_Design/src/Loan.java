@@ -17,6 +17,10 @@ public class Loan {
         this.isPaidOff = true;
     }
 
+    public double getInterest() {
+        return this.interest;
+    }
+
     public String getLoanID() {
         return this.loanID;
     }
@@ -32,6 +36,7 @@ public class Loan {
     public boolean isPaidOff() {
         return this.isPaidOff;
     }
+
 
     public double payOff(double paid_amount) {
         if (paid_amount < this.amount) {

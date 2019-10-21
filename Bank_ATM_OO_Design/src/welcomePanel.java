@@ -2,13 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
 
 public class welcomePanel {
     private JFrame frame;
+    private CustomerPanel customerPanel;
+    private ManagerPanel managerPanel;
+    private BufferedImage logoImage;
 
     private boolean loginAuth(String userID, String password, String identity) {
         String response = Bank.getInstance().authenticateUser(userID, password, identity);
-        JOptionPane.showMessageDialog(frame, "Response:" + response);
         switch (response) {
             case "NotExist":
                 JOptionPane.showMessageDialog(frame, "User does not exist!");
@@ -30,12 +37,18 @@ public class welcomePanel {
         contentPane.add(tabbedPane);
         contentPane.setLayout(null);
 
+        try {
+            logoImage = ImageIO.read(new File("./misc/Logo.png"));
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+
+        JLabel logoLabel = new JLabel(new ImageIcon(logoImage));
         JPanel loginPanel = new JPanel();
         JPanel signupPanel = new JPanel();
 
-
         frame.setTitle(Bank.getInstance().getBankName() + " Welcome Panel");
-        frame.setBounds(100, 500, 1000, 150);
+        frame.setBounds(100, 500, 1400, 600);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,13 +57,17 @@ public class welcomePanel {
         JRadioButton loginRadioBtn_customer = new JRadioButton("Customer");
         JRadioButton signupRadioBtn_manager = new JRadioButton("Manager");
         JRadioButton signupRadioBtn_customer = new JRadioButton("Customer");
-//        signupRadioBtn_manager.setBounds(100, 100, 100, 30);
-//        signupRadioBtn_customersetBounds(300, 100, 100, 30);
-        ButtonGroup bg = new ButtonGroup();
-        bg.add(signupRadioBtn_manager);
-        bg.add(signupRadioBtn_customer);
-        frame.add(signupRadioBtn_manager);
-        frame.add(signupRadioBtn_customer);
+
+        ButtonGroup loginGroup = new ButtonGroup();
+        loginGroup.add(loginRadioBtn_manager);
+        loginGroup.add(loginRadioBtn_customer);
+        ButtonGroup signupGroup = new ButtonGroup();
+        signupGroup.add(signupRadioBtn_manager);
+        signupGroup.add(signupRadioBtn_customer);
+
+
+//        frame.add(signupRadioBtn_manager);
+//        frame.add(signupRadioBtn_customer);
 
         JTextField userLoginIDField = new JTextField(8);
         JTextField userSignupIDField = new JTextField(8);
@@ -60,13 +77,9 @@ public class welcomePanel {
         JLabel userLoginIDLabel = new JLabel("ID:");
         JLabel userSignupIDLabel = new JLabel("ID:");
         JLabel userSignupPhoneLabel = new JLabel("Phone:");
-        JTextField userSignupPhoneField = new JTextField("10");
-//        userLoginIDLabel.setBounds(50, 90, 100, 20);
+        JTextField userSignupPhoneField = new JTextField(10);
         JPasswordField userLoginPassField = new JPasswordField(12);
         JPasswordField userSignupPassField = new JPasswordField(12);
-
-//        JTextField userLoginPassField = new JTextField(12);
-//        userLoginIDLabel.setBounds(50, 500, 110, 20);
 
         JLabel userLoginPassLabel = new JLabel("Password:");
         JLabel userSignupPassLabel = new JLabel("Password:");
@@ -88,11 +101,17 @@ public class welcomePanel {
                     JOptionPane.showMessageDialog(frame, "Please fill in your password.");
                 } else if (loginRadioBtn_manager.isSelected()) {
                     if (loginAuth(userID, password, loginRadioBtn_manager.getText())) {
+                        BankPortal.getInstance().userLogin(userID);
                         JOptionPane.showMessageDialog(frame, "Welcome " + loginRadioBtn_manager.getText() + " " + userID + "!");
+                        managerPanel = new ManagerPanel(userID);
+//                        setInvisible();
                     }
                 } else if (loginRadioBtn_customer.isSelected()) {
                     if (loginAuth(userID, password, loginRadioBtn_customer.getText())) {
+                        BankPortal.getInstance().userLogin(userID);
                         JOptionPane.showMessageDialog(frame, "Welcome " + loginRadioBtn_customer.getText() + " " + userID + "!");
+                        customerPanel = new CustomerPanel(userID);
+//                        setInvisible();
                     }
                 } else if (!loginRadioBtn_manager.isSelected() && !loginRadioBtn_customer.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Please select your identity. Manager/Customer?");
@@ -107,7 +126,6 @@ public class welcomePanel {
                 String password = new String(userSignupPassField.getPassword());
                 String userName = userSignupNameField.getText();
                 String userPhone = userSignupPhoneField.getText();
-                System.out.println("Name = " + userName + " ID = " + userID + " Pass = " + password);
                 if (userID.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please fill in your ID.");
                 } else if (password.isEmpty()) {
@@ -137,7 +155,6 @@ public class welcomePanel {
         signupPanel.add(userSignupNameField);
         signupPanel.add(userSignupPhoneLabel);
         signupPanel.add(userSignupPhoneField);
-
         signupPanel.add(signupRadioBtn_manager);
         signupPanel.add(signupRadioBtn_customer);
         signupPanel.add(registerButton);
@@ -152,7 +169,18 @@ public class welcomePanel {
         loginPanel.add(loginButton);
         tabbedPane.addTab("Login", null, loginPanel, "Use this tab for login");
 
-        frame.setVisible(true);
+        frame.add(logoLabel);
+//        frame.pack();
+        setVisible();
     }
+
+    public void setVisible() {
+        this.frame.setVisible(true);
+    }
+
+    public void setInvisible() {
+        this.frame.setVisible(false);
+    }
+
 
 }

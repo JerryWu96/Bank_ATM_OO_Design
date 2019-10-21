@@ -1,10 +1,16 @@
 public class Currency {
     private String name;
     private double exchangeRate;
+    private double balance;
 
-    Currency(String name, double exchangeRate) {
+    Currency(String name, double exchangeRate, double balance) {
         this.name = name;
         this.exchangeRate = exchangeRate;
+        this.balance = balance;
+    }
+
+    public double getBalance() {
+        return this.balance;
     }
 
     public String getName() {
