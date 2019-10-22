@@ -1,16 +1,21 @@
+/**
+ * Class that encapsulates a loan.
+ */
 public class Loan {
     private String loanID;
-    private int customerID;
+    private String customerID;
     private double interest;
     private double amount;
+    private String selectedCurrency;
     private boolean isPaidOff;
 
-    Loan(int customerID, double amount, double interest) {
+    Loan(String customerID, double amount, double interest, String selectedCurrency, int postfix) {
         this.customerID = customerID;
         this.amount = amount;
         this.interest = interest;
         this.isPaidOff = false;
-        this.loanID = customerID + "_" + amount;
+        this.selectedCurrency = selectedCurrency;
+        this.loanID = customerID + "_" + amount + "_" + postfix;
     }
 
     private void setPaid() {
@@ -25,10 +30,13 @@ public class Loan {
         return this.loanID;
     }
 
-    public int getCustomerID() {
+    public String getCustomerID() {
         return this.customerID;
     }
 
+    public String getSelectedCurrency() {
+        return this.selectedCurrency;
+    }
     public double getAmount() {
         return this.amount;
     }
@@ -37,8 +45,7 @@ public class Loan {
         return this.isPaidOff;
     }
 
-
-    public double payOff(double paid_amount) {
+    public double payByAmount(double paid_amount) {
         if (paid_amount < this.amount) {
             double diff_amount = this.amount - paid_amount;
             this.amount -= diff_amount;
@@ -47,6 +54,10 @@ public class Loan {
             this.setPaid();
             return paid_amount - this.amount;
         }
+    }
+
+    public double computeInterest() {
+        return getAmount() * getInterest();
     }
 
 }

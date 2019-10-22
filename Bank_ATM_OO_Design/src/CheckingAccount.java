@@ -1,5 +1,6 @@
-import java.util.List;
-
+/**
+ * A checking account.
+ */
 public class CheckingAccount extends Account {
     // Current system has not implemented debit/credit card systems. This is more of a design showcase.
     private int debitCardNumber;

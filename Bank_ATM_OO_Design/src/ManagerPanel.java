@@ -3,6 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A Swing GUI class designed for managers to interact with the system. It is mainly used to generate report.
+ */
 public class ManagerPanel {
     private JFrame frame;
 
@@ -14,14 +17,34 @@ public class ManagerPanel {
         contentPane.setLayout(null);
 
         JPanel bankPanel = new JPanel();
-        JPanel reportPanel = new JPanel();
         JLabel nameLabel = new JLabel();
         nameLabel.setText(Bank.getInstance().getManagerName(userID));
 
         tabbedPane.addTab("Your Bank", null, bankPanel, "Use this tab to check your bank metrics");
-        tabbedPane.addTab("Bank Report", null, reportPanel, "Use this tab to check reports of your bank");
 
+        JButton reportBtn = new JButton("Get your bank report");
+        JLabel infoLabel = new JLabel("Press next day to simulate time.");
+        JLabel dayLabel = new JLabel(updateDay());
+        JButton dayBtn = new JButton("next day");
         JButton signoutButton = new JButton("Logout");
+
+        reportBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Report report = BankLogger.getInstance().generateReport(BankPortal.getInstance().getDay());
+                JOptionPane.showMessageDialog(frame, report.display());
+            }
+        });
+
+
+        dayBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BankPortal.getInstance().nextDay();
+                dayLabel.setText(updateDay());
+            }
+        });
+
 
         signoutButton.addActionListener(new ActionListener() {
             @Override
@@ -32,38 +55,11 @@ public class ManagerPanel {
             }
         });
 
-
-        JTextField userLoginIDField = new JTextField(8);
-        JTextField userSignupIDField = new JTextField(8);
-        JLabel userSignupNameLabel = new JLabel("Name:");
-        JTextField userSignupNameField = new JTextField(10);
-
-        JLabel userLoginIDLabel = new JLabel("ID:");
-        JLabel userSignupIDLabel = new JLabel("ID:");
-        JLabel userSignupPhoneLabel = new JLabel("Phone:");
-        JTextField userSignupPhoneField = new JTextField(10);
-        JPasswordField userLoginPassField = new JPasswordField(12);
-        JPasswordField userSignupPassField = new JPasswordField(12);
-
-        JLabel userLoginPassLabel = new JLabel("Password:");
-        JLabel userSignupPassLabel = new JLabel("Password:");
-
-        userLoginIDField.setHorizontalAlignment(JTextField.LEFT);
-        userLoginPassField.setHorizontalAlignment(JPasswordField.LEFT);
-
-        JButton registerButton = new JButton("Signup");
-
-
-
-        bankPanel.add(userSignupIDLabel);
-        bankPanel.add(userSignupIDField);
-        bankPanel.add(userSignupPassLabel);
-        bankPanel.add(userSignupPassField);
-        bankPanel.add(userSignupNameLabel);
-        bankPanel.add(userSignupNameField);
-        bankPanel.add(userSignupPhoneLabel);
-        bankPanel.add(userSignupPhoneField);
-        bankPanel.add(registerButton);
+        bankPanel.add(reportBtn);
+        bankPanel.add(infoLabel);
+        bankPanel.add(dayLabel);
+        bankPanel.add(dayBtn);
+        bankPanel.add(signoutButton);
         tabbedPane.addTab("Your Bank", null, bankPanel, "Use this tab to check your bank metrics");
 
         frame.add(signoutButton);
@@ -75,6 +71,9 @@ public class ManagerPanel {
         setVisible();
     }
 
+    public String updateDay() {
+        return "Current day:" + BankPortal.getInstance().getDay();
+    }
     public void setVisible() {
         this.frame.setVisible(true);
     }

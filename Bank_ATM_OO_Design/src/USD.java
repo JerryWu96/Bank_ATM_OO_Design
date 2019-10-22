@@ -1,3 +1,6 @@
+/**
+ * Class that represents USD, one of the currencies our system needs.
+ */
 public class USD extends Currency {
     private double exchangeRate;
 

@@ -1,3 +1,6 @@
+/**
+ * Base class of a account. If there are more account types to be added, we can inherited from this class.
+ */
 public class Account {
     private String accountID;
     private String bankID;

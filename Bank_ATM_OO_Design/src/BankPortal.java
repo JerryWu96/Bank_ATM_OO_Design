@@ -1,22 +1,18 @@
-import com.sun.tools.javac.comp.Check;
-import java.util.List;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
+/**
+ * Class that serves as a session at the system runtime.
+ * You can imagine this class as a centralized Bank System Manager.
+ * It is a single point of failure, so we can even distribute it onto multiple machines.
+ */
 public class BankPortal {
     private int sessionID;
     private String userID;
     private int day;
-    private welcomePanel welcomePanel;
-    private boolean isUserLogin;
-    private boolean isUserLogout;
+    private WelcomePanel welcomePanel;
     private static BankPortal bankPortal = null;
 
     BankPortal() {
         this.day = 0; // initial day
         this.sessionID = 0; // initial sessionID
-        this.isUserLogin = false;
-        this.isUserLogout = true;
     }
 
     public static BankPortal getInstance() {
@@ -27,7 +23,7 @@ public class BankPortal {
     }
 
     public void run() {
-        welcomePanel = new welcomePanel();
+        welcomePanel = new WelcomePanel();
     }
 
     public void setUserID(String userID) {
@@ -39,7 +35,6 @@ public class BankPortal {
     }
 
     public void userLogin(String userID) {
-        System.out.println("User " + userID + " logged in!");
         BankPortal.getInstance().setUserID(userID);
         BankPortal.getInstance().updateSessionID();
     }
@@ -53,6 +48,7 @@ public class BankPortal {
         Integer accountCount = Bank.getInstance().getUserCheckingCount(userID);
         CheckingAccount newAccount = new CheckingAccount(bankID, userID, Integer.toString(accountCount));
         Bank.getInstance().openCheckingAccount(newAccount);
+        BankLogger.getInstance().addChecking(newAccount);
         return newAccount;
     }
 
@@ -60,6 +56,7 @@ public class BankPortal {
         Integer accountCount = Bank.getInstance().getUserSavingsCount(userID);
         SavingsAccount newAccount = new SavingsAccount(bankID, userID, Integer.toString(accountCount));
         Bank.getInstance().openSavingsAccount(newAccount);
+        BankLogger.getInstance().addSavings(newAccount);
         return newAccount;
     }
 
@@ -72,38 +69,77 @@ public class BankPortal {
     }
 
     public void deposit(String userID, String accountID, double amount, String selectedCurrency) {
-        Deposit depositTransaction = new Deposit(accountID, userID, this.day, selectedCurrency, amount);
-        depositTransaction.startTransaction();
-        BankLogger.getInstance().addDeposit(depositTransaction);
+        Deposit deposit = new Deposit(accountID, userID, this.day, selectedCurrency, amount);
+        deposit.startTransaction();
+        BankLogger.getInstance().addDeposit(deposit);
     }
 
-    public String makeTransaction(String userID, String sourceAccountID, String targetAccountID, double amount, String requestType) {
-        return null;
+    public String withdraw(String userID, String accountID, double amount, String selectedCurrency) {
+        Withdraw withdraw = new Withdraw(accountID, userID, this.day, selectedCurrency, amount);
+        String result = withdraw.startTransaction();
+        BankLogger.getInstance().addWithdraw(withdraw);
+        return result;
     }
 
-//    public Double balanceInquiry(String accountID, String type) {
-//        switch (type) {
-//            case "CK":
-//                return Bank.getInstance().getCheckingAccount(accountID).getBalance();
-//            case "SAV":
-//                return Bank.getInstance().getSavingsAccount(accountID).getBalance();
-//        }
-//        return -1.0;
-//    }
+    public String transfer(String userID, String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
+        Transfer transfer = new Transfer(sourceAccountID, targetAccountID, userID, this.day, selectedCurrency, amount);
+        String result = transfer.startTransaction();
+        BankLogger.getInstance().addTransfer(transfer);
+        return result;
+    }
 
-    public void takeLoan() {
+    public String takeLoan(String userID, double amount, String selectedCurrency) {
+            return Bank.getInstance().takeLoan(userID, amount, selectedCurrency);
+    }
 
+    public void payoffLoan(String loanID) {
+        Bank.getInstance().payoffLoan(userID, loanID);
+    }
+
+    public int getCustomerCollateral() {
+        return Bank.getInstance().getCustomerCollateral(userID);
+    }
+
+    public void nextDay() {
+        this.day++;
+        BankLogger.getInstance().nextDay();
+    }
+
+    public String getAccountInfo(String userID) {
+        String displayContent = "";
+        int CKCount = Bank.getInstance().getUserCheckingCount(userID);
+        int SAVCount = Bank.getInstance().getUserSavingsCount(userID);
+        displayContent += "Name: " + Bank.getInstance().getCustomerName(userID) + "\n";
+        displayContent += "ID: " + userID + "\n";
+        displayContent += "Total Accounts: " + (CKCount + SAVCount) + "\n";
+        displayContent += "Operation fee: 5 units for all currency\n";
+
+        if (Bank.getInstance().getUserCheckingCount(userID) == 0) {
+            displayContent += "You have not opened any Checking account yet!\n";
+        }
+        if (Bank.getInstance().getUserSavingsCount(userID) == 0) {
+            displayContent += "You have not opened any Savings account yet!\n";
+        }
+        for (CheckingAccount account : Bank.getInstance().getCheckings()) {
+            if (account.getUserID().equals(userID)) {
+                displayContent += "\nCK AccountID: " + account.getAccountID();
+                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
+                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
+            }
+        }
+        for (SavingsAccount account : Bank.getInstance().getSavings()) {
+            if (account.getUserID().equals(userID)) {
+                displayContent += "\nSAV AccountID: " + account.getAccountID();
+                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
+                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
+            }
+        }
+
+        return displayContent;
     }
 
     public int getDay() {
         return this.day;
-    }
-    private boolean doesCustomerExist(String userID) {
-        return Bank.getInstance().doesCustomerExist(userID);
-    }
-
-    private boolean doesManagerExist(String userID) {
-        return Bank.getInstance().doesManagerExist(userID);
     }
 
     public static void main(String[] args) {

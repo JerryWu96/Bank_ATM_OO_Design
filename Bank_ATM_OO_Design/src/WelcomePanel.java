@@ -6,9 +6,10 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-
-
-public class welcomePanel {
+/**
+ * The signup/login Swing GUI class.
+ */
+public class WelcomePanel {
     private JFrame frame;
     private CustomerPanel customerPanel;
     private ManagerPanel managerPanel;
@@ -30,7 +31,7 @@ public class welcomePanel {
         }
     }
 
-    public welcomePanel() {
+    public WelcomePanel() {
         this.frame = new JFrame();
         Container contentPane = frame.getContentPane();
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -100,14 +101,12 @@ public class welcomePanel {
                         BankPortal.getInstance().userLogin(userID);
                         JOptionPane.showMessageDialog(frame, "Welcome " + loginRadioBtn_manager.getText() + " " + userID + "!");
                         managerPanel = new ManagerPanel(userID);
-//                        setInvisible();
                     }
                 } else if (loginRadioBtn_customer.isSelected()) {
                     if (loginAuth(userID, password, loginRadioBtn_customer.getText())) {
                         BankPortal.getInstance().userLogin(userID);
                         JOptionPane.showMessageDialog(frame, "Welcome " + loginRadioBtn_customer.getText() + " " + userID + "!");
                         customerPanel = new CustomerPanel(userID);
-//                        setInvisible();
                     }
                 } else if (!loginRadioBtn_manager.isSelected() && !loginRadioBtn_customer.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Please select your identity. Manager/Customer?");

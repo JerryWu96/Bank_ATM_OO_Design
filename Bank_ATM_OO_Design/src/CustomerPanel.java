@@ -2,40 +2,167 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
+/**
+ * A Swing GUI that is displayed for customers to interact with the system.
+ */
 public class CustomerPanel {
     private JFrame frame;
-    private JComboBox<String> accountBox;
-//    private List<String> accountList;
+    private String userID;
+    private JComboBox<String> accountInfoBox;
+    private JComboBox<String> sourceAccountBox;
+    private JComboBox<String> targetAccountBox;
+    private JComboBox<String> loanBox;
+    private JTabbedPane tabbedPane;
+    private JTextArea infoArea;
 
     public CustomerPanel(String userID) {
         this.frame = new JFrame();
+        this.userID = userID;
         Container contentPane = frame.getContentPane();
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setSize(1000, 500);
+        tabbedPane = new JTabbedPane();
         contentPane.add(tabbedPane);
 
-        JPanel accountPanel = new JPanel();
-        JPanel transactionPanel = new JPanel();
-        JPanel loanPanel = new JPanel();
 
-        accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.Y_AXIS));
+        infoArea = new JTextArea(BankPortal.getInstance().getAccountInfo(userID));
+        initAccountManagePanel();
+        initTransactionPanel();
+        initLoanPanel();
+        updateBoxes();
+
+        tabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                updateInfoArea();
+            }
+        });
+
+        frame.setTitle("Customer Panel");
+        frame.setBounds(100, 500, 1400, 600);
+        frame.setLayout(new FlowLayout(FlowLayout.CENTER));
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible();
+    }
+
+    private void initLoanPanel() {
+        JPanel loanPanel = new JPanel();
+        loanPanel.setLayout(new BoxLayout(loanPanel, BoxLayout.Y_AXIS));
+
+        JLabel balanceLabel = new JLabel("Please input the amount you would like to get from the loan:");
+        JTextField loanField = new JTextField(5);
+        loanField.setInputVerifier(new doubleVerifier());
+        JComboBox<String> currencyBox = new JComboBox<>(Bank.getInstance().getCurrencyList());
+        JLabel loanLabel = new JLabel("Your current loans:");
+        loanBox = new JComboBox<>(new String[]{"N/A"});
+        JButton takeLoanBtn = new JButton("take loan");
+        JButton payoffLoanBtn = new JButton("pay off selected loan");
+
+
+        loanPanel.add(balanceLabel);
+        loanPanel.add(loanField);
+        loanPanel.add(currencyBox);
+        loanPanel.add(loanLabel);
+        loanPanel.add(loanBox);
+        loanPanel.add(takeLoanBtn);
+        loanPanel.add(payoffLoanBtn);
+
+        takeLoanBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String balanceStr = loanField.getText();
+                double amount = Double.parseDouble(balanceStr);
+                String selectedCurrency = (String) currencyBox.getSelectedItem();
+                String result = BankPortal.getInstance().takeLoan(userID, amount, selectedCurrency);
+                if (result.equals("Not Eligible")) {
+                    JOptionPane.showMessageDialog(frame, "You are no longer permitted to take out a loan!\n" +
+                            "Please pay off loans to retrieve your collaterals");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "New loan created! \n You have " +
+                            BankPortal.getInstance().getCustomerCollateral() + " remaining collaterals.");
+                }
+                infoArea = new JTextArea(BankPortal.getInstance().getAccountInfo(userID));
+                updateBoxes();
+            }
+        });
+
+        payoffLoanBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedLoan = (String) loanBox.getSelectedItem();
+                BankPortal.getInstance().payoffLoan(selectedLoan);
+                updateBoxes();
+            }
+        });
+
+
+        tabbedPane.addTab("Loan", null, loanPanel, "Use this tab to check/place/pay off your loan");
+
+    }
+
+    private void initTransactionPanel() {
+        JPanel transactionPanel = new JPanel();
+        transactionPanel.setLayout(new BoxLayout(transactionPanel, BoxLayout.Y_AXIS));
+
+        JLabel sourceLabel = new JLabel("Your source account to transfer money:");
+        JLabel targetLabel = new JLabel("Your destination account to send money:");
+
+        JLabel balanceLabel = new JLabel("Please select the balance amount for transfer:");
+        JTextField balanceField = new JTextField(5);
+        balanceField.setInputVerifier(new doubleVerifier());
+        sourceAccountBox = new JComboBox<>(new String[]{"N/A"});
+        targetAccountBox = new JComboBox<>(new String[]{"N/A"});
+        JComboBox<String> currencyBox = new JComboBox<>(Bank.getInstance().getCurrencyList());
+        JButton confirmBtn = new JButton("confirm");
+
+        transactionPanel.add(sourceLabel);
+        transactionPanel.add(targetLabel);
+        transactionPanel.add(sourceAccountBox);
+        transactionPanel.add(targetAccountBox);
+        transactionPanel.add(balanceLabel);
+        transactionPanel.add(balanceField);
+        transactionPanel.add(currencyBox);
+        transactionPanel.add(confirmBtn);
+
+        confirmBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String balanceStr = balanceField.getText();
+                double amount = Double.parseDouble(balanceStr);
+                String selectedCurrency = (String) currencyBox.getSelectedItem();
+                String sourceAccountID = (String) sourceAccountBox.getSelectedItem();
+                String targetAccountID = (String) targetAccountBox.getSelectedItem();
+                String result = BankPortal.getInstance().transfer(userID, sourceAccountID, targetAccountID, amount, selectedCurrency);
+                if (result.equals("Insufficient balance")) {
+                    JOptionPane.showMessageDialog(frame, "Your selected account does not have enough balance.");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Transfer succeeded!\n You have transfered " +
+                            amount + " from your account: " + sourceAccountID + " to the account: " + targetAccountID);
+                }
+                infoArea = new JTextArea(BankPortal.getInstance().getAccountInfo(userID));
+            }
+        });
+        tabbedPane.addTab("Transactions", null, transactionPanel, "Use this tab to make transactions");
+    }
+
+    private void initAccountManagePanel() {
+        JPanel accountPanel = new JPanel();
+        accountPanel.setLayout(new BoxLayout(accountPanel, BoxLayout.PAGE_AXIS));
 
         JButton newCheckingBtn = new JButton("open Checking account");
         JButton newSavingsBtn = new JButton("open Savings account");
         JButton closeAccountBtn = new JButton("close selected account");
         JLabel userBalanceLabel = new JLabel("Your cash to deposit:");
         JLabel accountIDLabel = new JLabel("Account ID to close/deposit:");
-        JTextField balanceField = new JTextField(5);
         JButton depositBtn = new JButton("deposit cash");
+        JButton withdrawBtn = new JButton("withdraw cash");
+        JTextField balanceField = new JTextField(5);
         balanceField.setInputVerifier(new doubleVerifier());
-        JTextField accountIDField = new JTextField(5);
         JComboBox<String> currencyBox = new JComboBox<>(Bank.getInstance().getCurrencyList());
-        accountBox = new JComboBox<>(new String[]{"N/A"});
+        accountInfoBox = new JComboBox<>(new String[]{"N/A"});
+        infoArea = new JTextArea(BankPortal.getInstance().getAccountInfo(userID));
 
-
-        String displayContent = getAccountInfo(userID);
-        JTextArea infoArea = new JTextArea(displayContent);
         accountPanel.add(infoArea);
         accountPanel.add(newCheckingBtn);
         accountPanel.add(newSavingsBtn);
@@ -43,23 +170,22 @@ public class CustomerPanel {
         accountPanel.add(balanceField);
         accountPanel.add(currencyBox);
         accountPanel.add(accountIDLabel);
-        accountPanel.add(accountBox);
+        accountPanel.add(accountInfoBox);
         accountPanel.add(depositBtn);
+        accountPanel.add(withdrawBtn);
+
         accountPanel.add(closeAccountBtn);
-        accountPanel.setSize(1000, 500);
         JScrollPane scrollAccountPane = new JScrollPane(accountPanel);
-        scrollAccountPane.setSize(1000, 500);
 
         tabbedPane.addTab("Account Info", null, scrollAccountPane, "Use this tab to check/open/close your account");
-        tabbedPane.addTab("Transactions", null, transactionPanel, "Use this tab to make transactions");
-        tabbedPane.addTab("Loan", null, loanPanel, "Use this tab to check/place/pay off your loan");
+
 
         newCheckingBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BankPortal.getInstance().openCheckingAccount("BofF", userID);
-                infoArea.setText(getAccountInfo(userID));
-                updateAccountbox();
+                updateInfoArea();
+                updateBoxes();
             }
         });
 
@@ -67,21 +193,21 @@ public class CustomerPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BankPortal.getInstance().openSavingsAccount("BofF", userID);
-                infoArea.setText(getAccountInfo(userID));
-                updateAccountbox();
+                updateInfoArea();
+                updateBoxes();
             }
         });
 
         closeAccountBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String accountID = (String) accountBox.getSelectedItem();
+                String accountID = (String) accountInfoBox.getSelectedItem();
                 if (Bank.getInstance().isCheckingAccount(accountID)) {
                     String reply = BankPortal.getInstance().closeCheckingAccount(userID, accountID);
                     if (reply.equals("Not Exist")) {
                         JOptionPane.showMessageDialog(frame, "The account ID does not exist!");
                     } else {
-                        infoArea.setText(getAccountInfo(userID));
+                        updateInfoArea();
                     }
 
                 } else if (Bank.getInstance().isSavingsAccount(accountID)) {
@@ -89,10 +215,10 @@ public class CustomerPanel {
                     if (reply.equals("Not Exist")) {
                         JOptionPane.showMessageDialog(frame, "The account ID does not exist!");
                     } else {
-                        infoArea.setText(getAccountInfo(userID));
+                        updateInfoArea();
                     }
                 }
-                updateAccountbox();
+                updateBoxes();
             }
         });
 
@@ -100,11 +226,27 @@ public class CustomerPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String balanceStr = balanceField.getText();
-                String accountID = (String) accountBox.getSelectedItem();
+                String accountID = (String) accountInfoBox.getSelectedItem();
                 double amount = Double.parseDouble(balanceStr);
                 String selectedCurrency = (String) currencyBox.getSelectedItem();
                 BankPortal.getInstance().deposit(userID, accountID, amount, selectedCurrency);
-                infoArea.setText(getAccountInfo(userID));
+                updateInfoArea();
+            }
+        });
+
+
+        withdrawBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String balanceStr = balanceField.getText();
+                String accountID = (String) accountInfoBox.getSelectedItem();
+                double amount = Double.parseDouble(balanceStr);
+                String selectedCurrency = (String) currencyBox.getSelectedItem();
+                String result = BankPortal.getInstance().withdraw(userID, accountID, amount, selectedCurrency);
+                if (result.equals("Insufficient balance")) {
+                    JOptionPane.showMessageDialog(frame, "Your selected account has insufficient balance!");
+                }
+                updateInfoArea();
             }
         });
 
@@ -119,61 +261,53 @@ public class CustomerPanel {
             }
 
         });
-
         frame.add(signoutButton);
-        frame.setTitle("Customer Panel");
-        frame.setBounds(100, 500, 1400, 600);
-        frame.setLayout(new FlowLayout(FlowLayout.CENTER));
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setVisible();
     }
 
-    private String getAccountInfo(String userID) {
-        String displayContent = "";
-        int CKCount = Bank.getInstance().getUserCheckingCount(userID);
-        int SAVCount = Bank.getInstance().getUserSavingsCount(userID);
-        displayContent += "Name: " + Bank.getInstance().getCustomerName(userID) + "\n";
-        displayContent += "ID: " + userID + "\n";
-        displayContent += "Total Accounts: " + (CKCount + SAVCount) + "\n";
-        if (Bank.getInstance().getUserCheckingCount(userID) == 0) {
-            displayContent += "You have not opened any Checking account yet!\n";
-        }
-        if (Bank.getInstance().getUserSavingsCount(userID) == 0) {
-            displayContent += "You have not opened any Savings account yet!\n";
-        }
-        for (CheckingAccount account : Bank.getInstance().getCheckings()) {
-            if (account.getUserID().equals(userID)) {
-                displayContent += "\nCK AccountID: " + account.getAccountID();
-                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
-                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
-            }
-        }
-        displayContent += "\n";
-        for (SavingsAccount account : Bank.getInstance().getSavings()) {
-            if (account.getUserID().equals(userID)) {
-                displayContent += "\nSAV AccountID: " + account.getAccountID();
-                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
-                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
-            }
-        }
-
-        return displayContent;
-    }
-
-    public void setVisible() {
+    private void setVisible() {
         this.frame.setVisible(true);
     }
 
-    public void setInvisible() {
+    private void setInvisible() {
         this.frame.setVisible(false);
     }
 
-    private void updateAccountbox() {
-        accountBox.removeAllItems();
+    private void updateBoxes() {
+        updateAccountbox(targetAccountBox);
+        updateUserAccountBox(accountInfoBox);
+        updateUserAccountBox(sourceAccountBox);
+        updateUserLoanBox(loanBox);
+    }
+
+    private void updateAccountbox(JComboBox myBox) {
+        myBox.removeAllItems();
         String[] accountList = Bank.getInstance().getAccountList();
         for (String accountID : accountList) {
-            accountBox.addItem(accountID);
+            myBox.addItem(accountID);
+        }
+    }
+
+    private void updateInfoArea() {
+        infoArea.removeAll();
+        String info = BankPortal.getInstance().getAccountInfo(userID);
+        infoArea.setText(info);
+    }
+
+    private void updateUserAccountBox(JComboBox myBox) {
+        myBox.removeAllItems();
+        String[] accountList = Bank.getInstance().getAccountList();
+        for (String accountID : accountList) {
+            if (Bank.getInstance().isUserAccount(userID, accountID)) {
+                myBox.addItem(accountID);
+            }
+        }
+    }
+
+    private void updateUserLoanBox(JComboBox myBox) {
+        myBox.removeAllItems();
+        String[] loanList = Bank.getInstance().getLoanList(userID);
+        for (String loanID : loanList) {
+            myBox.addItem(loanID);
         }
     }
 

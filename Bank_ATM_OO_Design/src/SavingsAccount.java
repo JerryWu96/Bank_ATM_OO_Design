@@ -1,3 +1,6 @@
+/**
+ * Savings account. We can add withdrawTimesLimit in the future to make it more realistic.
+ */
 public class SavingsAccount extends Account {
     private double withdrawTimesLimit;
     private double operationFee;
