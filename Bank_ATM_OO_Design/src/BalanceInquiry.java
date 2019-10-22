@@ -1,10 +1,14 @@
 public class BalanceInquiry extends Transaction {
 
-    BalanceInquiry(int accountID, int userID, int creationDay, Currency currency) {
+    BalanceInquiry(String accountID, String userID, int creationDay, String currency) {
         super(accountID, userID, creationDay, currency, 0);
     }
 
-    public double getBalance(Account account) {
-        return account.getBalance();
+    public void startTransaction() {
+
     }
+
+//    public double getBalance(Account account) {
+//        return account.getBalance();
+//    }
 }

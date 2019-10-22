@@ -156,12 +156,40 @@ public class Bank {
         return "Successful";
     }
 
+    public void deposit(String accountID, double amount, String selectedCurrency) {
+        if (checkingMap.containsKey(accountID)) {
+           checkingMap.get(accountID).setBalance(amount, selectedCurrency);
+        } else if (savingsMap.containsKey(accountID)) {
+            savingsMap.get(accountID).setBalance(amount, selectedCurrency);
+        }
+    }
+
+    public boolean isCheckingAccount(String accountID) {
+        return checkingMap.containsKey(accountID);
+    }
+
+    public boolean isSavingsAccount(String accountID) {
+        return savingsMap.containsKey(accountID);
+    }
+
+
     public CheckingAccount getCheckingAccount(String accountID) {
         return this.checkingMap.get(accountID);
     }
 
     public SavingsAccount getSavingsAccount(String accountID) {
         return this.savingsMap.get(accountID);
+    }
+
+    public String[] getAccountList() {
+        List<String> accountList = new ArrayList<>();
+        for (CheckingAccount checking : checkings) {
+            accountList.add(checking.getAccountID());
+        }
+        for (SavingsAccount saving : savings) {
+            accountList.add(saving.getAccountID());
+        }
+        return accountList.toArray(new String[0]);
     }
 
     public Integer getUserCheckingCount(String userID) {

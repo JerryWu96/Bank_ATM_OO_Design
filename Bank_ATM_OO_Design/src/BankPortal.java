@@ -49,17 +49,16 @@ public class BankPortal {
     }
 
 
-    public CheckingAccount openCheckingAccount(String currency, double balance, String bankID, String userID) {
+    public CheckingAccount openCheckingAccount(String bankID, String userID) {
         Integer accountCount = Bank.getInstance().getUserCheckingCount(userID);
-
-        CheckingAccount newAccount = new CheckingAccount(balance, bankID, userID, Integer.toString(accountCount));
+        CheckingAccount newAccount = new CheckingAccount(bankID, userID, Integer.toString(accountCount));
         Bank.getInstance().openCheckingAccount(newAccount);
         return newAccount;
     }
 
-    public SavingsAccount openSavingsAccount(String currency, double balance, String bankID, String userID) {
+    public SavingsAccount openSavingsAccount(String bankID, String userID) {
         Integer accountCount = Bank.getInstance().getUserSavingsCount(userID);
-        SavingsAccount newAccount = new SavingsAccount(balance, bankID, userID, Integer.toString(accountCount));
+        SavingsAccount newAccount = new SavingsAccount(bankID, userID, Integer.toString(accountCount));
         Bank.getInstance().openSavingsAccount(newAccount);
         return newAccount;
     }
@@ -72,24 +71,33 @@ public class BankPortal {
         return Bank.getInstance().closeSavingsAccount(userID, accountID);
     }
 
+    public void deposit(String userID, String accountID, double amount, String selectedCurrency) {
+        Deposit depositTransaction = new Deposit(accountID, userID, this.day, selectedCurrency, amount);
+        depositTransaction.startTransaction();
+        BankLogger.getInstance().addDeposit(depositTransaction);
+    }
+
     public String makeTransaction(String userID, String sourceAccountID, String targetAccountID, double amount, String requestType) {
         return null;
     }
 
-    public Double balanceInquiry(String accountID, String type) {
-        switch (type) {
-            case "CK":
-                return Bank.getInstance().getCheckingAccount(accountID).getBalance();
-            case "SAV":
-                return Bank.getInstance().getSavingsAccount(accountID).getBalance();
-        }
-        return -1.0;
-    }
+//    public Double balanceInquiry(String accountID, String type) {
+//        switch (type) {
+//            case "CK":
+//                return Bank.getInstance().getCheckingAccount(accountID).getBalance();
+//            case "SAV":
+//                return Bank.getInstance().getSavingsAccount(accountID).getBalance();
+//        }
+//        return -1.0;
+//    }
 
     public void takeLoan() {
 
     }
 
+    public int getDay() {
+        return this.day;
+    }
     private boolean doesCustomerExist(String userID) {
         return Bank.getInstance().doesCustomerExist(userID);
     }

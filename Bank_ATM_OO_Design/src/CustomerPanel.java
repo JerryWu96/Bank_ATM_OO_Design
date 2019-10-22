@@ -5,11 +5,14 @@ import java.awt.event.ActionListener;
 
 public class CustomerPanel {
     private JFrame frame;
+    private JComboBox<String> accountBox;
+//    private List<String> accountList;
 
     public CustomerPanel(String userID) {
         this.frame = new JFrame();
         Container contentPane = frame.getContentPane();
         JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setSize(1000, 500);
         contentPane.add(tabbedPane);
 
         JPanel accountPanel = new JPanel();
@@ -20,94 +23,93 @@ public class CustomerPanel {
 
         JButton newCheckingBtn = new JButton("open Checking account");
         JButton newSavingsBtn = new JButton("open Savings account");
-        JButton closeCheckingBtn = new JButton("close Checking account");
-        JButton closeSavingsBtn = new JButton("close Savings account");
+        JButton closeAccountBtn = new JButton("close selected account");
         JLabel userBalanceLabel = new JLabel("Your cash to deposit:");
-        JLabel accountIDLabel = new JLabel("Account ID you want to close:");
+        JLabel accountIDLabel = new JLabel("Account ID to close/deposit:");
         JTextField balanceField = new JTextField(5);
+        JButton depositBtn = new JButton("deposit cash");
         balanceField.setInputVerifier(new doubleVerifier());
         JTextField accountIDField = new JTextField(5);
-        JComboBox<String> currencyBox= new JComboBox<>(Bank.getInstance().getCurrencyList());
+        JComboBox<String> currencyBox = new JComboBox<>(Bank.getInstance().getCurrencyList());
+        accountBox = new JComboBox<>(new String[]{"N/A"});
 
 
         String displayContent = getAccountInfo(userID);
         JTextArea infoArea = new JTextArea(displayContent);
         accountPanel.add(infoArea);
+        accountPanel.add(newCheckingBtn);
+        accountPanel.add(newSavingsBtn);
         accountPanel.add(userBalanceLabel);
         accountPanel.add(balanceField);
         accountPanel.add(currencyBox);
-        accountPanel.add(newCheckingBtn);
-        accountPanel.add(newSavingsBtn);
-
         accountPanel.add(accountIDLabel);
-        accountPanel.add(accountIDField);
-        accountPanel.add(closeCheckingBtn);
-        accountPanel.add(closeSavingsBtn);
+        accountPanel.add(accountBox);
+        accountPanel.add(depositBtn);
+        accountPanel.add(closeAccountBtn);
+        accountPanel.setSize(1000, 500);
         JScrollPane scrollAccountPane = new JScrollPane(accountPanel);
+        scrollAccountPane.setSize(1000, 500);
 
         tabbedPane.addTab("Account Info", null, scrollAccountPane, "Use this tab to check/open/close your account");
         tabbedPane.addTab("Transactions", null, transactionPanel, "Use this tab to make transactions");
         tabbedPane.addTab("Loan", null, loanPanel, "Use this tab to check/place/pay off your loan");
 
-
-
-
         newCheckingBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String input = balanceField.getText();
-                String selectedCurrency = (String) currencyBox.getSelectedItem();
-                double balance = Double.parseDouble(input);
-                BankPortal.getInstance().openCheckingAccount(selectedCurrency, balance, "BofF", userID);
+                BankPortal.getInstance().openCheckingAccount("BofF", userID);
                 infoArea.setText(getAccountInfo(userID));
-            }
-        });
-
-        closeCheckingBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String accountID = accountIDField.getText();
-                String reply = BankPortal.getInstance().closeCheckingAccount(userID, accountID);
-                if (reply.equals("Not Exist")) {
-                    JOptionPane.showMessageDialog(frame, "The account ID does not exist!");
-                } else {
-                    JOptionPane.showMessageDialog(frame, "You have successfully closed your Checking account " + accountID + " !");
-                    infoArea.setText(getAccountInfo(userID));
-                }
+                updateAccountbox();
             }
         });
 
         newSavingsBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String input = balanceField.getText();
+                BankPortal.getInstance().openSavingsAccount("BofF", userID);
+                infoArea.setText(getAccountInfo(userID));
+                updateAccountbox();
+            }
+        });
+
+        closeAccountBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String accountID = (String) accountBox.getSelectedItem();
+                if (Bank.getInstance().isCheckingAccount(accountID)) {
+                    String reply = BankPortal.getInstance().closeCheckingAccount(userID, accountID);
+                    if (reply.equals("Not Exist")) {
+                        JOptionPane.showMessageDialog(frame, "The account ID does not exist!");
+                    } else {
+                        infoArea.setText(getAccountInfo(userID));
+                    }
+
+                } else if (Bank.getInstance().isSavingsAccount(accountID)) {
+                    String reply = BankPortal.getInstance().closeSavingsAccount(userID, accountID);
+                    if (reply.equals("Not Exist")) {
+                        JOptionPane.showMessageDialog(frame, "The account ID does not exist!");
+                    } else {
+                        infoArea.setText(getAccountInfo(userID));
+                    }
+                }
+                updateAccountbox();
+            }
+        });
+
+        depositBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String balanceStr = balanceField.getText();
+                String accountID = (String) accountBox.getSelectedItem();
+                double amount = Double.parseDouble(balanceStr);
                 String selectedCurrency = (String) currencyBox.getSelectedItem();
-                double balance = Double.parseDouble(input);
-                BankPortal.getInstance().openSavingsAccount(selectedCurrency, balance, "BofF", userID);
+                BankPortal.getInstance().deposit(userID, accountID, amount, selectedCurrency);
                 infoArea.setText(getAccountInfo(userID));
             }
         });
 
-        closeSavingsBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String accountID = accountIDField.getText();
-                String reply = BankPortal.getInstance().closeSavingsAccount(userID, accountID);
-                if (reply.equals("Not Exist")) {
-                    JOptionPane.showMessageDialog(frame, "The account ID does not exist!");
-                } else {
-                    JOptionPane.showMessageDialog(frame, "You have successfully closed your Savings account " + accountID + " !");
-                    infoArea.setText(getAccountInfo(userID));
-                }
-            }
-        });
-//        accountPanel.setLayout(new GridBagLayout());
-//        GridBagConstraints gbc = new GridBagConstraints();
-//        gbc.gridwidth = GridBagConstraints.REMAINDER;
-//        gbc.fill = GridBagConstraints.VERTICAL;
-
-
         JButton signoutButton = new JButton("Logout");
+
         signoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,12 +144,17 @@ public class CustomerPanel {
         }
         for (CheckingAccount account : Bank.getInstance().getCheckings()) {
             if (account.getUserID().equals(userID)) {
-                displayContent += "CK AccountID: " + account.getAccountID() + " Balance: " + account.getBalance() + "\n";
+                displayContent += "\nCK AccountID: " + account.getAccountID();
+                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
+                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
             }
         }
+        displayContent += "\n";
         for (SavingsAccount account : Bank.getInstance().getSavings()) {
             if (account.getUserID().equals(userID)) {
-                displayContent += "SAV AccountID: " + account.getAccountID() + " Balance: " + account.getBalance() + "\n";
+                displayContent += "\nSAV AccountID: " + account.getAccountID();
+                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
+                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
             }
         }
 
@@ -162,6 +169,14 @@ public class CustomerPanel {
         this.frame.setVisible(false);
     }
 
+    private void updateAccountbox() {
+        accountBox.removeAllItems();
+        String[] accountList = Bank.getInstance().getAccountList();
+        for (String accountID : accountList) {
+            accountBox.addItem(accountID);
+        }
+    }
+
     public class doubleVerifier extends InputVerifier {
         @Override
         public boolean verify(JComponent input) {
@@ -174,5 +189,4 @@ public class CustomerPanel {
             }
         }
     }
-
 }

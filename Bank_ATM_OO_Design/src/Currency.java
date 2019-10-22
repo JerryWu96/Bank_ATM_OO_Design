@@ -13,6 +13,10 @@ public class Currency {
         return this.balance;
     }
 
+    public void setAmount(double amount) {
+        this.balance += amount;
+    }
+
     public String getName() {
         return this.name;
     }

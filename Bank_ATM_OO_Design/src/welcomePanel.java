@@ -65,10 +65,6 @@ public class welcomePanel {
         signupGroup.add(signupRadioBtn_manager);
         signupGroup.add(signupRadioBtn_customer);
 
-
-//        frame.add(signupRadioBtn_manager);
-//        frame.add(signupRadioBtn_customer);
-
         JTextField userLoginIDField = new JTextField(8);
         JTextField userSignupIDField = new JTextField(8);
         JLabel userSignupNameLabel = new JLabel("Name:");

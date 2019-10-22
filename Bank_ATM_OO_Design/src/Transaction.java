@@ -1,24 +1,29 @@
-public class Transaction {
+public abstract class Transaction {
     private String transactionID;
-    private int accountID;
-    private int userID;
+    private String accountID;
+    private String userID;
     private String status;
     private int creationDay;
-    private Currency currency;
+    private String selectedCurrency;
     private double operationFee;
 
-    Transaction(int accountID, int userID, int creationDay, Currency currency, double operationFee) {
+    Transaction(String accountID, String userID, int creationDay, String selectedCurrency, double operationFee) {
         this.transactionID = accountID + "_" + userID;
         this.accountID = accountID;
         this.userID = userID;
         this.creationDay = creationDay;
-        this.currency = currency;
+        this.selectedCurrency = selectedCurrency;
         this.operationFee = operationFee;
     }
 
-    public void startTransaction() {
-
+    public String getAccountID() {
+        return this.accountID;
     }
 
+    public String getSelectedCurrency() {
+        return this.selectedCurrency;
+    }
+
+    public abstract void startTransaction();
 
 }
