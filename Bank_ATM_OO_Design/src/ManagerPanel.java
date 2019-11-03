@@ -18,7 +18,7 @@ public class ManagerPanel {
 
         JPanel bankPanel = new JPanel();
         JLabel nameLabel = new JLabel();
-        nameLabel.setText(Bank.getInstance().getManagerName(userID));
+        nameLabel.setText(BankPortal.getInstance().getBank().getUserName(userID, SharedConstants.MANAGER));
 
         tabbedPane.addTab("Your Bank", null, bankPanel, "Use this tab to check your bank metrics");
 
@@ -50,7 +50,6 @@ public class ManagerPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "You have successfully signed out!");
-                BankPortal.getInstance().userSignout();
                 setInvisible();
             }
         });
@@ -74,6 +73,7 @@ public class ManagerPanel {
     public String updateDay() {
         return "Current day:" + BankPortal.getInstance().getDay();
     }
+
     public void setVisible() {
         this.frame.setVisible(true);
     }

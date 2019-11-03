@@ -16,7 +16,7 @@ public class WelcomePanel {
     private BufferedImage logoImage;
 
     private boolean loginAuth(String userID, String password, String identity) {
-        String response = Bank.getInstance().authenticateUser(userID, password, identity);
+        String response = BankPortal.getInstance().getBank().authenticateUser(userID, password, identity);
         switch (response) {
             case "NotExist":
                 JOptionPane.showMessageDialog(frame, "User does not exist!");
@@ -48,7 +48,7 @@ public class WelcomePanel {
         JPanel loginPanel = new JPanel();
         JPanel signupPanel = new JPanel();
 
-        frame.setTitle(Bank.getInstance().getBankName() + " Welcome Panel");
+        frame.setTitle(BankPortal.getInstance().getBank().getBankName() + " Welcome Panel");
         frame.setBounds(100, 500, 1400, 600);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setLocationRelativeTo(null);
@@ -131,10 +131,10 @@ public class WelcomePanel {
                     JOptionPane.showMessageDialog(frame, "Please fill in your name.");
                 } else if (signupRadioBtn_manager.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Manager " + userID + ", you have successfully signed up!");
-                    Bank.getInstance().addUser(userID, password, userName, signupRadioBtn_manager.getText());
+                    BankPortal.getInstance().getBank().addUser(userID, password, userName, signupRadioBtn_manager.getText());
                 } else if (signupRadioBtn_customer.isSelected()) {
                     JOptionPane.showMessageDialog(frame, "Customer " + userID + ", you have successfully signed up!");
-                    Bank.getInstance().addUser(userID, password, userName, signupRadioBtn_customer.getText());
+                    BankPortal.getInstance().getBank().addUser(userID, password, userName, signupRadioBtn_customer.getText());
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please select your identity. Manager/Customer?");
                 }

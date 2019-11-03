@@ -9,8 +9,8 @@ public class CheckingAccount extends Account {
     private CNY cny;
     private YEN yen;
 
-    CheckingAccount(String bankID, String userID, String postfix) {
-        super(bankID + "_" + userID + "_CK_" + postfix, bankID, userID);
+    CheckingAccount(String bankID, String userID, String accountType, Integer postfix) {
+        super(bankID + "_" + userID + "_CK_" + postfix, bankID, userID, accountType);
         this.usd = new USD();
         this.cny = new CNY();
         this.yen = new YEN();

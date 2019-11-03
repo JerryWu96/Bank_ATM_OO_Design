@@ -14,18 +14,18 @@ public class Bank {
     private List<Manager> managerList;
     private List<Customer> customerList;
     private String[] currencyList;
-    private static final double OPERATION_FEE = 2;
-    private static final double LOAN_INTEREST = 0.1;
+    private double operationFee = SharedConstants.OPERATION_FEE;
+    private double loanInterestRate = SharedConstants.LOAN_INTEREST_RATE;
     private Map<String, CheckingAccount> checkingMap;
     private Map<String, SavingsAccount> savingsMap;
     private Map<String, Integer> checkingCountMap;
     private Map<String, Integer> savingsCountMap;
 
-    private static Bank bank = null;
+//    private static Bank bank = null;
 
-    private Bank() {
-        this.bankName = "Bank of Fools";
-        this.bankID = "BofF";
+    public Bank() {
+        this.bankName = SharedConstants.BANK_NAME;
+        this.bankID = SharedConstants.BANK_ID;
         this.savings = new ArrayList<>();
         this.checkings = new ArrayList<>();
         this.managerList = new ArrayList<>();
@@ -37,12 +37,12 @@ public class Bank {
         this.currencyList = new String[]{"USD", "CNY", "YEN"};
     }
 
-    public static Bank getInstance() {
-        if (bank == null) {
-            bank = new Bank();
-        }
-        return bank;
-    }
+//    public static Bank getInstance() {
+//        if (bank == null) {
+//            bank = new Bank();
+//        }
+//        return bank;
+//    }
 
     public String getBankName() {
         return this.bankName;
@@ -60,79 +60,86 @@ public class Bank {
         return this.checkings;
     }
 
-    public String getCustomerName(String userID) {
-        for (Customer customer : customerList) {
-            if (customer.getUserID().equals(userID)) {
-                return customer.getName();
-            }
+    public String getUserName(String userID, String identity) {
+        switch (identity){
+            case SharedConstants.CUSTOMER:
+                for (Customer customer : customerList) {
+                    if (customer.getUserID().equals(userID)) {
+                        return customer.getName();
+                    }
+                }
+            case SharedConstants.MANAGER:
+                for (Manager manager : managerList) {
+                    if (manager.getUserID().equals(userID)) {
+                        return manager.getName();
+                    }
+                }
         }
-        return "NULL";
-    }
-
-    public String getManagerName(String userID) {
-        for (Manager manager : managerList) {
-            if (manager.getUserID().equals(userID)) {
-                return manager.getName();
-            }
-        }
-        return "NULL";
+        return "";
     }
 
     public void addUser(String userID, String password, String name, String identity) {
         switch (identity) {
-            case "Customer":
+            case SharedConstants.CUSTOMER:
                 customerList.add(new Customer(name, userID, password));
                 break;
-            case "Manager":
+            case SharedConstants.MANAGER:
                 managerList.add(new Manager(name, userID, password, this.bankID));
                 break;
         }
     }
 
-    public void openCheckingAccount(CheckingAccount newAccount) {
-        String userID = newAccount.getUserID();
-        this.checkings.add(newAccount);
-        this.checkingMap.put(newAccount.getAccountID(), newAccount);
-        this.checkingCountMap.put(userID, this.checkingCountMap.getOrDefault(userID, 0) + 1);
+
+    public String openAccount(String userID, String accountType) {
+        switch (accountType) {
+            case SharedConstants.CK:
+                CheckingAccount newChecking = new CheckingAccount(this.bankID, userID, SharedConstants.CK, checkingCountMap.getOrDefault(userID, 0));
+                this.checkings.add(newChecking);
+                this.checkingMap.put(newChecking.getAccountID(), newChecking);
+                this.checkingCountMap.put(userID, this.checkingCountMap.getOrDefault(userID, 0) + 1);
+                return newChecking.getAccountID();
+            case SharedConstants.SAV:
+                SavingsAccount newSaving = new SavingsAccount(this.bankID, userID, SharedConstants.SAV, savingsCountMap.getOrDefault(userID, 0));
+                this.savings.add(newSaving);
+                this.savingsMap.put(newSaving.getAccountID(), newSaving);
+                this.savingsCountMap.put(userID, this.savingsCountMap.getOrDefault(userID, 0) + 1);
+                return newSaving.getAccountID();;
+        }
+        return SharedConstants.ERR_OPEN_ACCOUNT;
     }
 
-    public String closeCheckingAccount(String userID, String accountID) {
-        if (checkingCountMap.isEmpty() || checkingCountMap.get(userID) == 0 || !checkingMap.containsKey(accountID)) {
-            return "Not Exist";
+    public String closeAccount(String userID, String accountID, String accountType) {
+        switch (accountType) {
+            case SharedConstants.CK:
+                if (checkingCountMap.isEmpty() || checkingCountMap.get(userID) == 0 || !checkingMap.containsKey(accountID)) {
+                    return SharedConstants.ERR_NO_ACCOUNT;
+                }
+                checkingCountMap.replace(userID, checkingCountMap.get(userID) - 1);
+                checkingMap.remove(accountID);
+                for (CheckingAccount checking : checkings) {
+                    if (checking.getAccountID().equals(accountID)) {
+                        checkings.remove(checking);
+                        BankLogger.getInstance().closeAccount(accountID);
+                        break;
+                    }
+                }
+                return SharedConstants.SUCCESS_CLOSE_ACCOUNT;
+            case SharedConstants.SAV:
+                if (savingsCountMap.isEmpty() || savingsCountMap.get(userID) == 0 || !savingsMap.containsKey(accountID)) {
+                    return SharedConstants.ERR_NO_ACCOUNT;
+                }
+                savingsCountMap.replace(userID, savingsCountMap.get(userID) - 1);
+                savingsMap.remove(accountID);
+                for (SavingsAccount saving : savings) {
+                    if (saving.getAccountID().equals(accountID)) {
+                        savings.remove(saving);
+                        BankLogger.getInstance().closeAccount(accountID);
+                        break;
+                    }
+                }
+                return SharedConstants.SUCCESS_CLOSE_ACCOUNT;
         }
-        checkingCountMap.replace(userID, checkingCountMap.get(userID) - 1);
-        checkingMap.remove(accountID);
-        for (CheckingAccount checking : checkings) {
-            if (checking.getAccountID().equals(accountID)) {
-                checkings.remove(checking);
-                BankLogger.getInstance().closeChecking(checking);
-                break;
-            }
-        }
-        return "Successful";
-    }
-
-    public void openSavingsAccount(SavingsAccount newAccount) {
-        String userID = newAccount.getUserID();
-        this.savings.add(newAccount);
-        this.savingsMap.put(newAccount.getAccountID(), newAccount);
-        this.savingsCountMap.put(userID, this.savingsCountMap.getOrDefault(userID, 0) + 1);
-    }
-
-    public String closeSavingsAccount(String userID, String accountID) {
-        if (savingsCountMap.isEmpty() || savingsCountMap.get(userID) == 0 || !savingsMap.containsKey(accountID)) {
-            return "Not Exist";
-        }
-        savingsCountMap.replace(userID, savingsCountMap.get(userID) - 1);
-        savingsMap.remove(accountID);
-        for (SavingsAccount saving : savings) {
-            if (saving.getAccountID().equals(accountID)) {
-                savings.remove(saving);
-                BankLogger.getInstance().closeSavings(saving);
-                break;
-            }
-        }
-        return "Successful";
+        return SharedConstants.ERR_CLOSE_ACCOUNT;
     }
 
     public void deposit(String accountID, double amount, String selectedCurrency) {
@@ -141,19 +148,19 @@ public class Bank {
 
     public String withdraw(String accountID, double amount, String selectedCurrency) {
         double balance = getAccountBalance(accountID, selectedCurrency);
-        if (balance - OPERATION_FEE - amount < 0) {
-            return "Insufficient balance";
+        if (balance - operationFee - amount < 0) {
+            return SharedConstants.ERR_INSUFFICIENT_BALANCE;
         }
-        setAccountBalance(accountID, -amount - OPERATION_FEE, selectedCurrency);
+        setAccountBalance(accountID, -amount - operationFee, selectedCurrency);
         return "Success";
     }
 
     public String transfer(String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
         double sourceBalance = getAccountBalance(sourceAccountID, selectedCurrency);
-        if (sourceBalance - amount - OPERATION_FEE < 0) {
-            return "Insufficient balance";
+        if (sourceBalance - amount - operationFee < 0) {
+            return SharedConstants.ERR_INSUFFICIENT_BALANCE;
         }
-        setAccountBalance(sourceAccountID, -amount - OPERATION_FEE, selectedCurrency);
+        setAccountBalance(sourceAccountID, -amount - operationFee, selectedCurrency);
         setAccountBalance(targetAccountID, amount, selectedCurrency);
         return "Success";
     }
@@ -164,12 +171,12 @@ public class Bank {
         } else {
             for (Customer customer : customerList) {
                 if (customer.getUserID().equals(userID)) {
-                    customer.addLoan(amount, LOAN_INTEREST, selectedCurrency);
+                    customer.addLoan(amount, loanInterestRate, selectedCurrency);
                     return "Success";
                 }
             }
         }
-        return "Not Exist";
+        return SharedConstants.ERR_NO_ACCOUNT;
     }
 
     public void payoffLoan(String userID, String loanID) {
@@ -181,7 +188,7 @@ public class Bank {
     }
 
     public double getOperationFee() {
-        return OPERATION_FEE;
+        return operationFee;
     }
 
     private double getAccountBalance(String accountID, String selectedCurrency) {
@@ -239,14 +246,6 @@ public class Bank {
         return loanIDList.toArray(new String[0]);
     }
 
-    public Integer getUserCheckingCount(String userID) {
-        return this.checkingCountMap.getOrDefault(userID, 0);
-    }
-
-    public Integer getUserSavingsCount(String userID) {
-        return this.savingsCountMap.getOrDefault(userID, 0);
-    }
-
     public String[] getCurrencyList() {
         return this.currencyList;
     }
@@ -273,11 +272,21 @@ public class Bank {
         return -1;
     }
 
+    public Integer getAccountNumber(String userID, String accountType) {
+        switch (accountType) {
+            case SharedConstants.CK:
+                return this.checkingCountMap.getOrDefault(userID, 0);
+            case SharedConstants.SAV:
+                return this.savingsCountMap.getOrDefault(userID, 0);
+        }
+        return -1;
+    }
+
     public String authenticateUser(String userID, String password, String identity) {
         switch (identity) {
             case "Manager":
                 if (managerList.isEmpty()) {
-                    System.out.println("Not Exist");
+                    System.out.println(SharedConstants.ERR_NO_ACCOUNT);
                     return "NotExist";
                 }
                 for (Manager manager : managerList) {

@@ -7,10 +7,8 @@ import java.util.TreeMap;
  * Class that stores information required to generate logs/reports.
  */
 public class BankLogger {
-    private Map<Integer, List<CheckingAccount>> newCheckings;
-    private Map<Integer, List<CheckingAccount>> closedCheckings;
-    private Map<Integer, List<SavingsAccount>> newSavings;
-    private Map<Integer, List<SavingsAccount>> closedSavings;
+    private Map<Integer, List<String>> newAccountIDMap;
+    private Map<Integer, List<String>> closedAccountIDMap;
     private Map<Integer, List<Deposit>> deposits;
     private Map<Integer, List<Withdraw>> withdraws;
     private Map<Integer, List<Transfer>> transfers;
@@ -21,10 +19,8 @@ public class BankLogger {
 
     BankLogger(int day) {
         this.day = day;
-        this.newCheckings = new TreeMap<>();
-        this.closedCheckings = new TreeMap<>();
-        this.closedSavings = new TreeMap<>();
-        this.newSavings = new TreeMap<>();
+        this.newAccountIDMap = new TreeMap<>();
+        this.closedAccountIDMap = new TreeMap<>();
         this.deposits = new TreeMap<>();
         this.withdraws = new TreeMap<>();
         this.transfers = new TreeMap<>();
@@ -41,28 +37,16 @@ public class BankLogger {
 
     public void nextDay() {
         this.day++;
-        newCheckings.clear();
-        newSavings.clear();
     }
 
-    public void addChecking(CheckingAccount checkingAccount) {
-        this.newCheckings.putIfAbsent(this.day, new ArrayList<CheckingAccount>());
-        this.newCheckings.get(this.day).add(checkingAccount);
+    public void addAccount(String newAccountID) {
+            this.newAccountIDMap.putIfAbsent(this.day, new ArrayList<String>());
+            this.newAccountIDMap.get(this.day).add(newAccountID);
     }
 
-    public void closeChecking(CheckingAccount checkingAccount) {
-        this.closedCheckings.putIfAbsent(this.day, new ArrayList<CheckingAccount>());
-        this.closedCheckings.get(this.day).add(checkingAccount);
-    }
-
-    public void addSavings(SavingsAccount savingsAccount) {
-        this.newSavings.putIfAbsent(this.day, new ArrayList<SavingsAccount>());
-        this.newSavings.get(this.day).add(savingsAccount);
-    }
-
-    public void closeSavings(SavingsAccount savingsAccount) {
-        this.closedSavings.putIfAbsent(this.day, new ArrayList<SavingsAccount>());
-        this.closedSavings.get(this.day).add(savingsAccount);
+    public void closeAccount(String closedAccountID) {
+        this.closedAccountIDMap.putIfAbsent(this.day, new ArrayList<String>());
+        this.closedAccountIDMap.get(this.day).add(closedAccountID);
     }
 
     public void addDeposit(Deposit deposit) {
@@ -86,19 +70,19 @@ public class BankLogger {
     }
 
     public void addTransfer(Transfer transfer) {
-        this.transfers.putIfAbsent(this.day, new ArrayList<Transfer>());
+        this.transfers.putIfAbsent(this.day, new ArrayList<>());
         this.transfers.get(this.day).add(transfer);
     }
 
     public Report generateReport(int requestDay) {
-        String transactions = "";
+        String reportContent = "";
         for (Map.Entry<Integer, List<CheckingAccount>> entry : newCheckings.entrySet()) {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (CheckingAccount checking : entry.getValue()) {
-                    transactions += "Customer " + checking.getUserID() + " opened a new Checking account " +
+                    reportContent += "Customer " + checking.getUserID() + " opened a new Checking account " +
                             checking.getAccountID() + ".\n";
-                    transactions += "Operation fee earned: USD" + Bank.getInstance().getOperationFee() + ".\n";
+                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
                 }
             }
         }
@@ -107,9 +91,9 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (CheckingAccount checking : entry.getValue()) {
-                    transactions += "Customer " + checking.getUserID() + " closed a Checking account " +
+                    reportContent += "Customer " + checking.getUserID() + " closed a Checking account " +
                             checking.getAccountID() + ".\n";
-                    transactions += "Operation fee earned: USD" + Bank.getInstance().getOperationFee() + ".\n";
+                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
                 }
             }
         }
@@ -118,9 +102,9 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (SavingsAccount savings : entry.getValue()) {
-                    transactions += "Customer " + savings.getUserID() + " opened a new Savings account " +
+                    reportContent += "Customer " + savings.getUserID() + " opened a new Savings account " +
                             savings.getAccountID() + ".\n";
-                    transactions += "Operation fee earned: USD" + Bank.getInstance().getOperationFee() + ".\n";
+                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
                 }
             }
         }
@@ -129,9 +113,9 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (SavingsAccount savings : entry.getValue()) {
-                    transactions += "Customer " + savings.getUserID() + " closed a Savings account " +
+                    reportContent += "Customer " + savings.getUserID() + " closed a Savings account " +
                             savings.getAccountID() + ".\n";
-                    transactions += "Operation fee earned: USD" + Bank.getInstance().getOperationFee() + ".\n";
+                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
                 }
             }
         }
@@ -140,7 +124,7 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (Deposit deposit : entry.getValue()) {
-                    transactions += "Customer " + deposit.getAccountID() + " deposited " + deposit.getSelectedCurrency() +
+                    reportContent += "Customer " + deposit.getAccountID() + " deposited " + deposit.getSelectedCurrency() +
                             deposit.getDepositAmount() + " from account " + deposit.getAccountID() + ".\n";
                 }
             }
@@ -149,9 +133,9 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (Withdraw withdraw : entry.getValue()) {
-                    transactions += "Customer " + withdraw.getAccountID() + " withdrew " + withdraw.getSelectedCurrency() +
+                    reportContent += "Customer " + withdraw.getAccountID() + " withdrew " + withdraw.getSelectedCurrency() +
                             withdraw.getWithdrawAmount() + " from account " + withdraw.getAccountID() + ".\n";
-                    transactions += "Operation fee earned: USD" + Bank.getInstance().getOperationFee() + ".\n";
+                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
                 }
             }
         }
@@ -160,10 +144,10 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (Transfer transfer : entry.getValue()) {
-                    transactions += "Customer " + transfer.getAccountID() + " transferred " + transfer.getSelectedCurrency() +
+                    reportContent += "Customer " + transfer.getAccountID() + " transferred " + transfer.getSelectedCurrency() +
                             transfer.getTransferAmount() + " from account " + transfer.getSourceAccountID() +
                             " to account " + transfer.getTargetAccountID() + ".\n";
-                    transactions += "Operation fee earned: USD" + Bank.getInstance().getOperationFee() + ".\n";
+                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
                 }
             }
         }
@@ -173,7 +157,7 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (Loan loan : entry.getValue()) {
-                    transactions += "Customer " + loan.getCustomerID() + " made a  " + loan.getSelectedCurrency() +
+                    reportContent += "Customer " + loan.getCustomerID() + " made a  " + loan.getSelectedCurrency() +
                             loan.getAmount() + " loan\nInterest earned: " + loan.getSelectedCurrency() +
                             loan.computeInterest() + ".\n";
                 }
@@ -185,12 +169,12 @@ public class BankLogger {
             int day = entry.getKey();
             if (day == requestDay) {
                 for (Loan loan : entry.getValue()) {
-                    transactions += "Customer " + loan.getCustomerID() + " paid off a  " + loan.getSelectedCurrency() +
+                    reportContent += "Customer " + loan.getCustomerID() + " paid off a  " + loan.getSelectedCurrency() +
                             loan.getAmount() + " loan.\n";
                 }
             }
         }
 
-        return new Report(day, transactions);
+        return new Report(day, reportContent);
     }
 }

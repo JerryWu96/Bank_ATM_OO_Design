@@ -1,18 +1,20 @@
 /**
- * Class that serves as a session at the system runtime.
- * You can imagine this class as a centralized Bank System Manager.
- * It is a single point of failure, so we can even distribute it onto multiple machines.
+ * Class that serves as a centralized bank management interface that processes requests sent from GUI,
+ * executed corresponding methods and decouples some operations from Bank class, which
+ * makes it easier to add more banks in the future.
  */
 public class BankPortal {
-    private int sessionID;
-    private String userID;
     private int day;
+
+    private String userID;
+    private Bank bank; // Currently we only support one bank
     private WelcomePanel welcomePanel;
+
     private static BankPortal bankPortal = null;
 
     BankPortal() {
-        this.day = 0; // initial day
-        this.sessionID = 0; // initial sessionID
+        this.day = 0; // initial start day
+        this.bank = new Bank(); // set up our Bank
     }
 
     public static BankPortal getInstance() {
@@ -26,46 +28,25 @@ public class BankPortal {
         welcomePanel = new WelcomePanel();
     }
 
+    public Bank getBank() {
+        return this.bank;
+    }
+
     public void setUserID(String userID) {
         this.userID = userID;
     }
 
-    public void updateSessionID() {
-        this.sessionID++;
-    }
-
     public void userLogin(String userID) {
-        BankPortal.getInstance().setUserID(userID);
-        BankPortal.getInstance().updateSessionID();
+        this.setUserID(userID);
     }
 
-    public void userSignout() {
-        System.out.println("User " + userID + " signed out!");
+    public void openAccount(String bankID, String userID, String accountType) {
+        String newAccountID = this.bank.openAccount(userID, accountType);
+        BankLogger.getInstance().addAccount(newAccountID);
     }
 
-
-    public CheckingAccount openCheckingAccount(String bankID, String userID) {
-        Integer accountCount = Bank.getInstance().getUserCheckingCount(userID);
-        CheckingAccount newAccount = new CheckingAccount(bankID, userID, Integer.toString(accountCount));
-        Bank.getInstance().openCheckingAccount(newAccount);
-        BankLogger.getInstance().addChecking(newAccount);
-        return newAccount;
-    }
-
-    public SavingsAccount openSavingsAccount(String bankID, String userID) {
-        Integer accountCount = Bank.getInstance().getUserSavingsCount(userID);
-        SavingsAccount newAccount = new SavingsAccount(bankID, userID, Integer.toString(accountCount));
-        Bank.getInstance().openSavingsAccount(newAccount);
-        BankLogger.getInstance().addSavings(newAccount);
-        return newAccount;
-    }
-
-    public String closeCheckingAccount(String userID, String accountID) {
-        return Bank.getInstance().closeCheckingAccount(userID, accountID);
-    }
-
-    public String closeSavingsAccount(String userID, String accountID) {
-        return Bank.getInstance().closeSavingsAccount(userID, accountID);
+    public String closeAccount(String userID, String accountID, String accountType) {
+        return this.bank.closeAccount(userID, accountID, accountType);
     }
 
     public void deposit(String userID, String accountID, double amount, String selectedCurrency) {
@@ -89,15 +70,15 @@ public class BankPortal {
     }
 
     public String takeLoan(String userID, double amount, String selectedCurrency) {
-            return Bank.getInstance().takeLoan(userID, amount, selectedCurrency);
+        return this.bank.takeLoan(userID, amount, selectedCurrency);
     }
 
     public void payoffLoan(String loanID) {
-        Bank.getInstance().payoffLoan(userID, loanID);
+        this.bank.payoffLoan(userID, loanID);
     }
 
     public int getCustomerCollateral() {
-        return Bank.getInstance().getCustomerCollateral(userID);
+        return this.bank.getCustomerCollateral(userID);
     }
 
     public void nextDay() {
@@ -105,29 +86,30 @@ public class BankPortal {
         BankLogger.getInstance().nextDay();
     }
 
-    public String getAccountInfo(String userID) {
+    public String getUserInfo(String userID) {
         String displayContent = "";
-        int CKCount = Bank.getInstance().getUserCheckingCount(userID);
-        int SAVCount = Bank.getInstance().getUserSavingsCount(userID);
-        displayContent += "Name: " + Bank.getInstance().getCustomerName(userID) + "\n";
+        int CKCount = this.bank.getAccountNumber(userID, SharedConstants.CK);
+        int SAVCount = this.bank.getAccountNumber(userID, SharedConstants.SAV);
+        displayContent += "Name: " + this.bank.getUserName(userID, SharedConstants.CUSTOMER) + "\n";
         displayContent += "ID: " + userID + "\n";
         displayContent += "Total Accounts: " + (CKCount + SAVCount) + "\n";
-        displayContent += "Operation fee: 5 units for all currency\n";
+        displayContent += "Operation fee: 5 units for all currencies\n";
 
-        if (Bank.getInstance().getUserCheckingCount(userID) == 0) {
+        if (CKCount == 0) {
             displayContent += "You have not opened any Checking account yet!\n";
         }
-        if (Bank.getInstance().getUserSavingsCount(userID) == 0) {
+        if (SAVCount == 0) {
             displayContent += "You have not opened any Savings account yet!\n";
         }
-        for (CheckingAccount account : Bank.getInstance().getCheckings()) {
+
+        for (CheckingAccount account : this.bank.getCheckings()) {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nCK AccountID: " + account.getAccountID();
                 displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
                         account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
             }
         }
-        for (SavingsAccount account : Bank.getInstance().getSavings()) {
+        for (SavingsAccount account : this.bank.getSavings()) {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nSAV AccountID: " + account.getAccountID();
                 displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +

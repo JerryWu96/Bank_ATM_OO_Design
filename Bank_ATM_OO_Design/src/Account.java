@@ -5,12 +5,13 @@ public class Account {
     private String accountID;
     private String bankID;
     private String userID;
-    private boolean isActive;
+    private String accountType;
 
-    Account(String accountID, String bankID, String userID) {
+    Account(String accountID, String bankID, String userID, String accountType) {
         this.accountID = accountID;
         this.bankID = bankID;
         this.userID = userID;
+        this.accountType = accountType;
     }
 
     public String getAccountID() {
@@ -25,12 +26,7 @@ public class Account {
         return this.userID;
     }
 
-    public boolean getStatus() {
-        return this.isActive;
+    public String getAccountType() {
+        return this.accountType;
     }
-
-    public void close() {
-        this.isActive = false;
-    }
-
 }

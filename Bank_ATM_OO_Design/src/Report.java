@@ -3,18 +3,18 @@
  */
 public class Report {
     int day;
-    String transactions;
+    String content;
 
 
     Report(int day, String transactions) {
         this.day = day;
-        this.transactions = transactions;
+        this.content = transactions;
     }
 
     public String display() {
         String displayStr = "";
         displayStr += "Report for day " + this.day + "\n";
-        displayStr += transactions;
+        displayStr += content;
         return displayStr;
     }
 }
