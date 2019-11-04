@@ -1,6 +1,9 @@
 /**
  * Class that encapsulates a loan.
  */
+
+import java.text.DecimalFormat;
+
 public class Loan {
     private String loanID;
     private String customerID;
@@ -37,8 +40,14 @@ public class Loan {
     public String getSelectedCurrency() {
         return this.selectedCurrency;
     }
+
     public double getAmount() {
-        return this.amount;
+        DecimalFormat formatter = new DecimalFormat("#.##");
+        return Double.parseDouble(formatter.format(this.amount));
+    }
+
+    public String getCurrencyName() {
+        return this.selectedCurrency;
     }
 
     public boolean isPaidOff() {
@@ -56,8 +65,16 @@ public class Loan {
         }
     }
 
-    public double computeInterest() {
-        return getAmount() * getInterest();
+    public void computeInterest() {
+        this.amount += amount * interest;
+    }
+
+    @Override
+    public String toString() {
+        String loanInfo = "";
+        loanInfo += "Loan ID: " + getLoanID() + "Customer ID: " + getCustomerID() + "Amount: " + getCurrencyName() +
+                getAmount();
+        return loanInfo;
     }
 
 }

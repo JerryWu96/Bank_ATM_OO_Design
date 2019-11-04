@@ -48,6 +48,12 @@ public class Customer extends User {
         return this.loanList.size();
     }
 
+    public void computeLoanInterest() {
+        for (Loan loan : loanList) {
+            loan.computeInterest();
+        }
+    }
+
     public List<String> getLoans() {
         List<String> loanIDList = new ArrayList<>();
         for (Loan loan : loanList) {

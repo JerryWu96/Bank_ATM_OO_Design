@@ -44,12 +44,9 @@ public class SavingsAccount extends Account {
     }
 
     public void computeInterest() {
-        System.out.println("Compute!");
         for (Currency currency : currencies) {
-            System.out.println("Currency:" + currency.getName() + " Balance: " + getBalance(currency.getName()));
             if (doesHitThreshold(currency)) {
                 double currentBalance = currency.getBalance();
-                System.out.println("current balance:" + currentBalance);
                 currency.addBalance(currentBalance * SharedConstants.SAVINGS_INTEREST_RATE);
             }
         }

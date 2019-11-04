@@ -221,9 +221,9 @@ public class Bank {
         for (SavingsAccount saving : savings) {
             saving.computeInterest();
         }
-
-        // TODO: Add loan interest
-
+        for (Customer customer : customerList) {
+            customer.computeLoanInterest();
+        }
     }
 
     public boolean isCheckingAccount(String accountID) {
