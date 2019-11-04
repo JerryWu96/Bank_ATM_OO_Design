@@ -1,57 +1,57 @@
+import java.util.ArrayList;
+import java.util.List;
 /**
  * Savings account. We can add withdrawTimesLimit in the future to make it more realistic.
  */
 public class SavingsAccount extends Account {
-    private double withdrawTimesLimit;
     private double operationFee;
-    private USD usd;
-    private CNY cny;
-    private YEN yen;
+    private List<Currency> currencies;
 
     SavingsAccount(String bankID, String userID, String accountType, Integer postfix) {
         super(bankID + "_" + userID + "_SAV_" + postfix, bankID, userID, accountType);
-        this.usd = new USD();
-        this.cny = new CNY();
-        this.yen = new YEN();
-        this.withdrawTimesLimit = 5;
-        this.operationFee = 5;
-        this.setBalance(-operationFee, "USD");
-        this.setBalance(-operationFee, "CNY");
-        this.setBalance(-operationFee, "YEN");
+
+        this.operationFee = SharedConstants.OPERATION_FEE;
+
+        currencies = new ArrayList<>();
+        currencies.add(new USD());
+        currencies.add(new CNY());
+        currencies.add(new YEN());
+
+        this.setBalance(-operationFee, SharedConstants.USD);
+        this.setBalance(-operationFee, SharedConstants.CNY);
+        this.setBalance(-operationFee, SharedConstants.YEN);
     }
 
-    public void setBalance(double amount, String currency) {
-        switch (currency) {
-            case "USD":
-                this.usd.setAmount(amount);
-                break;
-            case "CNY":
-                this.cny.setAmount(amount);
-                break;
-            case "YEN":
-                this.yen.setAmount(amount);
-                break;
+    private boolean doesHitThreshold(Currency currency) {
+        return this.getBalance(currency.getName()) >= SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
+    }
+
+    public void setBalance(double amount, String currencyName) {
+        for (Currency currency : currencies) {
+            if (currency.getName().equals(currencyName)) {
+                currency.addBalance(amount);
+            }
         }
     }
 
-    public double getBalance(String currency) {
-        switch (currency) {
-            case "USD":
-                return this.usd.getBalance();
-            case "CNY":
-                return this.cny.getBalance();
-            case "YEN":
-                return this.yen.getBalance();
+    public double getBalance(String currencyName) {
+        for (Currency currency : currencies) {
+            if (currency.getName().equals(currencyName)) {
+                return currency.getBalance();
+            }
         }
-        return 0;
+        return -1;
     }
 
-    public double getWithdrawLimit() {
-        return this.getWithdrawLimit();
+    public void computeInterest() {
+        System.out.println("Compute!");
+        for (Currency currency : currencies) {
+            System.out.println("Currency:" + currency.getName() + " Balance: " + getBalance(currency.getName()));
+            if (doesHitThreshold(currency)) {
+                double currentBalance = currency.getBalance();
+                System.out.println("current balance:" + currentBalance);
+                currency.addBalance(currentBalance * SharedConstants.SAVINGS_INTEREST_RATE);
+            }
+        }
     }
-
-    public double getOperationFee() {
-        return this.operationFee;
-    }
-
 }

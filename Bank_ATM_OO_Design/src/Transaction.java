@@ -6,19 +6,22 @@ public abstract class Transaction {
     private String accountID;
     private String userID;
     private String status;
-    private int creationDay;
+    private int day;
     private String selectedCurrency;
 
-    Transaction(String accountID, String userID, int creationDay, String selectedCurrency) {
+    Transaction(String accountID, String userID, int day, String selectedCurrency) {
         this.transactionID = accountID + "_" + userID;
         this.accountID = accountID;
         this.userID = userID;
-        this.creationDay = creationDay;
+        this.day = day;
         this.selectedCurrency = selectedCurrency;
     }
 
     public String getAccountID() {
         return this.accountID;
+    }
+    public String getTransactionID() {
+        return this.transactionID;
     }
 
     public String getSelectedCurrency() {

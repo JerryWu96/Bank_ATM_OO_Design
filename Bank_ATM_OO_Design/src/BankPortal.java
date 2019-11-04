@@ -84,6 +84,7 @@ public class BankPortal {
     public void nextDay() {
         this.day++;
         BankLogger.getInstance().nextDay();
+        bank.computeInterest();
     }
 
     public String getUserInfo(String userID) {
@@ -105,15 +106,15 @@ public class BankPortal {
         for (CheckingAccount account : this.bank.getCheckings()) {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nCK AccountID: " + account.getAccountID();
-                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
-                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
+                displayContent += "\nBalance: USD:" + account.getBalance(SharedConstants.USD) + " CNY: " +
+                        account.getBalance(SharedConstants.CNY) + " YEN: " + account.getBalance(SharedConstants.YEN) + "\n";
             }
         }
         for (SavingsAccount account : this.bank.getSavings()) {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nSAV AccountID: " + account.getAccountID();
-                displayContent += "\nBalance: USD:" + account.getBalance("USD") + " CNY: " +
-                        account.getBalance("CNY") + " YEN: " + account.getBalance("YEN") + "\n";
+                displayContent += "\nBalance: USD:" + account.getBalance(SharedConstants.USD) + " CNY: " +
+                        account.getBalance(SharedConstants.CNY) + " YEN: " + account.getBalance(SharedConstants.YEN) + "\n";
             }
         }
 

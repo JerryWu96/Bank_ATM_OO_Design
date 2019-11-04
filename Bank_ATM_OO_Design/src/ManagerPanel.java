@@ -31,8 +31,8 @@ public class ManagerPanel {
         reportBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Report report = BankLogger.getInstance().generateReport(BankPortal.getInstance().getDay());
-                JOptionPane.showMessageDialog(frame, report.display());
+//                Report report = BankLogger.getInstance().generateReport(BankPortal.getInstance().getDay());
+//                JOptionPane.showMessageDialog(frame, report.display());
             }
         });
 

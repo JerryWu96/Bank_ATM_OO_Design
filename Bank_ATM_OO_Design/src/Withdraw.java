@@ -15,6 +15,6 @@ public class Withdraw extends Transaction{
     }
 
     public String startTransaction() {
-        return Bank.getInstance().withdraw(getAccountID(), getWithdrawAmount(), getSelectedCurrency());
+        return BankPortal.getInstance().getBank().withdraw(getAccountID(), getWithdrawAmount(), getSelectedCurrency());
     }
 }

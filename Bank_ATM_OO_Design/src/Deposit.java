@@ -10,7 +10,7 @@ public class Deposit extends Transaction {
     }
 
     public void startTransaction() {
-        Bank.getInstance().deposit(getAccountID(), getDepositAmount(), getSelectedCurrency());
+        BankPortal.getInstance().getBank().deposit(getAccountID(), getDepositAmount(), getSelectedCurrency());
     }
 
     public double getDepositAmount() {

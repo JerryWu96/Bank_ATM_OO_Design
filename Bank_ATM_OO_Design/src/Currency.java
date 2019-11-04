@@ -16,7 +16,7 @@ public class Currency {
         return this.balance;
     }
 
-    public void setAmount(double amount) {
+    public void addBalance(double amount) {
         this.balance += amount;
     }
 

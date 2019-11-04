@@ -3,7 +3,7 @@
  */
 public class CheckingAccount extends Account {
     // Current system has not implemented debit/credit card systems. This is more of a design showcase.
-    private int debitCardNumber;
+    private int debitCardNumber; // NOT REQUIRED YET
     private double operationFee;
     private USD usd;
     private CNY cny;
@@ -14,37 +14,37 @@ public class CheckingAccount extends Account {
         this.usd = new USD();
         this.cny = new CNY();
         this.yen = new YEN();
-        this.debitCardNumber = 0;
+        this.debitCardNumber = -1; // NOT REQUIRED YET
         this.operationFee = 5;
-        this.setBalance(-operationFee, "USD");
-        this.setBalance(-operationFee, "CNY");
-        this.setBalance(-operationFee, "YEN");
+        this.setBalance(-operationFee, SharedConstants.USD);
+        this.setBalance(-operationFee, SharedConstants.CNY);
+        this.setBalance(-operationFee, SharedConstants.YEN);
     }
 
     public void setBalance(double amount, String currency) {
         switch (currency) {
-            case "USD":
-                this.usd.setAmount(amount);
+            case SharedConstants.USD:
+                this.usd.addBalance(amount);
                 break;
-            case "CNY":
-                this.cny.setAmount(amount);
+            case SharedConstants.CNY:
+                this.cny.addBalance(amount);
                 break;
-            case "YEN":
-                this.yen.setAmount(amount);
+            case SharedConstants.YEN:
+                this.yen.addBalance(amount);
                 break;
         }
     }
 
     public double getBalance(String currency) {
         switch (currency) {
-            case "USD":
+            case SharedConstants.USD:
                 return this.usd.getBalance();
-            case "CNY":
+            case SharedConstants.CNY:
                 return this.cny.getBalance();
-            case "YEN":
+            case SharedConstants.YEN:
                 return this.yen.getBalance();
         }
-        return 0;
+        return -1;
     }
 
     public int getDebitCardNumber() {

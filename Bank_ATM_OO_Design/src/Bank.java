@@ -1,3 +1,5 @@
+import sun.tools.tree.ShiftRightExpression;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,6 +18,7 @@ public class Bank {
     private String[] currencyList;
     private double operationFee = SharedConstants.OPERATION_FEE;
     private double loanInterestRate = SharedConstants.LOAN_INTEREST_RATE;
+
     private Map<String, CheckingAccount> checkingMap;
     private Map<String, SavingsAccount> savingsMap;
     private Map<String, Integer> checkingCountMap;
@@ -34,7 +37,11 @@ public class Bank {
         this.savingsMap = new HashMap<>();
         this.checkingCountMap = new HashMap<>();
         this.savingsCountMap = new HashMap<>();
-        this.currencyList = new String[]{"USD", "CNY", "YEN"};
+        this.currencyList = new String[]{SharedConstants.USD, SharedConstants.YEN, SharedConstants.CNY};
+
+        // initial customer/manager
+        customerList.add(new Customer("a", "a", "a"));
+        managerList.add(new Manager("a", "a", "a", SharedConstants.BANK_ID));
     }
 
 //    public static Bank getInstance() {
@@ -61,7 +68,7 @@ public class Bank {
     }
 
     public String getUserName(String userID, String identity) {
-        switch (identity){
+        switch (identity) {
             case SharedConstants.CUSTOMER:
                 for (Customer customer : customerList) {
                     if (customer.getUserID().equals(userID)) {
@@ -103,7 +110,7 @@ public class Bank {
                 this.savings.add(newSaving);
                 this.savingsMap.put(newSaving.getAccountID(), newSaving);
                 this.savingsCountMap.put(userID, this.savingsCountMap.getOrDefault(userID, 0) + 1);
-                return newSaving.getAccountID();;
+                return newSaving.getAccountID();
         }
         return SharedConstants.ERR_OPEN_ACCOUNT;
     }
@@ -112,7 +119,7 @@ public class Bank {
         switch (accountType) {
             case SharedConstants.CK:
                 if (checkingCountMap.isEmpty() || checkingCountMap.get(userID) == 0 || !checkingMap.containsKey(accountID)) {
-                    return SharedConstants.ERR_NO_ACCOUNT;
+                    return SharedConstants.ERR_ACCOUNT_NOT_EXIST;
                 }
                 checkingCountMap.replace(userID, checkingCountMap.get(userID) - 1);
                 checkingMap.remove(accountID);
@@ -126,7 +133,7 @@ public class Bank {
                 return SharedConstants.SUCCESS_CLOSE_ACCOUNT;
             case SharedConstants.SAV:
                 if (savingsCountMap.isEmpty() || savingsCountMap.get(userID) == 0 || !savingsMap.containsKey(accountID)) {
-                    return SharedConstants.ERR_NO_ACCOUNT;
+                    return SharedConstants.ERR_ACCOUNT_NOT_EXIST;
                 }
                 savingsCountMap.replace(userID, savingsCountMap.get(userID) - 1);
                 savingsMap.remove(accountID);
@@ -152,7 +159,7 @@ public class Bank {
             return SharedConstants.ERR_INSUFFICIENT_BALANCE;
         }
         setAccountBalance(accountID, -amount - operationFee, selectedCurrency);
-        return "Success";
+        return SharedConstants.SUCCESS_TRANSACTION;
     }
 
     public String transfer(String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
@@ -162,21 +169,21 @@ public class Bank {
         }
         setAccountBalance(sourceAccountID, -amount - operationFee, selectedCurrency);
         setAccountBalance(targetAccountID, amount, selectedCurrency);
-        return "Success";
+        return SharedConstants.SUCCESS_TRANSACTION;
     }
 
     public String takeLoan(String userID, double amount, String selectedCurrency) {
         if (getCustomerCollateral(userID) == 0) {
-            return "Not Eligible";
+            return SharedConstants.ERR_INSUFFICIENT_COLLATERAL;
         } else {
             for (Customer customer : customerList) {
                 if (customer.getUserID().equals(userID)) {
                     customer.addLoan(amount, loanInterestRate, selectedCurrency);
-                    return "Success";
+                    return SharedConstants.SUCCESS_GET_LOAN;
                 }
             }
         }
-        return SharedConstants.ERR_NO_ACCOUNT;
+        return SharedConstants.ERR_ACCOUNT_NOT_EXIST;
     }
 
     public void payoffLoan(String userID, String loanID) {
@@ -207,6 +214,16 @@ public class Bank {
         } else if (isSavingsAccount(accountID)) {
             savingsMap.get(accountID).setBalance(balanceDiff, selectedCurrency);
         }
+    }
+
+
+    public void computeInterest() {
+        for (SavingsAccount saving : savings) {
+            saving.computeInterest();
+        }
+
+        // TODO: Add loan interest
+
     }
 
     public boolean isCheckingAccount(String accountID) {
@@ -284,33 +301,33 @@ public class Bank {
 
     public String authenticateUser(String userID, String password, String identity) {
         switch (identity) {
-            case "Manager":
+            case SharedConstants.MANAGER:
                 if (managerList.isEmpty()) {
-                    System.out.println(SharedConstants.ERR_NO_ACCOUNT);
-                    return "NotExist";
+                    System.out.println(SharedConstants.ERR_ACCOUNT_NOT_EXIST);
+                    return SharedConstants.ERR_USER_NOT_EXIST;
                 }
                 for (Manager manager : managerList) {
                     if (manager.getUserID().equals(userID) && manager.getPassword().equals(password)) {
-                        return "Pass";
+                        return SharedConstants.SUCCESS_AUTHENTICATE_USER;
                     } else if (manager.getUserID().equals(userID) && !manager.getPassword().equals(password)) {
-                        return "WrongPass";
+                        return SharedConstants.ERR_WRONG_PASS;
                     }
                 }
-                return "NotExist";
-            case "Customer":
+                return SharedConstants.ERR_USER_NOT_EXIST;
+            case SharedConstants.CUSTOMER:
                 if (customerList.isEmpty()) {
-                    return "NotExist";
+                    return SharedConstants.ERR_USER_NOT_EXIST;
                 }
                 for (Customer customer : customerList) {
                     if (customer.getUserID().equals(userID) && customer.getPassword().equals(password)) {
-                        return "Pass";
+                        return SharedConstants.SUCCESS_AUTHENTICATE_USER;
                     } else if (customer.getUserID().equals(userID) && !customer.getPassword().equals(password)) {
-                        return "WrongPass";
+                        return SharedConstants.ERR_WRONG_PASS;
                     }
                 }
-                return "NotExist";
+                return SharedConstants.ERR_USER_NOT_EXIST;
         }
-        return "Error";
+        return SharedConstants.ERR_INVALID_ARGUMENT;
     }
 
 }
