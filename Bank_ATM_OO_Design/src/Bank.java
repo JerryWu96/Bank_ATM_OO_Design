@@ -1,5 +1,3 @@
-import sun.tools.tree.ShiftRightExpression;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,8 +22,6 @@ public class Bank {
     private Map<String, Integer> checkingCountMap;
     private Map<String, Integer> savingsCountMap;
 
-//    private static Bank bank = null;
-
     public Bank() {
         this.bankName = SharedConstants.BANK_NAME;
         this.bankID = SharedConstants.BANK_ID;
@@ -43,14 +39,7 @@ public class Bank {
         customerList.add(new Customer("a", "a", "a"));
         managerList.add(new Manager("a", "a", "a", SharedConstants.BANK_ID));
     }
-
-//    public static Bank getInstance() {
-//        if (bank == null) {
-//            bank = new Bank();
-//        }
-//        return bank;
-//    }
-
+    
     public String getBankName() {
         return this.bankName;
     }
