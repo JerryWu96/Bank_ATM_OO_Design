@@ -1,6 +1,8 @@
 /**
  * Base class of a currency. It is designed for a more flexible extension of differenct curreincies.
  */
+import java.text.DecimalFormat;
+
 public class Currency {
     private String name;
     private double exchangeRate;
@@ -13,7 +15,8 @@ public class Currency {
     }
 
     public double getBalance() {
-        return this.balance;
+        DecimalFormat formatter = new DecimalFormat("#.##");
+        return Double.parseDouble(formatter.format(this.balance));
     }
 
     public void addBalance(double amount) {

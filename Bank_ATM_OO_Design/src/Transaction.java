@@ -20,6 +20,7 @@ public abstract class Transaction {
     public String getAccountID() {
         return this.accountID;
     }
+
     public String getTransactionID() {
         return this.transactionID;
     }
