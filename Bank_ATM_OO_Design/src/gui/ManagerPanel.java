@@ -30,9 +30,9 @@ public class ManagerPanel extends JPanel implements ActionListener {
 		add(submit);
 		submit.addActionListener(this);
 		
-		JButton returnButton = new JButton("Logout");
-		add(returnButton);
-		returnButton.addActionListener(this);
+		JButton logoutButton = new JButton("Logout");
+		add(logoutButton);
+		logoutButton.addActionListener(this);
 		
 	}
 	
@@ -40,8 +40,10 @@ public class ManagerPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if( e.getActionCommand().equals("Logout") ) {
-
-			
+			setEnabled(false);
+			setVisible(false);
+			operationFrame.setLoginPanel();			
+			JOptionPane.showMessageDialog(null,"Logout successfully!");			
 		}
 		
 		if( e.getActionCommand().equals("Get Report") ) {

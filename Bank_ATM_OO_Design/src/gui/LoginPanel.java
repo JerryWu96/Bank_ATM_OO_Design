@@ -132,18 +132,23 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 		}
 		
 		if( e.getActionCommand().equals("Manager Login") ) {
-			/*try {
-				String inputValue = JOptionPane.showInputDialog("Password: ");
-				Manager manager = atm.getCustomerDAOImp().getManager();
-				if( inputValue.equals(manager.getPassword()) ) {
-					setEnabled(false);
-		            setVisible(false);
-		            operationFrame.setManagerPanel();
-				}
+			String user = userText.getText();
+			String password = passwordText.getText();
+			// Customer cus = this.atm.getCustomerDAOImp().getCustomer(user);
+			if( user.equals("m") && password.equals("123" ) /*cus != null && cus.getPassword().equals(password)*/ ) {
+				JOptionPane.showMessageDialog(null,"Welcome!");
+				System.out.println("Welcome!");
+	            setEnabled(false);
+	            setVisible(false);
+	            userText.setText("");
+	            passwordText.setText("");
+	            // operationFrame.setCustomer(cus);
+	            operationFrame.setManagerPanel();     
 			}
-			catch(Exception error) {
-				System.out.println(error);
-			}*/
+			else {
+				JOptionPane.showMessageDialog(null,"Username and password do not match!");
+				System.out.println("Username and password do not match!");
+			}
 					
 		}
 		

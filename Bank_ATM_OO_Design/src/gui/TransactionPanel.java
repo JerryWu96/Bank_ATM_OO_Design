@@ -109,7 +109,9 @@ public class TransactionPanel extends JPanel implements ActionListener {
 		}
 		
 		if( e.getActionCommand() == "Loan" ) {
-			
+			setEnabled(false);
+			setVisible(false);
+			operationFrame.setLoanPanel();
 		}
 		
 		if( e.getActionCommand() == "History" ) {
