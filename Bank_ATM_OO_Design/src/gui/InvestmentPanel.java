@@ -64,7 +64,7 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         add(securityAccountsList);
         
         JButton inquiryButton = new JButton("Inquire");
-        inquiryButton.setBounds(x+140, y+increment*2, 80, 25);
+        inquiryButton.setBounds(x+140, y+increment*2+5, 80, 25);
         add(inquiryButton);
         inquiryButton.addActionListener(this);
         

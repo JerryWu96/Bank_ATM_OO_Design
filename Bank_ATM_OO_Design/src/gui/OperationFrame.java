@@ -12,6 +12,7 @@ public class OperationFrame extends JFrame {
 	private static RegisterPanel registerPanel;
 	private static TransferPanel transferPanel;
 	private static TransferWindow transferWindow;
+	private static LoanPanel loanPanel;
 	private static InvestmentPanel investmentPanel;
 	private static ManagerPanel managerPanel;
 	// private static Customer user;
@@ -37,6 +38,7 @@ public class OperationFrame extends JFrame {
 		transferPanel = new TransferPanel(this, atm);
 		transferWindow = new TransferWindow(this, atm);
 		investmentPanel = new InvestmentPanel(this, atm);
+		loanPanel = new LoanPanel(this, atm);
 		managerPanel = new ManagerPanel(this, atm);
 		
 		setVisible(true);
@@ -86,6 +88,12 @@ public class OperationFrame extends JFrame {
 		add(investmentPanel);
 		investmentPanel.setEnabled(true);
 		investmentPanel.setVisible(true);
+	}
+	
+	public void setLoanPanel() {
+		add(loanPanel);
+		loanPanel.setEnabled(true);
+		loanPanel.setVisible(true);
 	}
 	
 	public void setManagerPanel() {
