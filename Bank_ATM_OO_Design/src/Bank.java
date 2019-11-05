@@ -9,8 +9,8 @@ import java.util.HashMap;
 public class Bank {
     private String bankName;
     private String bankID;
-    private List<SavingsAccount> savings;
-    private List<CheckingAccount> checkings;
+    private List<SavingsAccount> savingsList;
+    private List<CheckingAccount> checkingList;
     private List<Manager> managerList;
     private List<Customer> customerList;
     private String[] currencyList;
@@ -25,8 +25,8 @@ public class Bank {
     public Bank() {
         this.bankName = SharedConstants.BANK_NAME;
         this.bankID = SharedConstants.BANK_ID;
-        this.savings = new ArrayList<>();
-        this.checkings = new ArrayList<>();
+        this.savingsList = new ArrayList<>();
+        this.checkingList = new ArrayList<>();
         this.managerList = new ArrayList<>();
         this.customerList = new ArrayList<>();
         this.checkingMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class Bank {
         customerList.add(new Customer("a", "a", "a"));
         managerList.add(new Manager("a", "a", "a", SharedConstants.BANK_ID));
     }
-    
+
     public String getBankName() {
         return this.bankName;
     }
@@ -49,11 +49,11 @@ public class Bank {
     }
 
     public List<SavingsAccount> getSavings() {
-        return this.savings;
+        return this.savingsList;
     }
 
     public List<CheckingAccount> getCheckings() {
-        return this.checkings;
+        return this.checkingList;
     }
 
     public String getUserName(String userID, String identity) {
@@ -90,13 +90,13 @@ public class Bank {
         switch (accountType) {
             case SharedConstants.CK:
                 CheckingAccount newChecking = new CheckingAccount(this.bankID, userID, SharedConstants.CK, checkingCountMap.getOrDefault(userID, 0));
-                this.checkings.add(newChecking);
+                this.checkingList.add(newChecking);
                 this.checkingMap.put(newChecking.getAccountID(), newChecking);
                 this.checkingCountMap.put(userID, this.checkingCountMap.getOrDefault(userID, 0) + 1);
                 return newChecking.getAccountID();
             case SharedConstants.SAV:
                 SavingsAccount newSaving = new SavingsAccount(this.bankID, userID, SharedConstants.SAV, savingsCountMap.getOrDefault(userID, 0));
-                this.savings.add(newSaving);
+                this.savingsList.add(newSaving);
                 this.savingsMap.put(newSaving.getAccountID(), newSaving);
                 this.savingsCountMap.put(userID, this.savingsCountMap.getOrDefault(userID, 0) + 1);
                 return newSaving.getAccountID();
@@ -112,9 +112,9 @@ public class Bank {
                 }
                 checkingCountMap.replace(userID, checkingCountMap.get(userID) - 1);
                 checkingMap.remove(accountID);
-                for (CheckingAccount checking : checkings) {
+                for (CheckingAccount checking : checkingList) {
                     if (checking.getAccountID().equals(accountID)) {
-                        checkings.remove(checking);
+                        checkingList.remove(checking);
                         BankLogger.getInstance().closeAccount(accountID);
                         break;
                     }
@@ -126,9 +126,9 @@ public class Bank {
                 }
                 savingsCountMap.replace(userID, savingsCountMap.get(userID) - 1);
                 savingsMap.remove(accountID);
-                for (SavingsAccount saving : savings) {
+                for (SavingsAccount saving : savingsList) {
                     if (saving.getAccountID().equals(accountID)) {
-                        savings.remove(saving);
+                        savingsList.remove(saving);
                         BankLogger.getInstance().closeAccount(accountID);
                         break;
                     }
@@ -138,8 +138,9 @@ public class Bank {
         return SharedConstants.ERR_CLOSE_ACCOUNT;
     }
 
-    public void deposit(String accountID, double amount, String selectedCurrency) {
+    public String deposit(String accountID, double amount, String selectedCurrency) {
         setAccountBalance(accountID, amount, selectedCurrency);
+        return SharedConstants.SUCCESS_TRANSACTION;
     }
 
     public String withdraw(String accountID, double amount, String selectedCurrency) {
@@ -168,19 +169,20 @@ public class Bank {
             for (Customer customer : customerList) {
                 if (customer.getUserID().equals(userID)) {
                     customer.addLoan(amount, loanInterestRate, selectedCurrency);
-                    return SharedConstants.SUCCESS_GET_LOAN;
+                    return SharedConstants.SUCCESS_TRANSACTION;
                 }
             }
         }
         return SharedConstants.ERR_ACCOUNT_NOT_EXIST;
     }
 
-    public void payoffLoan(String userID, String loanID) {
+    public String payoffLoan(String userID, String loanID) {
         for (Customer customer : customerList) {
             if (customer.getUserID().equals(userID)) {
                 customer.payoffLoan(loanID);
             }
         }
+        return SharedConstants.SUCCESS_TRANSACTION;
     }
 
     public double getOperationFee() {
@@ -207,7 +209,7 @@ public class Bank {
 
 
     public void computeInterest() {
-        for (SavingsAccount saving : savings) {
+        for (SavingsAccount saving : savingsList) {
             saving.computeInterest();
         }
         for (Customer customer : customerList) {
@@ -233,10 +235,10 @@ public class Bank {
 
     public String[] getAccountList() {
         List<String> accountList = new ArrayList<>();
-        for (CheckingAccount checking : checkings) {
+        for (CheckingAccount checking : checkingList) {
             accountList.add(checking.getAccountID());
         }
-        for (SavingsAccount saving : savings) {
+        for (SavingsAccount saving : savingsList) {
             accountList.add(saving.getAccountID());
         }
         return accountList.toArray(new String[0]);

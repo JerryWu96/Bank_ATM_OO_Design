@@ -9,11 +9,12 @@ import java.util.TreeMap;
 public class BankLogger {
     private Map<Integer, List<String>> newAccountIDMap;
     private Map<Integer, List<String>> closedAccountIDMap;
-    private Map<Integer, List<Deposit>> deposits;
-    private Map<Integer, List<Withdraw>> withdraws;
-    private Map<Integer, List<Transfer>> transfers;
-    private Map<Integer, List<Loan>> newLoans;
-    private Map<Integer, List<Loan>> closedLoans;
+    private Map<Integer, List<Transaction>> transactions;
+//    private Map<Integer, List<Deposit>> deposits;
+//    private Map<Integer, List<Withdraw>> withdraws;
+//    private Map<Integer, List<Transfer>> transfers;
+//    private Map<Integer, List<Loan>> newLoans;
+//    private Map<Integer, List<Loan>> closedLoans;
     private int day;
     private static BankLogger logger = null;
 
@@ -21,11 +22,12 @@ public class BankLogger {
         this.day = day;
         this.newAccountIDMap = new TreeMap<>();
         this.closedAccountIDMap = new TreeMap<>();
-        this.deposits = new TreeMap<>();
-        this.withdraws = new TreeMap<>();
-        this.transfers = new TreeMap<>();
-        this.newLoans = new TreeMap<>();
-        this.closedLoans = new TreeMap<>();
+        this.transactions = new TreeMap<>();
+//        this.deposits = new TreeMap<>();
+//        this.withdraws = new TreeMap<>();
+//        this.transfers = new TreeMap<>();
+//        this.newLoans = new TreeMap<>();
+//        this.closedLoans = new TreeMap<>();
     }
 
     public static BankLogger getInstance() {
@@ -49,30 +51,35 @@ public class BankLogger {
         this.closedAccountIDMap.get(this.day).add(closedAccountID);
     }
 
-    public void addDeposit(Deposit deposit) {
-        this.deposits.putIfAbsent(this.day, new ArrayList<Deposit>());
-        this.deposits.get(this.day).add(deposit);
+    public void addTransaction(Transaction transaction) {
+        this.transactions.putIfAbsent(this.day, new ArrayList<Transaction>());
+        this.transactions.get(this.day).add(transaction);
     }
 
-    public void addNewLoan(Loan loan) {
-        this.newLoans.putIfAbsent(this.day, new ArrayList<Loan>());
-        this.newLoans.get(this.day).add(loan);
-    }
-
-    public void payoffLoan(Loan loan) {
-        this.closedLoans.putIfAbsent(this.day, new ArrayList<Loan>());
-        this.closedLoans.get(this.day).add(loan);
-    }
-
-    public void addWithdraw(Withdraw withdraw) {
-        this.withdraws.putIfAbsent(this.day, new ArrayList<Withdraw>());
-        this.withdraws.get(this.day).add(withdraw);
-    }
-
-    public void addTransfer(Transfer transfer) {
-        this.transfers.putIfAbsent(this.day, new ArrayList<>());
-        this.transfers.get(this.day).add(transfer);
-    }
+//    public void addDeposit(Deposit deposit) {
+//        this.deposits.putIfAbsent(this.day, new ArrayList<Deposit>());
+//        this.deposits.get(this.day).add(deposit);
+//    }
+//
+//    public void addNewLoan(Loan loan) {
+//        this.newLoans.putIfAbsent(this.day, new ArrayList<Loan>());
+//        this.newLoans.get(this.day).add(loan);
+//    }
+//
+//    public void payoffLoan(Loan loan) {
+//        this.closedLoans.putIfAbsent(this.day, new ArrayList<Loan>());
+//        this.closedLoans.get(this.day).add(loan);
+//    }
+//
+//    public void addWithdraw(Withdraw withdraw) {
+//        this.withdraws.putIfAbsent(this.day, new ArrayList<Withdraw>());
+//        this.withdraws.get(this.day).add(withdraw);
+//    }
+//
+//    public void addTransfer(Transfer transfer) {
+//        this.transfers.putIfAbsent(this.day, new ArrayList<>());
+//        this.transfers.get(this.day).add(transfer);
+//    }
 
 //    public Report generateReport(int requestDay) {
 //        String reportContent = "";

@@ -7,7 +7,7 @@ public class Transfer extends Transaction {
     private String targetAccountID;
 
     Transfer(String sourceAccountID, String targetAccountID, String userID, int creationDay, String selectedCurrency, double transferAmount) {
-        super(sourceAccountID, userID, creationDay, selectedCurrency);
+        super(sourceAccountID, userID, creationDay, selectedCurrency, "Transfer");
         this.sourceAccountID = sourceAccountID;
         this.targetAccountID = targetAccountID;
         this.transferAmount = transferAmount;

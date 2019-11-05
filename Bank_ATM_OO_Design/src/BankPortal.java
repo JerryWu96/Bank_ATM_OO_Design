@@ -52,29 +52,35 @@ public class BankPortal {
     public void deposit(String userID, String accountID, double amount, String selectedCurrency) {
         Deposit deposit = new Deposit(accountID, userID, this.day, selectedCurrency, amount);
         deposit.startTransaction();
-        BankLogger.getInstance().addDeposit(deposit);
+        BankLogger.getInstance().addTransaction(deposit);
     }
 
     public String withdraw(String userID, String accountID, double amount, String selectedCurrency) {
         Withdraw withdraw = new Withdraw(accountID, userID, this.day, selectedCurrency, amount);
         String result = withdraw.startTransaction();
-        BankLogger.getInstance().addWithdraw(withdraw);
+        BankLogger.getInstance().addTransaction(withdraw);
         return result;
     }
 
     public String transfer(String userID, String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
         Transfer transfer = new Transfer(sourceAccountID, targetAccountID, userID, this.day, selectedCurrency, amount);
         String result = transfer.startTransaction();
-        BankLogger.getInstance().addTransfer(transfer);
+        BankLogger.getInstance().addTransaction(transfer);
         return result;
     }
 
     public String takeLoan(String userID, double amount, String selectedCurrency) {
-        return this.bank.takeLoan(userID, amount, selectedCurrency);
+        LoanCreate loanCreate = new LoanCreate(userID, this.day, selectedCurrency, amount);
+        String result = loanCreate.startTransaction();
+        BankLogger.getInstance().addTransaction(loanCreate);
+        return result;
     }
 
-    public void payoffLoan(String loanID) {
-        this.bank.payoffLoan(userID, loanID);
+    public String payoffLoan(String loanID) {
+        LoanPayOff loanPayOff = new LoanPayOff(userID, this.day, loanID);
+        String result = loanPayOff.startTransaction();
+        BankLogger.getInstance().addTransaction(loanPayOff);
+        return result;
     }
 
     public int getCustomerCollateral() {

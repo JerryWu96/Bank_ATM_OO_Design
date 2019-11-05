@@ -31,7 +31,6 @@ public class Customer extends User {
         Loan loan = new Loan(getUserID(), amount, interest, selectedCurrency, getLoanCount());
         this.loanList.add(loan);
         useCollateral();
-        BankLogger.getInstance().addNewLoan(loan);
     }
 
     public void payoffLoan(String loanID) {
@@ -39,7 +38,6 @@ public class Customer extends User {
             if (loan.getLoanID().equals(loanID)) {
                 loanList.remove(loan);
                 addCollateral();
-                BankLogger.getInstance().payoffLoan(loan);
             }
         }
     }

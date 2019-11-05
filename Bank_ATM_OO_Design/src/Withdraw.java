@@ -6,7 +6,7 @@ public class Withdraw extends Transaction{
     private static final double OPERATION_FEE = 5;
 
     Withdraw(String accountID, String userID, int creationDay, String selectedCurrency, double withdrawAmount) {
-        super(accountID, userID, creationDay, selectedCurrency);
+        super(accountID, userID, creationDay, selectedCurrency, "Withdraw");
         this.withdrawAmount = withdrawAmount;
     }
 
