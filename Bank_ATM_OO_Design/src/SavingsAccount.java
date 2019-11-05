@@ -1,54 +1,33 @@
-import java.util.ArrayList;
-import java.util.List;
 /**
  * Savings account. We can add withdrawTimesLimit in the future to make it more realistic.
  */
 public class SavingsAccount extends Account {
     private double operationFee;
-    private List<Currency> currencies;
+    private USD usd;
 
     SavingsAccount(String bankID, String userID, String accountType, Integer postfix) {
         super(bankID + "_" + userID + "_SAV_" + postfix, bankID, userID, accountType);
 
         this.operationFee = SharedConstants.OPERATION_FEE;
-
-        currencies = new ArrayList<>();
-        currencies.add(new USD());
-        currencies.add(new CNY());
-        currencies.add(new YEN());
-
-        this.setBalance(-operationFee, SharedConstants.USD);
-        this.setBalance(-operationFee, SharedConstants.CNY);
-        this.setBalance(-operationFee, SharedConstants.YEN);
+        this.usd = new USD(-operationFee);
     }
 
-    private boolean doesHitThreshold(Currency currency) {
-        return this.getBalance(currency.getName()) >= SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
+    private boolean doesHitThreshold() {
+        return this.getBalance() >= SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
     }
 
-    public void setBalance(double amount, String currencyName) {
-        for (Currency currency : currencies) {
-            if (currency.getName().equals(currencyName)) {
-                currency.addBalance(amount);
-            }
-        }
+    public void setBalance(Currency currency) {
+        this.usd.addBalance(currency.convertToUSD());
     }
 
-    public double getBalance(String currencyName) {
-        for (Currency currency : currencies) {
-            if (currency.getName().equals(currencyName)) {
-                return currency.getBalance();
-            }
-        }
-        return -1;
+    public double getBalance() {
+        return this.usd.getBalance();
     }
 
     public void computeInterest() {
-        for (Currency currency : currencies) {
-            if (doesHitThreshold(currency)) {
-                double currentBalance = currency.getBalance();
-                currency.addBalance(currentBalance * SharedConstants.SAVINGS_INTEREST_RATE);
-            }
+        if (doesHitThreshold()) {
+            double currentBalance = usd.getBalance();
+            usd.addBalance(currentBalance * SharedConstants.SAVINGS_INTEREST_RATE);
         }
     }
 }

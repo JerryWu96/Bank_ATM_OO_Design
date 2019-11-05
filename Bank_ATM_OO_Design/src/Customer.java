@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * for/pay off a loan, or make transactions between multiple accounts.
  */
 public class Customer extends User {
-    private List<Loan> loanList;
+    private List<LoanAccount> loanList;
     private int collateral;
 
     Customer(String name, String userID, String password) {
@@ -28,13 +28,13 @@ public class Customer extends User {
     }
 
     public void addLoan(double amount, double interest, String selectedCurrency) {
-        Loan loan = new Loan(getUserID(), amount, interest, selectedCurrency, getLoanCount());
+        LoanAccount loan = new LoanAccount(getUserID(), amount, interest, selectedCurrency, getLoanCount());
         this.loanList.add(loan);
         useCollateral();
     }
 
     public void payoffLoan(String loanID) {
-        for (Loan loan : loanList) {
+        for (LoanAccount loan : loanList) {
             if (loan.getLoanID().equals(loanID)) {
                 loanList.remove(loan);
                 addCollateral();
@@ -47,14 +47,14 @@ public class Customer extends User {
     }
 
     public void computeLoanInterest() {
-        for (Loan loan : loanList) {
+        for (LoanAccount loan : loanList) {
             loan.computeInterest();
         }
     }
 
     public List<String> getLoans() {
         List<String> loanIDList = new ArrayList<>();
-        for (Loan loan : loanList) {
+        for (LoanAccount loan : loanList) {
             loanIDList.add(loan.getLoanID());
         }
         return loanIDList;

@@ -1,3 +1,4 @@
+import javax.swing.plaf.synth.SynthEditorPaneUI;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -144,7 +145,7 @@ public class Bank {
     }
 
     public String withdraw(String accountID, double amount, String selectedCurrency) {
-        double balance = getAccountBalance(accountID, selectedCurrency);
+        double balance = getAccountBalance(accountID);
         if (balance - operationFee - amount < 0) {
             return SharedConstants.ERR_INSUFFICIENT_BALANCE;
         }
@@ -153,7 +154,7 @@ public class Bank {
     }
 
     public String transfer(String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
-        double sourceBalance = getAccountBalance(sourceAccountID, selectedCurrency);
+        double sourceBalance = getAccountBalance(sourceAccountID);
         if (sourceBalance - amount - operationFee < 0) {
             return SharedConstants.ERR_INSUFFICIENT_BALANCE;
         }
@@ -189,22 +190,36 @@ public class Bank {
         return operationFee;
     }
 
-    private double getAccountBalance(String accountID, String selectedCurrency) {
+    private double getAccountBalance(String accountID) {
         double balance = 0;
         if (isCheckingAccount(accountID)) {
-            balance = checkingMap.get(accountID).getBalance(selectedCurrency);
+            balance = checkingMap.get(accountID).getBalance();
         } else if (isSavingsAccount(accountID)) {
-            balance = savingsMap.get(accountID).getBalance(selectedCurrency);
+            balance = savingsMap.get(accountID).getBalance();
         }
         return balance;
     }
 
     private void setAccountBalance(String accountID, double balanceDiff, String selectedCurrency) {
+        Currency currency = getCurrencyObj(balanceDiff, selectedCurrency);
         if (isCheckingAccount(accountID)) {
-            checkingMap.get(accountID).setBalance(balanceDiff, selectedCurrency);
+            checkingMap.get(accountID).setBalance(currency);
         } else if (isSavingsAccount(accountID)) {
-            savingsMap.get(accountID).setBalance(balanceDiff, selectedCurrency);
+            savingsMap.get(accountID).setBalance(currency);
         }
+    }
+
+    // factory design pattern that returns a Currency obj given its balance and currency name
+    private Currency getCurrencyObj(double balanceDiff, String selectedCurrency) {
+        switch (selectedCurrency) {
+            case SharedConstants.CNY:
+                return new CNY(balanceDiff);
+            case SharedConstants.USD:
+                return new USD(balanceDiff);
+            case SharedConstants.YEN:
+                return new CNY(balanceDiff);
+        }
+        return null;
     }
 
 

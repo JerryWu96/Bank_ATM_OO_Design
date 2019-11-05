@@ -112,15 +112,13 @@ public class BankPortal {
         for (CheckingAccount account : this.bank.getCheckings()) {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nCK AccountID: " + account.getAccountID();
-                displayContent += "\nBalance: USD:" + account.getBalance(SharedConstants.USD) + " CNY: " +
-                        account.getBalance(SharedConstants.CNY) + " YEN: " + account.getBalance(SharedConstants.YEN) + "\n";
+                displayContent += "\nBalance: USD " + account.getBalance();
             }
         }
         for (SavingsAccount account : this.bank.getSavings()) {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nSAV AccountID: " + account.getAccountID();
-                displayContent += "\nBalance: USD:" + account.getBalance(SharedConstants.USD) + " CNY: " +
-                        account.getBalance(SharedConstants.CNY) + " YEN: " + account.getBalance(SharedConstants.YEN) + "\n";
+                displayContent += "\nBalance: USD " + account.getBalance();
             }
         }
 

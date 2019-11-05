@@ -5,6 +5,7 @@ public class SharedConstants {
 
     public static final String CK = "CK";
     public static final String SAV = "SAV";
+    public static final String LOAN = "Loan";
 
     public static final String USD = "USD";
     public static final String CNY = "CNY";

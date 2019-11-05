@@ -1,16 +1,16 @@
 /**
- * Base class of a currency. It is designed for a more flexible extension of differenct curreincies.
+ * Base class of a currency. It is designed for a more flexible extension of different currencies.
  */
 import java.text.DecimalFormat;
 
 public class Currency {
     private String name;
-    private double exchangeRate;
+    private double conversionRate;
     private double balance;
 
-    Currency(String name, double exchangeRate, double balance) {
+    Currency(String name, double conversionRate, double balance) {
         this.name = name;
-        this.exchangeRate = exchangeRate;
+        this.conversionRate = conversionRate;
         this.balance = balance;
     }
 
@@ -20,7 +20,11 @@ public class Currency {
     }
 
     public void addBalance(double amount) {
-        this.balance += amount;
+        this.balance += amount ;
+    }
+
+    public double convertToUSD() { // to USD in default
+        return this.balance / getExchangeRate();
     }
 
     public String getName() {
@@ -28,7 +32,6 @@ public class Currency {
     }
 
     public double getExchangeRate() {
-        return this.exchangeRate;
+        return this.conversionRate;
     }
-
 }
