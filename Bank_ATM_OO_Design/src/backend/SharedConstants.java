@@ -1,3 +1,4 @@
+package backend;
 public class SharedConstants {
     // Constant String names
     public static final String CUSTOMER = "Customer";

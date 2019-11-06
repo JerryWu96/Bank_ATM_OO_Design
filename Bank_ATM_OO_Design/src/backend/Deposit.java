@@ -1,3 +1,4 @@
+package backend;
 /**
  * A Transaction class that encapsulates a deposit made by customers
  */

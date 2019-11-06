@@ -1,3 +1,4 @@
+package backend;
 /**
  * Class that represents USD, one of the currencies our system needs.
  */

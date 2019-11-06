@@ -4,7 +4,7 @@
 
 import java.text.DecimalFormat;
 
-public class Loan {
+public class LoanAccount extends Account{
     private String loanID;
     private String customerID;
     private double interest;
@@ -12,7 +12,8 @@ public class Loan {
     private String selectedCurrency;
     private boolean isPaidOff;
 
-    Loan(String customerID, double amount, double interest, String selectedCurrency, int postfix) {
+    LoanAccount(String customerID, double amount, double interest, String selectedCurrency, int postfix) {
+        super(customerID + "_" + amount + "_" + postfix, SharedConstants.BANK_ID, customerID, SharedConstants.LOAN);
         this.customerID = customerID;
         this.amount = amount;
         this.interest = interest;

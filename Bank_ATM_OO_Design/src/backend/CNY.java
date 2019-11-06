@@ -1,3 +1,4 @@
+package backend;
 /**
  * Class that represents CNY, one of the currencies our system needs.
  */

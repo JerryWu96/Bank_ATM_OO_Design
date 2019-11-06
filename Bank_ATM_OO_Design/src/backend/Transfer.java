@@ -1,3 +1,4 @@
+package backend;
 /**
  * A class that encapsulates a cash transfer between different accounts.
  */

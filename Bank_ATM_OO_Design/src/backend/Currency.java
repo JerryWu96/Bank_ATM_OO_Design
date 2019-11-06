@@ -1,3 +1,4 @@
+package backend;
 /**
  * Base class of a currency. It is designed for a more flexible extension of different currencies.
  */

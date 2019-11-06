@@ -1,3 +1,7 @@
+package backend;
+
+import gui.OperationFrame;
+
 /**
  * Class that serves as a centralized bank management interface that processes requests sent from GUI,
  * executed corresponding methods and decouples some operations from Bank class, which
@@ -8,8 +12,7 @@ public class BankPortal {
 
     private String userID;
     private Bank bank; // Currently we only support one bank
-    private WelcomePanel welcomePanel;
-
+    
     private static BankPortal bankPortal = null;
 
     BankPortal() {
@@ -25,7 +28,8 @@ public class BankPortal {
     }
 
     public void run() {
-        welcomePanel = new WelcomePanel();
+        OperationFrame operationFrame = OperationFrame.getInstance();
+        operationFrame.run();
     }
 
     public Bank getBank() {
