@@ -14,6 +14,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import backend.BankPortal;
+import backend.SharedConstants;
+
 /*
 Author: Ziqi Tan
 */
@@ -96,28 +99,28 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 	 * */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		
+		// Customer Login
 		if( e.getActionCommand().equals("Customer Login") ) {
-
 			String user = userText.getText();
 			String password = passwordText.getText();
-			// Customer cus = this.atm.getCustomerDAOImp().getCustomer(user);
-			if( user.equals("ziqi") && password.equals("123" ) /*cus != null && cus.getPassword().equals(password)*/ ) {
+			boolean loginFlag = loginAuth(user, password, SharedConstants.CUSTOMER);			
+			if( loginFlag ) {
 				JOptionPane.showMessageDialog(null,"Welcome!");
 				System.out.println("Welcome!");
 	            setEnabled(false);
 	            setVisible(false);
 	            userText.setText("");
 	            passwordText.setText("");
-	            // operationFrame.setCustomer(cus);
-	            OperationFrame.getInstance().setAccountsInfoPanel();     
+	            OperationFrame.getInstance().setAccountsInfoPanel();
 			}
 			else {
-				JOptionPane.showMessageDialog(null,"Username and password do not match!");
+				// JOptionPane.showMessageDialog(null,"Username and password do not match!");
 				System.out.println("Username and password do not match!");
 			}
 		}
 		
+		// Register
 		if( e.getActionCommand().equals("Register") ) {
 			System.out.println("Register!");
 			setEnabled(false);
@@ -125,47 +128,50 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
             OperationFrame.getInstance().setRegisterPanel();				
 		}
 		
+		// Manager Login
 		if( e.getActionCommand().equals("Manager Login") ) {
 			String user = userText.getText();
 			String password = passwordText.getText();
-			// Customer cus = this.atm.getCustomerDAOImp().getCustomer(user);
-			if( user.equals("m") && password.equals("123" ) /*cus != null && cus.getPassword().equals(password)*/ ) {
+			boolean loginFlag = loginAuth(user, password, SharedConstants.MANAGER);			
+			if( loginFlag ) {
 				JOptionPane.showMessageDialog(null,"Welcome!");
 				System.out.println("Welcome!");
 	            setEnabled(false);
 	            setVisible(false);
 	            userText.setText("");
 	            passwordText.setText("");
-	            // operationFrame.setCustomer(cus);
-	            OperationFrame.getInstance().setManagerPanel();     
+	            OperationFrame.getInstance().setManagerPanel();
 			}
 			else {
-				JOptionPane.showMessageDialog(null,"Username and password do not match!");
+				// JOptionPane.showMessageDialog(null,"Username and password do not match!");
 				System.out.println("Username and password do not match!");
 			}
 					
 		}
 		
 	}
-
+	
+	/**
+	 * Methods from KeyListener
+	 * */
 	@Override
 	public void keyPressed(KeyEvent e) {
 
 		if( e.getKeyCode() == KeyEvent.VK_ENTER ) {
 			String user = userText.getText();
 			String password = passwordText.getText();
-			if( user.equals("ziqi") && password.equals("123" ) /*cus != null && cus.getPassword().equals(password)*/ ) {
+			boolean loginFlag = loginAuth(user, password, SharedConstants.CUSTOMER);			
+			if( loginFlag ) {
 				JOptionPane.showMessageDialog(null,"Welcome!");
 				System.out.println("Welcome!");
 	            setEnabled(false);
 	            setVisible(false);
 	            userText.setText("");
 	            passwordText.setText("");
-	            // operationFrame.setCustomer(cus);
-	            OperationFrame.getInstance().setAccountsInfoPanel();     
+	            OperationFrame.getInstance().setAccountsInfoPanel();
 			}
 			else {
-				JOptionPane.showMessageDialog(null,"Username and password do not match!");
+				// JOptionPane.showMessageDialog(null,"Username and password do not match!");
 				System.out.println("Username and password do not match!");
 			}
 		}
@@ -183,5 +189,24 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 		
 	}
 	
+	/**
+	 * Method: loginAuth
+	 * Function: check whether user name matches the password.
+	 * */
+	private boolean loginAuth(String userID, String password, String identity) {
+        
+		String response = BankPortal.getInstance().getBank().authenticateUser(userID, password, identity);
+        
+        switch (response) {
+            case SharedConstants.ERR_USER_NOT_EXIST:
+                JOptionPane.showMessageDialog(null, "User does not exist!");
+                return false;
+            case SharedConstants.ERR_WRONG_PASS:
+                JOptionPane.showMessageDialog(null, "Wrong password!");
+                return false;
+            default:
+                return true;
+        }
+    }
 }
 

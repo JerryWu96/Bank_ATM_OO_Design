@@ -10,6 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import backend.BankPortal;
+import backend.SharedConstants;
+
 /*
 Author: Ziqi Tan
 */
@@ -99,48 +102,58 @@ public class RegisterPanel extends JPanel implements ActionListener {
 		// Submit your information
 		if( e.getActionCommand().equals("Submit") ) {
 			
-			// get text from JComboBox
-			String s = roleBox.getSelectedItem().toString();
-			System.out.println(s);
-			////////////////////////////////////
-			
-			if( nameText.getText().equals("") || idText.getText().equals("") || 
-					phoneText.getText().equals("") ||
-					password.getText().equals("") || passwordConfirm.getText().equals("")
-				) {
+			String userName = nameText.getText();
+			String userID = idText.getText();
+			String phone = phoneText.getText();
+			String pw = password.getText();
+			String pwc = passwordConfirm.getText();
+					
+			if( userName.equals("") || userID.equals("") || 
+					phone.equals("") || pw.equals("") || pwc.equals("") ) {
 				JOptionPane.showMessageDialog(null,"Please fill all boxes!");
 				System.out.println("Please fill all boxes!");
 			}
 			else {
 				// Password confirm
-				if( !password.getText().equals(passwordConfirm.getText())) {
+				if( !pw.equals(pwc) ) {
 					JOptionPane.showMessageDialog(null,"Please confirm your password!");
 					System.out.println("Please confirm your password!");
 				}
 				else {
-					// Registration successful
+					// Registration success
 					
-					try {
-						String inputValue = JOptionPane.showInputDialog("Deposit some money to activate your account(checking and saving):");
-						int deposit = Integer.parseInt(inputValue);
-						/*Customer customer = new Customer(nameText.getText(), idText.getText(), phoneText.getText(), 
-								 password.getText(), deposit)/
-						atm.getCustomerDAOImp().addCustomer(customer);*/
-						System.out.println("Registration Successful!"); 
-						JOptionPane.showMessageDialog(null,"Registration Successful!");
-						
-						// Return to login panel
-						setEnabled(false);
-						setVisible(false);
-						OperationFrame.getInstance().setLoginPanel();
-					}
-					catch(Exception error) {
-						System.out.println(error);
-						JOptionPane.showMessageDialog(null,"Please input a number!");
-					}					
-														
-				}
-								
+					// get text from JComboBox
+					String role = roleBox.getSelectedItem().toString();
+					System.out.println(role);
+					switch(role) {
+						case SharedConstants.CUSTOMER:
+							BankPortal.getInstance().getBank().addUser(userID, pw, userName, role);
+							JOptionPane.showMessageDialog(null,"Registration success!");
+							nameText.setText("");
+							idText.setText("");
+							phoneText.setText("");
+							password.setText("");
+							passwordConfirm.setText("");
+							setEnabled(false);
+							setVisible(false);
+							OperationFrame.getInstance().setLoginPanel();
+							break;
+						case SharedConstants.MANAGER:
+							BankPortal.getInstance().getBank().addUser(userID, pw, userName, role);
+							JOptionPane.showMessageDialog(null,"Registration success!");
+							nameText.setText("");
+							idText.setText("");
+							phoneText.setText("");
+							password.setText("");
+							passwordConfirm.setText("");
+							setEnabled(false);
+							setVisible(false);
+							OperationFrame.getInstance().setLoginPanel();
+							break;
+						default:
+							System.out.println("Fail to register.");
+					}	
+				}							
 			}
 		} // Submit event
 		
@@ -154,8 +167,6 @@ public class RegisterPanel extends JPanel implements ActionListener {
 			setEnabled(false);
 			setVisible(false);
 			OperationFrame.getInstance().setLoginPanel();	
-		}
-		
+		}		
 	}
-
 }
