@@ -19,17 +19,11 @@ Author: Ziqi Tan
 */
 public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 	
-	private ATMGUI atm;
-	private OperationFrame operationFrame;
-	
 	private JButton loginButton;
 	private JTextField userText;
 	private JPasswordField  passwordText;
 	
-	public LoginPanel(OperationFrame operationFrame, ATMGUI atm) {
-		
-		this.atm = atm;
-		this.operationFrame = operationFrame;
+	public LoginPanel() {
 		
 		setLayout(null);
 		
@@ -116,7 +110,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 	            userText.setText("");
 	            passwordText.setText("");
 	            // operationFrame.setCustomer(cus);
-	            operationFrame.setAccountsInfoPanel();     
+	            OperationFrame.getInstance().setAccountsInfoPanel();     
 			}
 			else {
 				JOptionPane.showMessageDialog(null,"Username and password do not match!");
@@ -128,7 +122,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 			System.out.println("Register!");
 			setEnabled(false);
             setVisible(false);
-            operationFrame.setRegisterPanel();				
+            OperationFrame.getInstance().setRegisterPanel();				
 		}
 		
 		if( e.getActionCommand().equals("Manager Login") ) {
@@ -143,7 +137,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 	            userText.setText("");
 	            passwordText.setText("");
 	            // operationFrame.setCustomer(cus);
-	            operationFrame.setManagerPanel();     
+	            OperationFrame.getInstance().setManagerPanel();     
 			}
 			else {
 				JOptionPane.showMessageDialog(null,"Username and password do not match!");
@@ -168,7 +162,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 	            userText.setText("");
 	            passwordText.setText("");
 	            // operationFrame.setCustomer(cus);
-	            operationFrame.setAccountsInfoPanel();     
+	            OperationFrame.getInstance().setAccountsInfoPanel();     
 			}
 			else {
 				JOptionPane.showMessageDialog(null,"Username and password do not match!");

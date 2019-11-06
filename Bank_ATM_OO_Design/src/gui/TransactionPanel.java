@@ -12,19 +12,15 @@ Author: Ziqi Tan
 */
 public class TransactionPanel extends JPanel implements ActionListener {
 	
-	private OperationFrame operationFrame;
-	private ATMGUI atm;
-	
 	private JComboBox<String> accountsList;
 	private JComboBox<String> currencyList;
 	
-	public TransactionPanel(OperationFrame operationFrame, ATMGUI atm) {
-		this.operationFrame = operationFrame;
-		this.atm = atm;
+	public TransactionPanel() {
+
 		setLayout(null);
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/3*2;
 		int y = windowHeight/7;
@@ -91,7 +87,7 @@ public class TransactionPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand() == "Return" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setAccountsInfoPanel();
+			OperationFrame.getInstance().setAccountsInfoPanel();
 		}
 		
 		if( e.getActionCommand() == "Withdraw" ) {
@@ -105,13 +101,13 @@ public class TransactionPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand() == "Transfer" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setTransferPanel();
+			OperationFrame.getInstance().setTransferPanel();
 		}
 		
 		if( e.getActionCommand() == "Loan" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setLoanPanel();
+			OperationFrame.getInstance().setLoanPanel();
 		}
 		
 		if( e.getActionCommand() == "History" ) {

@@ -14,19 +14,14 @@ Author: Ziqi Tan
 */
 public class InvestmentPanel extends JPanel implements ActionListener {
 	
-	private ATMGUI atm;
-	private OperationFrame operationFrame;
-	
 	private JComboBox<String> securityAccountsList;
 	private JTextArea accountTextArea;
 	
-	public InvestmentPanel(OperationFrame operationFrame, ATMGUI atm) {
-		this.atm = atm;
-		this.operationFrame = operationFrame;
+	public InvestmentPanel() {
 		setLayout(null);
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/9*5;
 		int y = windowHeight/15;
@@ -86,7 +81,7 @@ public class InvestmentPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand() == "Return" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setAccountsInfoPanel();
+			OperationFrame.getInstance().setAccountsInfoPanel();
 		}	
 	}
 }

@@ -5,7 +5,7 @@ Author: Ziqi Tan
 public class ATMGUIDemo {
 
 	public static void main(String[] args) {
-		new ATMGUI();
+		OperationFrame operationFrame = OperationFrame.getInstance();
+		operationFrame.run();
 	}
-
 }

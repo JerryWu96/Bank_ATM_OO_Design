@@ -13,20 +13,15 @@ Author: Ziqi Tan
 */
 public class LoanPanel extends JPanel implements ActionListener {
 	
-	private ATMGUI atm;
-	private OperationFrame operationFrame;
-	
 	private JComboBox<String> currencyList;
 	private JComboBox<String> loanList;
 	
-	public LoanPanel(OperationFrame operationFrame, ATMGUI atm) {
-		this.atm = atm;
-		this.operationFrame = operationFrame;
+	public LoanPanel() {
 		
 		setLayout(null);
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/3*2;
 		int y = windowHeight/7;
@@ -77,7 +72,7 @@ public class LoanPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand() == "Return" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setTransactionPanel();
+			OperationFrame.getInstance().setTransactionPanel();
 		}
 		
 		if( e.getActionCommand() == "Take loan" ) {
