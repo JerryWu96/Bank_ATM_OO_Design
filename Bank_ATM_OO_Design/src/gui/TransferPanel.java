@@ -11,15 +11,10 @@ Author: Ziqi Tan
 */
 public class TransferPanel extends JPanel implements ActionListener {
 	
-	private OperationFrame operationFrame;
-	private ATMGUI atm;
-	
-	public TransferPanel(OperationFrame operationFrame, ATMGUI atm) {
-		this.operationFrame = operationFrame;
-		this.atm = atm;
+	public TransferPanel() {
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/5;
 		int y = windowHeight/4;
@@ -49,7 +44,7 @@ public class TransferPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand().contentEquals("Return") ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setTransactionPanel();
+			OperationFrame.getInstance().setTransactionPanel();
 		}
 		
 		if( e.getActionCommand().contentEquals("Transfer between your accounts") ) {
@@ -59,7 +54,7 @@ public class TransferPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand().contentEquals("Transfer to others") ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setTransferWindow();
+			OperationFrame.getInstance().setTransferWindow();
 		}	
 	}
 }

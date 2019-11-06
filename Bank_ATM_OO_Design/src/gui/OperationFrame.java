@@ -5,7 +5,6 @@ Author: Ziqi Tan
 */
 public class OperationFrame extends JFrame {
 	
-	private static ATMGUI atm;
 	private static LoginPanel loginPanel;
 	private static AccountsInfoPanel accountsInfoPanel;
 	private static TransactionPanel transactionPanel;
@@ -18,32 +17,43 @@ public class OperationFrame extends JFrame {
 	// private static Customer user;
 	// private static Manager manager;
 	
-	public OperationFrame(ATMGUI _atm) {
-				
-		atm = _atm;
+	private static OperationFrame operationFrame = null;
+	
+	// Constructor
+	private OperationFrame() {				
 		// user = null;
-		// manager = null;
-		
+		// manager = null;	
+	}
+	
+	// Singleton Pattern
+	public static OperationFrame getInstance() {
+		if( operationFrame == null ) {
+			operationFrame = new OperationFrame();
+		}
+		return operationFrame;
+	}
+	
+	public void run() {
 		setTitle("Welcome to Bank of BBUU!");
 		setSize(600,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);         		
 		setLocationRelativeTo(null);  // this will center your app
 		System.out.println("ATM opeartion frame has been created.");
 		
-		loginPanel = new LoginPanel(this, atm);
-		setLoginPanel();	
-		accountsInfoPanel = new AccountsInfoPanel(this, atm);
-		transactionPanel = new TransactionPanel(this, atm);
-		registerPanel = new RegisterPanel(this, atm);
-		transferPanel = new TransferPanel(this, atm);
-		transferWindow = new TransferWindow(this, atm);
-		investmentPanel = new InvestmentPanel(this, atm);
-		loanPanel = new LoanPanel(this, atm);
-		managerPanel = new ManagerPanel(this, atm);
+		loginPanel = new LoginPanel();
+		setLoginPanel();
+		accountsInfoPanel = new AccountsInfoPanel();
+		transactionPanel = new TransactionPanel();
+		registerPanel = new RegisterPanel();
+		transferPanel = new TransferPanel();
+		transferWindow = new TransferWindow();
+		investmentPanel = new InvestmentPanel();
+		loanPanel = new LoanPanel();
+		managerPanel = new ManagerPanel();
 		
 		setVisible(true);
 	}
-	
+		
 	/**
 	 * setter() for showing which JPanel on the JFrame.
 	 * */

@@ -15,21 +15,16 @@ import javax.swing.JTextArea;
 Author: Ziqi Tan
 */
 public class AccountsInfoPanel extends JPanel implements ActionListener {
-
-	private OperationFrame operationFrame;
-	private ATMGUI atm;
 	
 	private JComboBox<String> accountsList;
 	private JTextArea accountTextArea;
 	
-	public AccountsInfoPanel(OperationFrame operationFrame, ATMGUI atm) {
-		
-		this.operationFrame = operationFrame;
-		this.atm = atm;
+	public AccountsInfoPanel() {
+
 		setLayout(null);
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/9*5;
 		int y = windowHeight/15;
@@ -157,13 +152,13 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 		if( e.getActionCommand() == "Transaction" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setTransactionPanel();
+			OperationFrame.getInstance().setTransactionPanel();
 		}
 		
 		if( e.getActionCommand() == "Investment" ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setInvestmentPanel();
+			OperationFrame.getInstance().setInvestmentPanel();
 		}
 		
 		if( e.getActionCommand() == "Logout" ) {
@@ -171,7 +166,7 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 			
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setLoginPanel();
+			OperationFrame.getInstance().setLoginPanel();
 			
 			JOptionPane.showMessageDialog(null,"Logout successfully!");
 		}

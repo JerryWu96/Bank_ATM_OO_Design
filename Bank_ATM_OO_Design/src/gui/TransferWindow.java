@@ -13,21 +13,15 @@ Author: Ziqi Tan
 */
 public class TransferWindow extends JPanel implements ActionListener {
 	
-	private OperationFrame operationFrame;
-	private ATMGUI atm;
-	
 	private JTextField recipientText;
 	private JTextField amountText;
 	
-	public TransferWindow(OperationFrame operationFrame, ATMGUI atm) {
-		
-		this.operationFrame = operationFrame;
-		this.atm = atm;
+	public TransferWindow() {
 		
 		setLayout(null);
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/5;
 		int y = windowHeight/7;
@@ -67,7 +61,7 @@ public class TransferWindow extends JPanel implements ActionListener {
 		if( e.getActionCommand().equals("Return") ) {
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setTransferPanel();
+			OperationFrame.getInstance().setTransferPanel();
 		}
 		
 		if( e.getActionCommand().equals("Submit") ) {

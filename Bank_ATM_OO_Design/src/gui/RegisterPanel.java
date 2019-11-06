@@ -15,8 +15,6 @@ Author: Ziqi Tan
 */
 public class RegisterPanel extends JPanel implements ActionListener {
 	
-	private ATMGUI atm;
-	private OperationFrame operationFrame;
 	private JTextField nameText;
 	private JTextField idText;
 	private JTextField phoneText;
@@ -24,13 +22,12 @@ public class RegisterPanel extends JPanel implements ActionListener {
 	private JPasswordField password;
 	private JPasswordField passwordConfirm;
 		
-	public RegisterPanel(OperationFrame operationFrame, ATMGUI atm) {
-		this.atm = atm;
-		this.operationFrame = operationFrame;
+	public RegisterPanel() {
+
 		setLayout(null);
 		
-		int windowHeight = operationFrame.getHeight();
-		int windowWidth = operationFrame.getWidth();
+		int windowHeight = OperationFrame.getInstance().getHeight();
+		int windowWidth = OperationFrame.getInstance().getWidth();
 		
 		int x = windowWidth/5;
 		int y = windowHeight/10;
@@ -135,7 +132,7 @@ public class RegisterPanel extends JPanel implements ActionListener {
 						// Return to login panel
 						setEnabled(false);
 						setVisible(false);
-						operationFrame.setLoginPanel();
+						OperationFrame.getInstance().setLoginPanel();
 					}
 					catch(Exception error) {
 						System.out.println(error);
@@ -156,7 +153,7 @@ public class RegisterPanel extends JPanel implements ActionListener {
 			passwordConfirm.setText("");
 			setEnabled(false);
 			setVisible(false);
-			operationFrame.setLoginPanel();	
+			OperationFrame.getInstance().setLoginPanel();	
 		}
 		
 	}
