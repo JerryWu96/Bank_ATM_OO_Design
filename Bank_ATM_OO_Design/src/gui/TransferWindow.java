@@ -52,7 +52,6 @@ public class TransferWindow extends JPanel implements ActionListener {
 		returnButton.setBounds(x+100, y+increment*2, 80, 25);
 		add(returnButton);
 		returnButton.addActionListener(this);
-		
 	}
 
 	@Override

@@ -106,12 +106,13 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 			String password = passwordText.getText();
 			boolean loginFlag = loginAuth(user, password, SharedConstants.CUSTOMER);			
 			if( loginFlag ) {
-				JOptionPane.showMessageDialog(null,"Welcome!");
+				JOptionPane.showMessageDialog(null, "Welcome!");
 				System.out.println("Welcome!");
 	            setEnabled(false);
 	            setVisible(false);
 	            userText.setText("");
 	            passwordText.setText("");
+	            OperationFrame.getInstance().setUserID(user);
 	            OperationFrame.getInstance().setAccountsInfoPanel();
 			}
 			else {
@@ -168,6 +169,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
 	            setVisible(false);
 	            userText.setText("");
 	            passwordText.setText("");
+	            OperationFrame.getInstance().setUserID(user);
 	            OperationFrame.getInstance().setAccountsInfoPanel();
 			}
 			else {
