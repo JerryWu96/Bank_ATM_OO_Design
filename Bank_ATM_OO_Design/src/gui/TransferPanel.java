@@ -55,6 +55,6 @@ public class TransferPanel extends JPanel implements ActionListener {
 			setEnabled(false);
 			setVisible(false);
 			OperationFrame.getInstance().setTransferWindow();
-		}	
+		}
 	}
 }
