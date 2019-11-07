@@ -1,4 +1,8 @@
 package backend;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class SharedConstants {
     // Constant String names
     public static final String CUSTOMER = "Customer";
@@ -15,6 +19,12 @@ public class SharedConstants {
     public static final String BANK_NAME = "Bank of Fools";
     public static final String BANK_ID = "BofF";
 
+    // Stock
+    public static final Map<String, String> stockIDtoCompany = new HashMap<String, String>() {{
+        put("AAPL", "Apple Inc.");
+        put("FB", "Facebook Inc");
+        put("AMZN", "Amazon.com Inc");
+    }};
 
     // Numeric values that can be modified
     public static double OPERATION_FEE = 2;   // 2 unit per currency
@@ -36,4 +46,5 @@ public class SharedConstants {
     public static final String ERR_INSUFFICIENT_BALANCE = "ErrInsufficientBalance";
     public static final String ERR_OPEN_ACCOUNT = "ErrOpenAccount";
     public static final String ERR_CLOSE_ACCOUNT = "ErrCloseAccount";
+
 }
