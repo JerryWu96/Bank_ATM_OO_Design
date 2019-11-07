@@ -1,4 +1,7 @@
 package backend;
+/**
+ * Transaction: request loan
+ */
 public class LoanCreate extends Transaction {
     private double loanAmount;
 
@@ -7,6 +10,9 @@ public class LoanCreate extends Transaction {
         this.loanAmount = loanAmount;
     }
 
+    /**
+     * execute transaction: request loan
+     */
     public String startTransaction() {
         return BankPortal.getInstance().getBank().takeLoan(getUserID(), getLoanAmount(), getSelectedCurrency());
     }

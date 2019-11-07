@@ -56,6 +56,12 @@ public class LoanAccount extends Account{
         return this.isPaidOff;
     }
 
+    
+    /**
+     * pay off this amount of loan
+     * @param paid_amount
+     * @return 
+     */
     public double payByAmount(double paid_amount) {
         if (paid_amount < this.amount) {
             double diff_amount = this.amount - paid_amount;
@@ -67,6 +73,9 @@ public class LoanAccount extends Account{
         }
     }
 
+    /**
+     * add the corresponding interest to this loan according to interest rate
+     */
     public void computeInterest() {
         this.amount += amount * interest;
     }

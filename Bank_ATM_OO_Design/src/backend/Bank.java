@@ -58,6 +58,12 @@ public class Bank {
         return this.checkingList;
     }
 
+    /**
+     * get the name of a customer or manager
+     * @param userID
+     * @param identity (customer or manager)
+     * @return name
+     */
     public String getUserName(String userID, String identity) {
         switch (identity) {
             case SharedConstants.CUSTOMER:
@@ -76,6 +82,13 @@ public class Bank {
         return "";
     }
 
+    /**
+     * add a new user (customer or manager)
+     * @param userID
+     * @param password
+     * @param name
+     * @param identity
+     */
     public void addUser(String userID, String password, String name, String identity) {
         switch (identity) {
             case SharedConstants.CUSTOMER:
@@ -87,7 +100,12 @@ public class Bank {
         }
     }
 
-
+    /**
+     * open a new account for a user
+     * @param userID
+     * @param accountType (checking, savings or security)
+     * @return opened account id if succeed, or error message
+     */
     public String openAccount(String userID, String accountType) {
         switch (accountType) {
             case SharedConstants.CK:
@@ -106,6 +124,13 @@ public class Bank {
         return SharedConstants.ERR_OPEN_ACCOUNT;
     }
 
+    /**
+     * close the corresponding account
+     * @param userID
+     * @param accountID
+     * @param accountType
+     * @return message about whether it succeeds or fails
+     */
     public String closeAccount(String userID, String accountID, String accountType) {
         switch (accountType) {
             case SharedConstants.CK:
@@ -140,11 +165,25 @@ public class Bank {
         return SharedConstants.ERR_CLOSE_ACCOUNT;
     }
 
+    /**
+     * make a deposit
+     * @param accountID
+     * @param amount
+     * @param selectedCurrency
+     * @return success message
+     */
     public String deposit(String accountID, double amount, String selectedCurrency) {
         setAccountBalance(accountID, amount, selectedCurrency);
         return SharedConstants.SUCCESS_TRANSACTION;
     }
 
+    /**
+     * make a withdraw
+     * @param accountID
+     * @param amount
+     * @param selectedCurrency
+     * @return message about success or failure
+     */
     public String withdraw(String accountID, double amount, String selectedCurrency) {
         double balance = getAccountBalance(accountID);
         if (balance - operationFee - amount < 0) {
@@ -154,6 +193,14 @@ public class Bank {
         return SharedConstants.SUCCESS_TRANSACTION;
     }
 
+    /**
+     * make a transfer from one account to another
+     * @param sourceAccountID
+     * @param targetAccountID
+     * @param amount
+     * @param selectedCurrency
+     * @return message about success or failure
+     */
     public String transfer(String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
         double sourceBalance = getAccountBalance(sourceAccountID);
         if (sourceBalance - amount - operationFee < 0) {
@@ -164,6 +211,13 @@ public class Bank {
         return SharedConstants.SUCCESS_TRANSACTION;
     }
 
+    /**
+     * request a loan, success if user has collaterals
+     * @param userID
+     * @param amount
+     * @param selectedCurrency
+     * @return message success or failure
+     */
     public String takeLoan(String userID, double amount, String selectedCurrency) {
         if (getCustomerCollateral(userID) == 0) {
             return SharedConstants.ERR_INSUFFICIENT_COLLATERAL;
@@ -178,6 +232,12 @@ public class Bank {
         return SharedConstants.ERR_ACCOUNT_NOT_EXIST;
     }
 
+    /**
+     * pay off a loan
+     * @param userID
+     * @param loanID
+     * @return message
+     */
     public String payoffLoan(String userID, String loanID) {
         for (Customer customer : customerList) {
             if (customer.getUserID().equals(userID)) {
@@ -223,7 +283,9 @@ public class Bank {
         return null;
     }
 
-
+    /**
+     * compute interests of balance and loan
+     */
     public void computeInterest() {
         for (SavingsAccount saving : savingsList) {
             saving.computeInterest();
@@ -274,6 +336,12 @@ public class Bank {
         return this.currencyList;
     }
 
+    /**
+     * check if this account belongs to this user
+     * @param userID
+     * @param accountID
+     * @return true if it is, or false
+     */
     public boolean isUserAccount(String userID, String accountID) {
         if (isCheckingAccount(accountID)) {
             if (getCheckingAccount(accountID).getUserID().equals(userID)) {
