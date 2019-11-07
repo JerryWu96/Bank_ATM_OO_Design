@@ -28,12 +28,22 @@ public class Customer extends User {
         this.collateral--;
     }
 
+    /**
+     * add a loan entry to this customer, and remove one collateral
+     * @param amount
+     * @param interest (interest rate)
+     * @param selectedCurrency
+     */
     public void addLoan(double amount, double interest, String selectedCurrency) {
         LoanAccount loan = new LoanAccount(getUserID(), amount, interest, selectedCurrency, getLoanCount());
         this.loanList.add(loan);
         useCollateral();
     }
 
+    /**
+     * pay off the loan with the corresponding ID
+     * @param loanID
+     */
     public void payoffLoan(String loanID) {
         for (LoanAccount loan : loanList) {
             if (loan.getLoanID().equals(loanID)) {
@@ -47,12 +57,19 @@ public class Customer extends User {
         return this.loanList.size();
     }
 
+    /**
+     * compute interests for all loan entries
+     */
     public void computeLoanInterest() {
         for (LoanAccount loan : loanList) {
             loan.computeInterest();
         }
     }
 
+    /**
+     * 
+     * @return  a list with all the loan entries this customer has
+     */
     public List<String> getLoans() {
         List<String> loanIDList = new ArrayList<>();
         for (LoanAccount loan : loanList) {

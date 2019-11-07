@@ -1,4 +1,7 @@
 package backend;
+/**
+ * Transaction: pay off loan
+ */
 public class LoanPayOff extends Transaction {
     private String loanID;
 
@@ -7,6 +10,9 @@ public class LoanPayOff extends Transaction {
         this.loanID = loanID;
     }
 
+    /**
+     * execute transaction: pay off loan
+     */
     public String startTransaction() {
         return BankPortal.getInstance().getBank().payoffLoan(getUserID(), getLoanID());
     }

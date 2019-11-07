@@ -13,7 +13,7 @@ public class BankPortal {
     private String userID;
     private Bank bank; // Currently we only support one bank
     
-    private static BankPortal bankPortal = null;
+    private static BankPortal bankPortal = null;// Ruidong: what's this?
 
     BankPortal() {
         this.day = 0; // initial start day
@@ -27,6 +27,9 @@ public class BankPortal {
         return bankPortal;
     }
 
+    /**
+     * run GUI
+     */
     public void run() {
         OperationFrame operationFrame = OperationFrame.getInstance();
         operationFrame.run();
@@ -36,6 +39,10 @@ public class BankPortal {
         return this.bank;
     }
 
+    /**
+     * bind the user who's interacting with GUI
+     * @param userID
+     */
     public void setUserID(String userID) {
         this.userID = userID;
     }
@@ -44,21 +51,49 @@ public class BankPortal {
         this.setUserID(userID);
     }
 
+    /**
+     * called by GUI, open a new account in backend
+     * @param bankID
+     * @param userID
+     * @param accountType
+     */
     public void openAccount(String bankID, String userID, String accountType) {
         String newAccountID = this.bank.openAccount(userID, accountType);
         BankLogger.getInstance().addAccount(newAccountID);
     }
 
+    /**
+     * called by GUI, close the corresponding account
+     * @param userID
+     * @param accountID
+     * @param accountType
+     * @return message about success or failure
+     */
     public String closeAccount(String userID, String accountID, String accountType) {
         return this.bank.closeAccount(userID, accountID, accountType);
     }
 
+    /**
+     * called by GUI, make a deposit in backend
+     * @param userID
+     * @param accountID
+     * @param amount
+     * @param selectedCurrency
+     */
     public void deposit(String userID, String accountID, double amount, String selectedCurrency) {
         Deposit deposit = new Deposit(accountID, userID, this.day, selectedCurrency, amount);
         deposit.startTransaction();
         BankLogger.getInstance().addTransaction(deposit);
     }
 
+    /**
+     * called by GUI, make a withdraw in backend
+     * @param userID
+     * @param accountID
+     * @param amount
+     * @param selectedCurrency
+     * @return message about success or failure
+     */
     public String withdraw(String userID, String accountID, double amount, String selectedCurrency) {
         Withdraw withdraw = new Withdraw(accountID, userID, this.day, selectedCurrency, amount);
         String result = withdraw.startTransaction();
@@ -66,6 +101,15 @@ public class BankPortal {
         return result;
     }
 
+    /**
+     * called by GUI, make a transfer within backend
+     * @param userID
+     * @param sourceAccountID
+     * @param targetAccountID
+     * @param amount
+     * @param selectedCurrency
+     * @return message about success or failure
+     */
     public String transfer(String userID, String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
         Transfer transfer = new Transfer(sourceAccountID, targetAccountID, userID, this.day, selectedCurrency, amount);
         String result = transfer.startTransaction();
@@ -73,6 +117,13 @@ public class BankPortal {
         return result;
     }
 
+    /**
+     * called by GUI, request loan
+     * @param userID
+     * @param amount
+     * @param selectedCurrency
+     * @return message about success or failure
+     */
     public String takeLoan(String userID, double amount, String selectedCurrency) {
         LoanCreate loanCreate = new LoanCreate(userID, this.day, selectedCurrency, amount);
         String result = loanCreate.startTransaction();
@@ -80,6 +131,11 @@ public class BankPortal {
         return result;
     }
 
+    /**
+     * called by GUI, pay off loan
+     * @param loanID
+     * @return message about success or failure
+     */
     public String payoffLoan(String loanID) {
         LoanPayOff loanPayOff = new LoanPayOff(userID, this.day, loanID);
         String result = loanPayOff.startTransaction();
@@ -91,12 +147,20 @@ public class BankPortal {
         return this.bank.getCustomerCollateral(userID);
     }
 
+    /**
+     * when new day comes, add the counter and calculate interests
+     */
     public void nextDay() {
         this.day++;
         BankLogger.getInstance().nextDay();
         bank.computeInterest();
     }
 
+    /**
+     * return info of a user
+     * @param userID
+     * @return String that contains user's info
+     */
     public String getUserInfo(String userID) {
         String displayContent = "";
         int CKCount = this.bank.getAccountNumber(userID, SharedConstants.CK);
