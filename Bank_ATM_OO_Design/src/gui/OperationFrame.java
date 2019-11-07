@@ -14,7 +14,7 @@ public class OperationFrame extends JFrame {
 	private static LoanPanel loanPanel;
 	private static InvestmentPanel investmentPanel;
 	private static ManagerPanel managerPanel;
-	// private static Customer user;
+	private static String userID;
 	// private static Manager manager;
 	
 	private static OperationFrame operationFrame = null;
@@ -72,6 +72,8 @@ public class OperationFrame extends JFrame {
 	
 	public void setTransactionPanel() {
 		add(transactionPanel);
+		transactionPanel.updateAccountsListBox();
+		transactionPanel.updateCurrencyListBox();
 		transactionPanel.setEnabled(true);
 		transactionPanel.setVisible(true);
 	}
@@ -112,12 +114,18 @@ public class OperationFrame extends JFrame {
 		managerPanel.setVisible(true);
 	}
 	
-	
+	/*
+	 * getter()
+	 * */
+	public String getUserID() {
+		return this.userID;
+	}
+		
 	/*
 	 * Method: setCustomer
 	 * Function: set current customer
 	 * */
-	/*public void setCustomer(Customer cus) {
-		user = cus;
-	}*/
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
 }

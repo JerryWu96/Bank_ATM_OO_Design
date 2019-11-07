@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import backend.BankPortal;
+import backend.SharedConstants;
+
 /*
 Author: Ziqi Tan
 */
@@ -18,6 +21,7 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 	
 	private JComboBox<String> accountsList;
 	private JTextArea accountTextArea;
+	private static final String selectOne = ">Select one";
 	
 	public AccountsInfoPanel() {
 
@@ -26,7 +30,7 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 		int windowHeight = OperationFrame.getInstance().getHeight();
 		int windowWidth = OperationFrame.getInstance().getWidth();
 		
-		int x = windowWidth/9*5;
+		int x = windowWidth/10*6;
 		int y = windowHeight/15;
 		int increment = 50;
 		int buttonWidth = 180;
@@ -67,22 +71,22 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
         add(logoutButton);
         logoutButton.addActionListener(this);
            
-        x = windowWidth/9;
+        x = windowWidth/14;
         y = windowHeight/10;
         increment = 25;
-        int textWidth = 220;
+        int textWidth = 290;
         
-        JLabel titleLabel = new JLabel("Select an account to inquire: ");
+        JLabel titleLabel = new JLabel("Select an account: ");
         titleLabel.setBounds(x, y, textWidth, 25);
         add(titleLabel);
         
         accountsList = new JComboBox<String>();
-        accountsList.addItem(">Select one");
+        accountsList.addItem(selectOne);
         accountsList.setBounds(x, y+increment*1, textWidth, 25);
         add(accountsList);
         
         JButton inquiryButton = new JButton("Inquire");
-        inquiryButton.setBounds(x+140, y+increment*2+5, 80, 25);
+        inquiryButton.setBounds(x+210, y+increment*2+5, 80, 25);
         add(inquiryButton);
         inquiryButton.addActionListener(this);
         
@@ -91,7 +95,7 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
         add(accountInfoLabel);
         
         accountTextArea = new JTextArea();
-        accountTextArea.setText("Account:\nAccount:\nAccount:\nAccount:\nAccount:\n");
+        accountTextArea.setLineWrap(true);
         accountTextArea.setEditable(false);
         JScrollPane jsp = new JScrollPane(accountTextArea);
         jsp.setBounds(x, y+increment*5, textWidth, 200);
@@ -105,40 +109,49 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 	 * 			including balance in all accounts.
 	 * */
 	public void updateInfo() {
-		
-		/*Customer cus = operationFrame.getCustomer();
-		DecimalFormat df = new DecimalFormat(".00");*/
-		
-		/*double checkingBalance = cus.getCheckingAccount().getBalance();
-		checking.setText("Checking Account: " + df.format(checkingBalance) + " USD");
-		
-		double savingBalance = cus.getSavingAccount().getBalance();
-		saving.setText("Saving Account: " + df.format(savingBalance) + " USD");
-		
-		double euroBalance = cus.getEuroAccount().getBalance();
-		euro.setText("Euro Account: " + df.format(euroBalance) + " EUR");
-		
-		double cnyBalance = cus.getCNYAccount().getBalance();
-		cny.setText("CNY Account: " + df.format(cnyBalance) + " CNY");*/
+		String userID = OperationFrame.getInstance().getUserID();
+		String info = BankPortal.getInstance().getUserInfo(userID);
+		accountTextArea.append("\n\n");
+        accountTextArea.append(info);
+        accountTextArea.append("\n\n");
 	}
 	
+	public void updateAccountsListBox() {
+		accountsList.removeAllItems();
+		accountsList.addItem(selectOne);
+		String userID = OperationFrame.getInstance().getUserID();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        for (String accountID : accountList) {
+            if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
+            	accountsList.addItem(accountID);
+            }
+        }
+	}
+	
+	/**
+	 * Method: actionPerformed
+	 * */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		if( e.getActionCommand() == "Inquire" ) {
-			
-			// accountTextArea.setText("");
-			accountTextArea.append("Account : \n");
-			
+			updateInfo();			
 		}
 		
 		if( e.getActionCommand() == "Open a checking account" ) {
-			accountTextArea.setText("");
 			accountTextArea.append("Opening a checking account.");
+			String userID = OperationFrame.getInstance().getUserID();
+			BankPortal.getInstance().openAccount(SharedConstants.BANK_ID, userID, SharedConstants.CK);			
+	        updateAccountsListBox();
+	        updateInfo();
 		}
 		
 		if( e.getActionCommand() == "Open a saving account" ) {
-			
+			accountTextArea.append("Opening a saving account.");
+			String userID = OperationFrame.getInstance().getUserID();
+			BankPortal.getInstance().openAccount(SharedConstants.BANK_ID, userID, SharedConstants.SAV);
+			updateAccountsListBox();
+	        updateInfo();
 		}
 		
 		if( e.getActionCommand() == "Open a security account" ) {
@@ -146,6 +159,31 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 		}
 		
 		if( e.getActionCommand() == "Close selected account" ) {
+			
+			accountTextArea.append("Closing a selected account.");
+			String userID = OperationFrame.getInstance().getUserID();
+			String selectedAccount = accountsList.getSelectedItem().toString();
+			
+			if( selectedAccount.equals(selectOne) ) {
+				JOptionPane.showMessageDialog(null, "Please select an account!");
+			}
+			else {
+				// Closing checking/saving account
+				if (BankPortal.getInstance().getBank().isCheckingAccount(selectedAccount)) {
+                    String reply = BankPortal.getInstance().closeAccount(userID, selectedAccount, SharedConstants.CK);
+                    if (reply.equals(SharedConstants.ERR_ACCOUNT_NOT_EXIST)) {
+                        JOptionPane.showMessageDialog(null, "Account ID does not exist!");
+                    } 
+                } 
+				else if (BankPortal.getInstance().getBank().isSavingsAccount(selectedAccount)) {
+                    String reply = BankPortal.getInstance().closeAccount(userID, selectedAccount, SharedConstants.SAV);
+                    if (reply.equals(SharedConstants.ERR_ACCOUNT_NOT_EXIST)) {
+                        JOptionPane.showMessageDialog(null, "Account ID does not exist!");
+                    } 
+                }
+				updateAccountsListBox();
+		        updateInfo();				
+			}
 			
 		}
 		
