@@ -19,7 +19,7 @@ public class LoanPanel extends JPanel implements ActionListener {
 	
 	private JComboBox<String> currencyList;
 	private JComboBox<String> loanList;
-	private static final String selectOne = ">Select one";
+	private final String selectOne = ">Select one";
 	
 	public LoanPanel() {
 		

@@ -18,7 +18,7 @@ public class TransactionPanel extends JPanel implements ActionListener {
 	
 	private JComboBox<String> accountsList;
 	private JComboBox<String> currencyList;
-	private static final String selectOne = ">Select one";
+	private final String selectOne = ">Select one";
 	
 	public TransactionPanel() {
 
