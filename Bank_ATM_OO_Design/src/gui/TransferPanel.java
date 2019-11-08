@@ -3,6 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -10,6 +12,9 @@ import javax.swing.JPanel;
 Author: Ziqi Tan
 */
 public class TransferPanel extends JPanel implements ActionListener {
+	
+	private JComboBox<String> sourceAccountList;
+	private JComboBox<String> targetAccountList;
 	
 	public TransferPanel() {
 		
@@ -22,15 +27,16 @@ public class TransferPanel extends JPanel implements ActionListener {
 		
 		setLayout(null);
 		
-		JButton transferBetweenYourAccounts = new JButton("Transfer between your accounts");
-		transferBetweenYourAccounts.setBounds(x, y+increment, 300, 25);
-        add(transferBetweenYourAccounts);
-        transferBetweenYourAccounts.addActionListener(this);
+		// Accounts List
+        /*JLabel titleLabel = new JLabel("Select an account: ");
+        titleLabel.setBounds(x, y, textWidth, 25);
+        add(titleLabel);
         
-        JButton transferToOthers = new JButton("Transfer to others");
-        transferToOthers.setBounds(x, y+increment*2, 300, 25);
-        add(transferToOthers);
-        transferToOthers.addActionListener(this);
+        accountsList = new JComboBox<String>();
+        accountsList.setBounds(x, y+increment*1, textWidth, 25);
+        add(accountsList);
+        updateAccountsListBox();*/
+		
         
         JButton returnButton = new JButton("Return");
         returnButton.setBounds(x, y+increment*3, 300, 25);
@@ -47,14 +53,6 @@ public class TransferPanel extends JPanel implements ActionListener {
 			OperationFrame.getInstance().setTransactionPanel();
 		}
 		
-		if( e.getActionCommand().contentEquals("Transfer between your accounts") ) {
-						
-		}	
-		
-		if( e.getActionCommand().contentEquals("Transfer to others") ) {
-			setEnabled(false);
-			setVisible(false);
-			OperationFrame.getInstance().setTransferWindow();
-		}
+
 	}
 }
