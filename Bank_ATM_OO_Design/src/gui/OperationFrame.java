@@ -64,6 +64,7 @@ public class OperationFrame extends JFrame {
 	public void setAccountsInfoPanel() {
 		add(accountsInfoPanel);
 		accountsInfoPanel.updateInfo();
+		accountsInfoPanel.updateAccountsListBox();
 		accountsInfoPanel.setEnabled(true);
 		accountsInfoPanel.setVisible(true);
 	}
@@ -84,6 +85,8 @@ public class OperationFrame extends JFrame {
 	
 	public void setTransferPanel() {
 		add(transferPanel);
+		transferPanel.updateSourceAccountListBox();
+		transferPanel.updateTargetAccountListBox();
 		transferPanel.setEnabled(true);
 		transferPanel.setVisible(true);
 	}

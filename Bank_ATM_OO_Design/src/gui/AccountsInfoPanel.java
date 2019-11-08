@@ -21,7 +21,7 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 	
 	private JComboBox<String> accountsList;
 	private JTextArea accountTextArea;
-	private static final String selectOne = ">Select one";
+	private final String selectOne = ">Select one";
 	
 	public AccountsInfoPanel() {
 
@@ -109,6 +109,7 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 	 * 			including balance in all accounts.
 	 * */
 	public void updateInfo() {
+		accountTextArea.setText("");
 		String userID = OperationFrame.getInstance().getUserID();
 		String info = BankPortal.getInstance().getUserInfo(userID);
 		accountTextArea.append("\n\n");
@@ -200,8 +201,8 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 		}
 		
 		if( e.getActionCommand() == "Logout" ) {
-			/*operationFrame.setCustomer(null);*/
 			
+			OperationFrame.getInstance().setUserID(null);
 			setEnabled(false);
 			setVisible(false);
 			OperationFrame.getInstance().setLoginPanel();
