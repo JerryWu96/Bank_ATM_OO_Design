@@ -160,6 +160,7 @@ public class Bank {
                         this.securityList.add(newSecurityAcc);
                         this.securityMap.put(newSecurityAcc.getAccountID(), newSecurityAcc);
                         this.securityCountMap.put(userID, this.securityCountMap.getOrDefault(userID, 0) + 1);
+                        return newSecurityAcc.getAccountID();
                     } else {
                         return SharedConstants.ERR_INSUFFICIENT_BALANCE;
                     }

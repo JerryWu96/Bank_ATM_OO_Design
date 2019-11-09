@@ -78,7 +78,7 @@ public class BankPortal {
      * @param savAccountID
      */
     public void openAccount(String bankID, String userID, String accountType, String savAccountID) {
-        String newAccountID = this.bank.openAccount(userID, accountType);
+        String newAccountID = this.bank.openAccount(userID, accountType, savAccountID);
         BankLogger.getInstance().addAccount(newAccountID);
     }
 
