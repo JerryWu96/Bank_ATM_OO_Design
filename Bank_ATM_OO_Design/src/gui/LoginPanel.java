@@ -72,19 +72,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
         add(pass);
 
         JTextArea sample = new JTextArea();
-        String text =
-                "For your convenience, there are two initial customers:\n"
-                        + "\n"
-                        + "Customer 1:\n"
-                        + "            Username: ziqi\n"
-                        + "            Password: 123\n"
-                        + "Customer 2:\n"
-                        + "            Username: tf\n"
-                        + "            Password: 123456\n"
-                        + "\n"
-                        + "Have fun!\n"
-                        + "\n"
-                        + "Ziqi Tan U88387934";
+        String text = "Have fun!\n";
         sample.setLineWrap(true);
         sample.setText(text);
         sample.setFont(new Font("", Font.BOLD, 13));

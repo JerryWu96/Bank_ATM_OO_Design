@@ -45,14 +45,9 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
         savingButton.setBounds(x, y+increment*2, buttonWidth, buttonHeight);
         add(savingButton);
         savingButton.addActionListener(this);
-        
-        JButton securityButton = new JButton("Open a security account");
-        securityButton.setBounds(x, y+increment*3, buttonWidth, buttonHeight);
-        add(securityButton);
-        securityButton.addActionListener(this);
-        
+               
         JButton closeButton = new JButton("Close selected account");
-        closeButton.setBounds(x, y+increment*4, buttonWidth, buttonHeight);
+        closeButton.setBounds(x, y+increment*3, buttonWidth, buttonHeight);
         add(closeButton);
         closeButton.addActionListener(this);
         
@@ -85,11 +80,6 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
         accountsList.setBounds(x, y+increment*1, textWidth, 25);
         add(accountsList);
         
-        JButton inquiryButton = new JButton("Inquire");
-        inquiryButton.setBounds(x+210, y+increment*2+5, 80, 25);
-        add(inquiryButton);
-        inquiryButton.addActionListener(this);
-        
         JLabel accountInfoLabel = new JLabel("Account Information:");
         accountInfoLabel.setBounds(x, y+increment*4,textWidth, 25);
         add(accountInfoLabel);
@@ -121,7 +111,13 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 		accountsList.removeAllItems();
 		accountsList.addItem(selectOne);
 		String userID = OperationFrame.getInstance().getUserID();
-        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.CK);
+        for (String accountID : accountList) {
+            if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
+            	accountsList.addItem(accountID);
+            }
+        }
+        accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SAV);
         for (String accountID : accountList) {
             if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
             	accountsList.addItem(accountID);
@@ -153,10 +149,6 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 			BankPortal.getInstance().openAccount(SharedConstants.BANK_ID, userID, SharedConstants.SAV);
 			updateAccountsListBox();
 	        updateInfo();
-		}
-		
-		if( e.getActionCommand() == "Open a security account" ) {
-			
 		}
 		
 		if( e.getActionCommand() == "Close selected account" ) {

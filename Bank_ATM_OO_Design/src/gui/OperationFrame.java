@@ -33,7 +33,7 @@ public class OperationFrame extends JFrame {
 	}
 	
 	public void run() {
-		setTitle("Welcome to Bank of BBUU!");
+		setTitle("Welcome to Bank of BBUU");
 		setSize(600,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);         		
 		setLocationRelativeTo(null);  // this will center your app

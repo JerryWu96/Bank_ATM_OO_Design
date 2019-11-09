@@ -51,13 +51,15 @@ public class TransactionPanel extends JPanel implements ActionListener {
         add(loanButton);
         loanButton.addActionListener(this);
         
+        /*
         JButton historyButton = new JButton("History");
         historyButton.setBounds(x, y+increment*5, 100, 25);
         add(historyButton);
         historyButton.addActionListener(this);
+        */
         
         JButton logoutButton = new JButton("Return");
-        logoutButton.setBounds(x, y+increment*6, 100, 25);
+        logoutButton.setBounds(x, y+increment*5, 100, 25);
         add(logoutButton);
         logoutButton.addActionListener(this);
         
@@ -96,7 +98,13 @@ public class TransactionPanel extends JPanel implements ActionListener {
 		accountsList.removeAllItems();
 		accountsList.addItem(selectOne);
 		String userID = OperationFrame.getInstance().getUserID();
-        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.CK);
+        for (String accountID : accountList) {
+            if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
+            	accountsList.addItem(accountID);
+            }
+        }
+        accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SAV);
         for (String accountID : accountList) {
             if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
             	accountsList.addItem(accountID);
@@ -140,8 +148,7 @@ public class TransactionPanel extends JPanel implements ActionListener {
 		}
 		return true;
 	}
-	
-	
+		
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -162,6 +169,9 @@ public class TransactionPanel extends JPanel implements ActionListener {
 	                String result = BankPortal.getInstance().withdraw(userID, accountID, amount, selectedCurrency);
 	                if (result.equals(SharedConstants.ERR_INSUFFICIENT_BALANCE)) {
 	                    JOptionPane.showMessageDialog(null, "Your selected account has insufficient balance!");
+	                }
+	                else {
+	                	JOptionPane.showMessageDialog(null, "Withdraw successfully!");
 	                }
 	                
 				}
@@ -184,6 +194,7 @@ public class TransactionPanel extends JPanel implements ActionListener {
 					String accountID = accountsList.getSelectedItem().toString();					
 	                String selectedCurrency = currencyList.getSelectedItem().toString();
 	                BankPortal.getInstance().deposit(userID, accountID, amount, selectedCurrency);
+	                JOptionPane.showMessageDialog(null, "Deposit successfully!");
 				}
 				catch(Exception error) {
 					System.out.println(error);
@@ -207,8 +218,6 @@ public class TransactionPanel extends JPanel implements ActionListener {
 			OperationFrame.getInstance().setLoanPanel();
 		}
 		
-		if( e.getActionCommand() == "History" ) {
 
-		}		
 	}	
 }

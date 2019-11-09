@@ -89,7 +89,13 @@ public class TransferPanel extends JPanel implements ActionListener {
 		sourceAccountList.removeAllItems();
 		sourceAccountList.addItem(selectOne);
 		String userID = OperationFrame.getInstance().getUserID();
-        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.CK);
+        for (String accountID : accountList) {
+            if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
+            	sourceAccountList.addItem(accountID);
+            }
+        }
+        accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SAV);
         for (String accountID : accountList) {
             if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
             	sourceAccountList.addItem(accountID);
@@ -97,10 +103,15 @@ public class TransferPanel extends JPanel implements ActionListener {
         }
 	}
 	
+	
 	public void updateTargetAccountListBox() {
 		targetAccountList.removeAllItems();
 		targetAccountList.addItem(selectOne);
-        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.CK);
+        for (String accountID : accountList) {
+        	targetAccountList.addItem(accountID);
+        }
+        accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SAV);
         for (String accountID : accountList) {
         	targetAccountList.addItem(accountID);
         }
