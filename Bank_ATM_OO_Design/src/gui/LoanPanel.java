@@ -6,7 +6,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import backend.BankPortal;
 
 /*
 Author: Ziqi Tan
@@ -15,6 +19,7 @@ public class LoanPanel extends JPanel implements ActionListener {
 	
 	private JComboBox<String> currencyList;
 	private JComboBox<String> loanList;
+	private final String selectOne = ">Select one";
 	
 	public LoanPanel() {
 		
@@ -52,18 +57,42 @@ public class LoanPanel extends JPanel implements ActionListener {
         add(titleLabel);
         
         currencyList = new JComboBox<String>();
-        currencyList.addItem(">Select one");
         currencyList.setBounds(x, y+increment*1, textWidth, 25);
         add(currencyList);
+        updateCurrencyListBox();
         
         JLabel loanListLabel = new JLabel("Your current loans: ");
         loanListLabel.setBounds(x, y+increment*3, textWidth, 25);
         add(loanListLabel);
         
         loanList = new JComboBox<String>();
-        loanList.addItem(">Select one");
         loanList.setBounds(x, y+increment*4, textWidth, 25);
         add(loanList);
+        updateLoanListBox();
+	}
+	
+	/*
+	 * Method: updateCurrencyListBox
+	 * Function: update currency list in JComboBox
+	 * */
+	public void updateCurrencyListBox() {
+		currencyList.removeAllItems();
+		currencyList.addItem(selectOne);
+		String[] currencies = BankPortal.getInstance().getBank().getCurrencyList();
+		for( String currency: currencies ) {
+			currencyList.addItem(currency);
+		}
+	}
+	
+	private void updateLoanListBox() {
+	    
+        loanList.removeAllItems();
+        loanList.addItem(selectOne);
+        String userID = OperationFrame.getInstance().getUserID();
+        String[] list = BankPortal.getInstance().getBank().getLoanList(userID);
+        for (String loanID : list) {
+            loanList.addItem(loanID);
+        }	    
 	}
 	
 	@Override
@@ -76,13 +105,33 @@ public class LoanPanel extends JPanel implements ActionListener {
 		}
 		
 		if( e.getActionCommand() == "Take loan" ) {
-			
+			try {
+				String inputValue = JOptionPane.showInputDialog("Take loan:");
+				double amount = Double.parseDouble(inputValue);
+				String userID = OperationFrame.getInstance().getUserID();					            
+				String selectedCurrency = currencyList.getSelectedItem().toString();				
+	            String result = BankPortal.getInstance().takeLoan(userID, amount, selectedCurrency);
+	            if (result.equals("Not Eligible")) {
+	                JOptionPane.showMessageDialog(null, "You are no longer permitted to take out a loan!\n" +
+	                        "Please pay off loans to retrieve your collaterals");
+	            } 
+	            else {
+	                JOptionPane.showMessageDialog(null, "New loan created! \n You have " +
+	                        BankPortal.getInstance().getCustomerCollateral() + " remaining collaterals.");
+	            }
+	            updateLoanListBox();	            
+			}
+			catch(Exception error) {
+				System.out.println(error);
+				JOptionPane.showMessageDialog(null, "Please input a number.");
+			}			
 		}
 		
 		if( e.getActionCommand() == "Pay loan" ) {
-			
+			String selectedLoan = loanList.getSelectedItem().toString();
+            BankPortal.getInstance().payoffLoan(selectedLoan);
+            updateLoanListBox();
 		}
-		
 	}
 
 }

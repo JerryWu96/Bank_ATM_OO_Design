@@ -10,7 +10,6 @@ public class OperationFrame extends JFrame {
 	private static TransactionPanel transactionPanel;
 	private static RegisterPanel registerPanel;
 	private static TransferPanel transferPanel;
-	private static TransferWindow transferWindow;
 	private static LoanPanel loanPanel;
 	private static InvestmentPanel investmentPanel;
 	private static ManagerPanel managerPanel;
@@ -46,7 +45,6 @@ public class OperationFrame extends JFrame {
 		transactionPanel = new TransactionPanel();
 		registerPanel = new RegisterPanel();
 		transferPanel = new TransferPanel();
-		transferWindow = new TransferWindow();
 		investmentPanel = new InvestmentPanel();
 		loanPanel = new LoanPanel();
 		managerPanel = new ManagerPanel();
@@ -66,6 +64,7 @@ public class OperationFrame extends JFrame {
 	public void setAccountsInfoPanel() {
 		add(accountsInfoPanel);
 		accountsInfoPanel.updateInfo();
+		accountsInfoPanel.updateAccountsListBox();
 		accountsInfoPanel.setEnabled(true);
 		accountsInfoPanel.setVisible(true);
 	}
@@ -86,16 +85,12 @@ public class OperationFrame extends JFrame {
 	
 	public void setTransferPanel() {
 		add(transferPanel);
+		transferPanel.updateSourceAccountListBox();
+		transferPanel.updateTargetAccountListBox();
 		transferPanel.setEnabled(true);
 		transferPanel.setVisible(true);
 	}
-	
-	public void setTransferWindow() {
-		add(transferWindow);
-		transferWindow.setEnabled(true);
-		transferWindow.setVisible(true);
-	}
-	
+		
 	public void setInvestmentPanel() {
 		add(investmentPanel);
 		investmentPanel.setEnabled(true);
