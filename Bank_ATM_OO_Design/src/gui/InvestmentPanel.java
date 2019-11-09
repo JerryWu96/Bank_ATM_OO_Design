@@ -92,7 +92,8 @@ public class InvestmentPanel extends JPanel implements ActionListener {
 		String userID = OperationFrame.getInstance().getUserID();
         String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SEC);
         for (String accountID : accountList) {
-            if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
+			System.out.println("value = " + accountID);
+			if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
             	securityAccountsList.addItem(accountID);
             }
         }
