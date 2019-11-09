@@ -11,11 +11,6 @@ public class BankLogger {
     private Map<Integer, List<String>> newAccountIDMap;
     private Map<Integer, List<String>> closedAccountIDMap;
     private Map<Integer, List<Transaction>> transactions;
-//    private Map<Integer, List<Deposit>> deposits;
-//    private Map<Integer, List<Withdraw>> withdraws;
-//    private Map<Integer, List<Transfer>> transfers;
-//    private Map<Integer, List<Loan>> newLoans;
-//    private Map<Integer, List<Loan>> closedLoans;
     private int day;
     private static BankLogger logger = null;
 
@@ -24,11 +19,6 @@ public class BankLogger {
         this.newAccountIDMap = new TreeMap<>();
         this.closedAccountIDMap = new TreeMap<>();
         this.transactions = new TreeMap<>();
-//        this.deposits = new TreeMap<>();
-//        this.withdraws = new TreeMap<>();
-//        this.transfers = new TreeMap<>();
-//        this.newLoans = new TreeMap<>();
-//        this.closedLoans = new TreeMap<>();
     }
 
     /**

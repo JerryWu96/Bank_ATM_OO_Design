@@ -1,25 +1,22 @@
 package backend;
 
-/**
- * Transaction: buy stock
- */
-public class StockPurchase extends Transaction {
+public class StockSell extends Transaction{
     private String stockID;
     private String savAccountID;
     private int unit;
 
-    StockPurchase(String userID, int creationDay, String savAccountID, String stockID, int unit) {
-        super(userID, creationDay, null, "StockPurchase");
+    StockSell(String userID, int creationDay, String savAccountID, String stockID, int unit) {
+        super(userID, creationDay, null, "StockSell");
         this.stockID = stockID;
         this.savAccountID = savAccountID;
         this.unit = unit;
     }
 
     /**
-     * execute transaction: buy stock
+     * execute transaction: sell stock
      */
     public String startTransaction() {
-        return BankPortal.getInstance().getBank().buyStock(getSavAccountID(), getStockID(), getUnit());
+        return BankPortal.getInstance().getBank().sellStock(getSavAccountID(), getStockID(), getUnit());
     }
 
     public String getStockID() {
@@ -36,6 +33,6 @@ public class StockPurchase extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " bought " + unit + " units of " + getStockID() + "stock";
+        return "Day " + getDay() + " customer " + getUserID() + " sold " + unit + " units of " + getStockID() + "stock";
     }
 }

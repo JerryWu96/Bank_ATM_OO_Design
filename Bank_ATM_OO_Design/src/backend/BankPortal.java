@@ -12,7 +12,7 @@ public class BankPortal {
 
     private String userID;
     private Bank bank; // Currently we only support one bank
-    
+
     private static BankPortal bankPortal = null;
 
     BankPortal() {
@@ -46,6 +46,7 @@ public class BankPortal {
 
     /**
      * bind the user who's interacting with GUI
+     *
      * @param userID
      */
     public void setUserID(String userID) {
@@ -58,6 +59,7 @@ public class BankPortal {
 
     /**
      * open a new account in backend
+     *
      * @param bankID
      * @param userID
      * @param accountType
@@ -69,6 +71,7 @@ public class BankPortal {
 
     /**
      * open a new Security account in backend
+     *
      * @param bankID
      * @param userID
      * @param accountType
@@ -81,6 +84,7 @@ public class BankPortal {
 
     /**
      * close a savings/checking account. Security account can be toggled invalid but it won't be closed.
+     *
      * @param userID
      * @param accountID
      * @param accountType
@@ -92,6 +96,7 @@ public class BankPortal {
 
     /**
      * make a deposit in backend
+     *
      * @param userID
      * @param accountID
      * @param amount
@@ -105,6 +110,7 @@ public class BankPortal {
 
     /**
      * make a withdraw in backend
+     *
      * @param userID
      * @param accountID
      * @param amount
@@ -120,6 +126,7 @@ public class BankPortal {
 
     /**
      * make a transfer within backend
+     *
      * @param userID
      * @param sourceAccountID
      * @param targetAccountID
@@ -136,6 +143,7 @@ public class BankPortal {
 
     /**
      * request loan
+     *
      * @param userID
      * @param amount
      * @param selectedCurrency
@@ -150,6 +158,7 @@ public class BankPortal {
 
     /**
      * pay off loan
+     *
      * @param loanID
      * @return message about success or failure
      */
@@ -175,6 +184,7 @@ public class BankPortal {
 
     /**
      * return info of a user
+     *
      * @param userID
      * @return String that contains user's info
      */

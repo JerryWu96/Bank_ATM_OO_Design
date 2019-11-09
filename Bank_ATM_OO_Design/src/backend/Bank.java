@@ -35,12 +35,15 @@ public class Bank {
         this.bankID = SharedConstants.BANK_ID;
         this.savingsList = new ArrayList<>();
         this.checkingList = new ArrayList<>();
+        this.securityList = new ArrayList<>();
         this.managerList = new ArrayList<>();
         this.customerList = new ArrayList<>();
         this.checkingMap = new HashMap<>();
         this.savingsMap = new HashMap<>();
+        this.securityMap = new HashMap<>();
         this.checkingCountMap = new HashMap<>();
         this.savingsCountMap = new HashMap<>();
+        this.securityCountMap = new HashMap<>();
         this.currencyList = new String[]{SharedConstants.USD, SharedConstants.YEN, SharedConstants.CNY};
 
         // initial customer/manager
@@ -142,7 +145,7 @@ public class Bank {
      * open a new security account. This is an overloaded method
      *
      * @param userID
-     * @param accountType (security)
+     * @param accountType  (security)
      * @param savAccountID
      * @return opened account id if succeed, or error message
      */
@@ -296,13 +299,14 @@ public class Bank {
 
     /**
      * buy stock
+     *
      * @param secAccountID
      * @param stockID
      * @param unit
      * @return
      */
     public String buyStock(String secAccountID, String stockID, int unit) {
-        for (SecurityAccount securityAccount: securityList) {
+        for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
                 securityAccount.buyStock(stockID, unit);
             }
@@ -311,7 +315,7 @@ public class Bank {
     }
 
     public String sellStock(String secAccountID, String stockID, int unit) {
-        for (SecurityAccount securityAccount: securityList) {
+        for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
                 securityAccount.sellStock(stockID, unit);
             }
@@ -343,7 +347,13 @@ public class Bank {
         }
     }
 
-    // factory design pattern that returns a Currency obj given its balance and currency name
+    /**
+     * factory design pattern that returns a Currency obj given its balance and currency name
+     *
+     * @param balanceDiff
+     * @param selectedCurrency
+     * @return
+     */
     private Currency getCurrencyObj(double balanceDiff, String selectedCurrency) {
         switch (selectedCurrency) {
             case SharedConstants.CNY:
@@ -386,8 +396,9 @@ public class Bank {
 
     /**
      * get a String array of accountID given a specific accountType
+     *
      * @param accountType type of the account.
-     * @return Array of accountID
+     * @return array of accountID
      */
     public String[] getAccountList(String accountType) {
         List<String> accountList = new ArrayList<>();
@@ -430,7 +441,7 @@ public class Bank {
      *
      * @param userID
      * @param accountID
-     * @return true if it is, or false
+     * @return true if it does, false otherwise
      */
     public boolean isUserAccount(String userID, String accountID) {
         if (isCheckingAccount(accountID)) {
