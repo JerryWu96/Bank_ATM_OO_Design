@@ -7,6 +7,15 @@ public class Transfer extends Transaction {
     private String sourceAccountID;
     private String targetAccountID;
 
+    /**
+     * create transaction: transfer
+     * @param sourceAccountID
+     * @param targetAccountID
+     * @param userID
+     * @param creationDay
+     * @param selectedCurrency
+     * @param transferAmount
+     */
     Transfer(String sourceAccountID, String targetAccountID, String userID, int creationDay, String selectedCurrency, double transferAmount) {
         super(sourceAccountID, userID, creationDay, selectedCurrency, "Transfer");
         this.sourceAccountID = sourceAccountID;
@@ -26,6 +35,9 @@ public class Transfer extends Transaction {
         return this.targetAccountID;
     }
 
+    /**
+     * execute transaction: transfer
+     */
     public String startTransaction() {
         return BankPortal.getInstance().getBank().transfer(getAccountID(), getTargetAccountID(), getTransferAmount(), getSelectedCurrency());
     }

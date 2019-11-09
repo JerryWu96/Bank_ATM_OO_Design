@@ -31,6 +31,10 @@ public class BankLogger {
 //        this.closedLoans = new TreeMap<>();
     }
 
+    /**
+     * return a new instance of BankLogger
+     * @return
+     */
     public static BankLogger getInstance() {
         if (logger == null) {
             logger = new BankLogger(BankPortal.getInstance().getDay());

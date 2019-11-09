@@ -13,6 +13,10 @@ public class SavingsAccount extends Account {
         this.usd = new USD(-operationFee);
     }
 
+    /**
+     * check whether balance is above the threshold where there interests start to be calculated
+     * @return
+     */
     private boolean doesHitThreshold() {
         return this.getBalance() >= SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
     }
@@ -25,6 +29,9 @@ public class SavingsAccount extends Account {
         return this.usd.getBalance();
     }
 
+    /**
+     * calculate interests and then apply
+     */
     public void computeInterest() {
         if (doesHitThreshold()) {
             double currentBalance = usd.getBalance();

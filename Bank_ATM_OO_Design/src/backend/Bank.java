@@ -355,6 +355,11 @@ public class Bank {
         return false;
     }
 
+    /**
+     * get the number of collaterals owned by this user
+     * @param userID
+     * @return number of collaterals, or -1 if it fails
+     */
     public int getCustomerCollateral(String userID) {
         for (Customer customer : customerList) {
             if (customer.getUserID().equals(userID)) {
@@ -364,6 +369,12 @@ public class Bank {
         return -1;
     }
 
+    /**
+     * get the number of some type of accounts owned by this user
+     * @param userID
+     * @param accountType
+     * @return the number, or -1 if it fails
+     */
     public Integer getAccountNumber(String userID, String accountType) {
         switch (accountType) {
             case SharedConstants.CK:
@@ -374,6 +385,13 @@ public class Bank {
         return -1;
     }
 
+    /**
+     * check if id matches password for both types of users
+     * @param userID
+     * @param password
+     * @param identity (customer or manager)
+     * @return message about success or failure
+     */
     public String authenticateUser(String userID, String password, String identity) {
         switch (identity) {
             case SharedConstants.MANAGER:
