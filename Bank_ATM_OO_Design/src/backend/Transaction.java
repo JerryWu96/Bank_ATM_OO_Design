@@ -28,6 +28,10 @@ public abstract class Transaction {
         this.type = type;
     }
 
+    public int getDay() {
+        return this.day;
+    }
+
     public String getAccountID() {
         return this.accountID;
     }
@@ -40,7 +44,7 @@ public abstract class Transaction {
         return this.transactionID;
     }
 
-    public String getSelectedCurrency() {
+    public String   getSelectedCurrency() {
         return this.selectedCurrency;
     }
 

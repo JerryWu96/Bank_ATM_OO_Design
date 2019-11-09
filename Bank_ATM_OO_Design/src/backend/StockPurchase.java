@@ -1,8 +1,9 @@
 package backend;
+
 /**
  * Transaction: buy stock
  */
-public class StockPurchase extends Transaction{
+public class StockPurchase extends Transaction {
     private String stockID;
     private String savAccountID;
     private int unit;
@@ -30,5 +31,10 @@ public class StockPurchase extends Transaction{
 
     public int getUnit() {
         return this.unit;
+    }
+
+    @Override
+    public String toString() {
+        return "Day " + getDay() + " customer " + getUserID() + " bought " + unit + " units of " + getStockID() + "stock";
     }
 }

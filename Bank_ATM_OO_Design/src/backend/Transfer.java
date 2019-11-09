@@ -41,4 +41,10 @@ public class Transfer extends Transaction {
     public String startTransaction() {
         return BankPortal.getInstance().getBank().transfer(getAccountID(), getTargetAccountID(), getTransferAmount(), getSelectedCurrency());
     }
+
+    @Override
+    public String toString() {
+        return "Day " + getDay() + " customer " + getUserID() + " transferred " + getSelectedCurrency() +
+                getTransferAmount() + " from account: " + getSourceAccountID() + " to account: " + getTargetAccountID();
+    }
 }

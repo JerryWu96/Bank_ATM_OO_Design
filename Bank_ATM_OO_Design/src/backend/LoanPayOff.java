@@ -20,5 +20,10 @@ public class LoanPayOff extends Transaction {
     public String getLoanID() {
         return this.loanID;
     }
+
+    @Override
+    public String toString() {
+        return "Day " + getDay() + " customer " + getUserID() + " paid off a loan.";
+    }
 }
 

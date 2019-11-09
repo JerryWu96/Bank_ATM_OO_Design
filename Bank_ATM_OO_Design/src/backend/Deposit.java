@@ -1,4 +1,5 @@
 package backend;
+
 /**
  * A Transaction class that encapsulates a deposit made by customers
  */
@@ -7,6 +8,7 @@ public class Deposit extends Transaction {
 
     /**
      * create transaction: deposit
+     *
      * @param accountID
      * @param userID
      * @param creationDay
@@ -27,5 +29,10 @@ public class Deposit extends Transaction {
 
     public double getDepositAmount() {
         return this.depositAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Day " + getDay() + " customer " + getUserID() + " deposited " + getSelectedCurrency() + getDepositAmount() + " to account: " + getAccountID();
     }
 }
