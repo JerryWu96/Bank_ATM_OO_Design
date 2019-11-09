@@ -92,6 +92,7 @@ public class InvestmentPanel extends JPanel implements ActionListener {
 		String userID = OperationFrame.getInstance().getUserID();
         String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SEC);
         for (String accountID : accountList) {
+        	System.out.println(accountID);
             if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
             	securityAccountsList.addItem(accountID);
             }
@@ -129,7 +130,9 @@ public class InvestmentPanel extends JPanel implements ActionListener {
 							+ SharedConstants.SAVINGS_AMOUNT_THRESHOLD + " USD in this saving account!");
 				}
 				else {
+					// Open a security account
 					BankPortal.getInstance().openAccount(SharedConstants.BANK_ID, userID, SharedConstants.SEC, selectedSavingAccount);
+					System.out.println("asdfasdf");
 					updateSecurityAccountList();
 				}
 				

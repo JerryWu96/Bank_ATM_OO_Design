@@ -283,7 +283,7 @@ public class CustomerPanel {
 
     private void updateAccountbox(JComboBox myBox) {
         myBox.removeAllItems();
-        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.CK);
         for (String accountID : accountList) {
             myBox.addItem(accountID);
         }
@@ -297,7 +297,7 @@ public class CustomerPanel {
 
     private void updateUserAccountBox(JComboBox myBox) {
         myBox.removeAllItems();
-        String[] accountList = BankPortal.getInstance().getBank().getAccountList();
+        String[] accountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.CK);
         for (String accountID : accountList) {
             if (BankPortal.getInstance().getBank().isUserAccount(userID, accountID)) {
                 myBox.addItem(accountID);
