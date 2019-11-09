@@ -13,7 +13,7 @@ public class BankPortal {
     private String userID;
     private Bank bank; // Currently we only support one bank
     
-    private static BankPortal bankPortal = null;// Ruidong: what's this?
+    private static BankPortal bankPortal = null;
 
     BankPortal() {
         this.day = 0; // initial start day
