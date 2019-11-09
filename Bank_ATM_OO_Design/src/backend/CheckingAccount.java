@@ -9,7 +9,8 @@ public class CheckingAccount extends Account {
     private USD usd;
 
     CheckingAccount(String bankID, String userID, String accountType, Integer postfix) {
-        super(bankID + "_" + userID + "_CK_" + postfix, bankID, userID, accountType);
+        super(bankID + SharedConstants.DELIMITER + userID + SharedConstants.DELIMITER + SharedConstants.CK +
+                SharedConstants.DELIMITER + postfix, bankID, userID, accountType);
         this.operationFee = SharedConstants.OPERATION_FEE;
         this.usd = new USD(-operationFee);
         this.debitCardNumber = -1; // NOT REQUIRED YET

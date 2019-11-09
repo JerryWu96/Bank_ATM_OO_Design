@@ -26,4 +26,10 @@ public class Withdraw extends Transaction{
     public String startTransaction() {
         return BankPortal.getInstance().getBank().withdraw(getAccountID(), getWithdrawAmount(), getSelectedCurrency());
     }
+
+    @Override
+    public String toString() {
+        return "Day " + getDay() + " customer " + getUserID() + " withdrew " + getSelectedCurrency() +
+                getWithdrawAmount() + " from account: " + getAccountID();
+    }
 }

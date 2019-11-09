@@ -1,4 +1,8 @@
 package backend;
+
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Savings account. We can add withdrawTimesLimit in the future to make it more realistic.
  */
@@ -7,8 +11,8 @@ public class SavingsAccount extends Account {
     private USD usd;
 
     SavingsAccount(String bankID, String userID, String accountType, Integer postfix) {
-        super(bankID + "_" + userID + "_SAV_" + postfix, bankID, userID, accountType);
-
+        super(bankID + SharedConstants.DELIMITER + userID + SharedConstants.DELIMITER + SharedConstants.SAV +
+                SharedConstants.DELIMITER + postfix, bankID, userID, accountType);
         this.operationFee = SharedConstants.OPERATION_FEE;
         this.usd = new USD(-operationFee);
     }
@@ -17,8 +21,12 @@ public class SavingsAccount extends Account {
      * check whether balance is above the threshold where there interests start to be calculated
      * @return
      */
-    private boolean doesHitThreshold() {
+    public boolean higherThanThreshold() {
         return this.getBalance() >= SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
+    }
+
+    public boolean lowerThanThreshold() {
+        return this.getBalance() < SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
     }
 
     public void setBalance(Currency currency) {
@@ -33,7 +41,7 @@ public class SavingsAccount extends Account {
      * calculate interests and then apply
      */
     public void computeInterest() {
-        if (doesHitThreshold()) {
+        if (higherThanThreshold()) {
             double currentBalance = usd.getBalance();
             usd.addBalance(currentBalance * SharedConstants.SAVINGS_INTEREST_RATE);
         }

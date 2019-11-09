@@ -12,7 +12,7 @@ public class BankPortal {
 
     private String userID;
     private Bank bank; // Currently we only support one bank
-    
+
     private static BankPortal bankPortal = null;
 
     BankPortal() {
@@ -20,6 +20,11 @@ public class BankPortal {
         this.bank = new Bank(); // set up our Bank
     }
 
+    /**
+     * Singleton design pattern is applied so BankPortal serves as a unified interface between backend logic and frontend GUI.
+     *
+     * @return instance of BankPortal
+     */
     public static BankPortal getInstance() {
         if (bankPortal == null) {
             bankPortal = new BankPortal();
@@ -41,6 +46,7 @@ public class BankPortal {
 
     /**
      * bind the user who's interacting with GUI
+     *
      * @param userID
      */
     public void setUserID(String userID) {
@@ -52,7 +58,8 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, open a new account in backend
+     * open a new account in backend
+     *
      * @param bankID
      * @param userID
      * @param accountType
@@ -63,7 +70,21 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, close the corresponding account
+     * open a new Security account in backend
+     *
+     * @param bankID
+     * @param userID
+     * @param accountType
+     * @param savAccountID
+     */
+    public void openAccount(String bankID, String userID, String accountType, String savAccountID) {
+        String newAccountID = this.bank.openAccount(userID, accountType);
+        BankLogger.getInstance().addAccount(newAccountID);
+    }
+
+    /**
+     * close a savings/checking account. Security account can be toggled invalid but it won't be closed.
+     *
      * @param userID
      * @param accountID
      * @param accountType
@@ -74,7 +95,8 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, make a deposit in backend
+     * make a deposit in backend
+     *
      * @param userID
      * @param accountID
      * @param amount
@@ -87,7 +109,8 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, make a withdraw in backend
+     * make a withdraw in backend
+     *
      * @param userID
      * @param accountID
      * @param amount
@@ -102,7 +125,8 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, make a transfer within backend
+     * make a transfer within backend
+     *
      * @param userID
      * @param sourceAccountID
      * @param targetAccountID
@@ -118,7 +142,8 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, request loan
+     * request loan
+     *
      * @param userID
      * @param amount
      * @param selectedCurrency
@@ -132,7 +157,8 @@ public class BankPortal {
     }
 
     /**
-     * called by GUI, pay off loan
+     * pay off loan
+     *
      * @param loanID
      * @return message about success or failure
      */
@@ -158,6 +184,7 @@ public class BankPortal {
 
     /**
      * return info of a user
+     *
      * @param userID
      * @return String that contains user's info
      */
@@ -189,7 +216,6 @@ public class BankPortal {
                 displayContent += "\nBalance: USD " + account.getBalance();
             }
         }
-
         return displayContent;
     }
 

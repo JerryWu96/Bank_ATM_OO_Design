@@ -1,17 +1,22 @@
 package backend;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 
 public class SecurityAccount extends Account {
 
     private String savingsAccountID;
+    // if the account is inactive, only selling stocks is allowed.
     private boolean isActive;
-    private ArrayList<Stock> stocks;
+    // company - Stock mapping
+    private Map<String, ArrayList<Stock>> stocks;
 
-    public SecurityAccount(String accountID, String savingsAccountID, String bankID, String userID, String accountType) {
-        super(accountID, bankID, userID, accountType);
+    public SecurityAccount(String bankID, String userID, String accountType, Integer postfix, String savingsAccountID) {
+        super(bankID + SharedConstants.DELIMITER + userID + SharedConstants.DELIMITER + SharedConstants.SEC + SharedConstants.DELIMITER + postfix, bankID, userID, accountType);
         this.savingsAccountID = savingsAccountID;
-        this.stocks = new ArrayList<>();
+        this.stocks = new HashMap<>();
         this.isActive = true;
     }
 
@@ -19,52 +24,89 @@ public class SecurityAccount extends Account {
         return isActive;
     }
 
-    public void purchaseStock(String id, int unit) {
-        //before calling this method,
-        //you need to alter the money inside
-        //the linked savings account
-
-//        Stock newStock = new Stock(id, SharedConstants.stockIDtoCompany.get(id), unit, );
-//
-//        int i = -1;
-//        int j;
-//        for (j = 0; j < stocks.size(); j++) {
-//            Stock s = stocks.get(j);
-//            if (s.equals(stock) && s.getPrice() == stock.getPrice()) {
-//                i = j;
-//                break;
-//            }
-//        }
-//        if (i == -1) {
-//            stocks.add(stock);
-//        } else {
-//            Stock s = stocks.get(i);
-//            s.setUnit(s.getUnit() + stock.getUnit());
-//        }
+    private void setInactive() {
+        this.isActive = false;
     }
 
-    public void sellStock(String id, int unit) {
-        int i = -1;
-        Stock s = new Stock(id);
-        for (int j = 0; j < stocks.size(); j++) {
-            if (stocks.get(j).equals(s)) {
-                i = j;
-                break;
+    /**
+     * Update stock units as well as update savings account balance
+     *
+     * @param stockID
+     * @param curStockPrice
+     * @param unit positive if we buy stock, negative if we sell stock.
+     * @return
+     */
+    private String updateStock(String stockID, String company, double curStockPrice, int unit) {
+        double balanceDiff = curStockPrice * unit;
+        USD usdDiff = new USD(balanceDiff);
+        // TODO: verify if the savingsAccount here is a reference.
+        SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
+        savingsAccount.setBalance(usdDiff);
+        if (savingsAccount.lowerThanThreshold()) {
+            setInactive();
+            return SharedConstants.ERR_INSUFFICIENT_BALANCE;
+        }
+        for (Stock stock : stocks.get(company)) {
+            if (stock.getID().equals(stockID)) {
+                stock.setUnit(unit);
             }
         }
-        if (i != -1) {
-            s = stocks.get(i);
-            if (s.getUnit() > unit) {
-                s.setUnit(s.getUnit() - unit);
-            }
+        return SharedConstants.SUCCESS_TRANSACTION;
+    }
+
+    /**
+     * buy stock API. It calls updateStock() to update the status and balance of the savings account.
+     *
+     * @param stockID
+     * @param unit    stock units. It must be positive when calling this api
+     * @return
+     */
+    public String buyStock(String stockID, int unit) {
+        StockMarket stockMarket = StockMarket.getInstance();
+        String company = stockMarket.getStockCompany(stockID);
+        Double curStockPrice = stockMarket.getStockPrice(stockID);
+
+        // If the current user has bought the stock.
+        if (stocks.containsKey(company)) {
+            return updateStock(stockID, company, curStockPrice, unit);
+        } else {
+            Stock newStock = new Stock(stockID, company, curStockPrice, unit);
+            stocks.put(company, new ArrayList<Stock>() {
+                {
+                    add(newStock);
+                }
+            });
+            return SharedConstants.SUCCESS_TRANSACTION;
         }
-        //after calling this method,
-        //you need to get savings account and
-        //alter the money inside it
     }
 
-    public ArrayList<Stock> getStockList() {
-        return stocks;
+
+    /**
+     * sell stock API. It calls updateStock() to update the status and balance of the savings account.
+     *
+     * @param stockID
+     * @param unit    stock units. It must be positive when calling this api
+     * @return
+     */
+    public String sellStock(String stockID, int unit) {
+        StockMarket stockMarket = StockMarket.getInstance();
+        String company = stockMarket.getStockCompany(stockID);
+        Double curStockPrice = stockMarket.getStockPrice(stockID);
+
+        // If the stockID is valid, update.
+        if (stocks.containsKey(company)) {
+            return updateStock(stockID, company, curStockPrice, -1 * unit);
+        } else {
+            return SharedConstants.ERR_STOCK_NOT_EXIST;
+        }
     }
 
+
+    public List<Stock> getStockList() {
+        List<Stock> allStocksList = new ArrayList<>();
+        for (ArrayList<Stock> stockList : stocks.values()) {
+            allStocksList.addAll(stockList);
+        }
+        return allStocksList;
+    }
 }

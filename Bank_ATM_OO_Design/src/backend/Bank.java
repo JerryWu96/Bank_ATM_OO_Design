@@ -1,4 +1,5 @@
 package backend;
+
 import javax.swing.plaf.synth.SynthEditorPaneUI;
 import java.util.List;
 import java.util.ArrayList;
@@ -11,30 +12,38 @@ import java.util.HashMap;
 public class Bank {
     private String bankName;
     private String bankID;
-    private List<SavingsAccount> savingsList;
-    private List<CheckingAccount> checkingList;
-    private List<Manager> managerList;
-    private List<Customer> customerList;
-    private String[] currencyList;
+
     private double operationFee = SharedConstants.OPERATION_FEE;
     private double loanInterestRate = SharedConstants.LOAN_INTEREST_RATE;
 
+    private String[] currencyList;
+    private List<Manager> managerList;
+    private List<Customer> customerList;
+    private List<SavingsAccount> savingsList;
+    private List<CheckingAccount> checkingList;
+    private List<SecurityAccount> securityList;
+
     private Map<String, CheckingAccount> checkingMap;
     private Map<String, SavingsAccount> savingsMap;
+    private Map<String, SecurityAccount> securityMap;
     private Map<String, Integer> checkingCountMap;
     private Map<String, Integer> savingsCountMap;
+    private Map<String, Integer> securityCountMap;
 
     public Bank() {
         this.bankName = SharedConstants.BANK_NAME;
         this.bankID = SharedConstants.BANK_ID;
         this.savingsList = new ArrayList<>();
         this.checkingList = new ArrayList<>();
+        this.securityList = new ArrayList<>();
         this.managerList = new ArrayList<>();
         this.customerList = new ArrayList<>();
         this.checkingMap = new HashMap<>();
         this.savingsMap = new HashMap<>();
+        this.securityMap = new HashMap<>();
         this.checkingCountMap = new HashMap<>();
         this.savingsCountMap = new HashMap<>();
+        this.securityCountMap = new HashMap<>();
         this.currencyList = new String[]{SharedConstants.USD, SharedConstants.YEN, SharedConstants.CNY};
 
         // initial customer/manager
@@ -58,8 +67,13 @@ public class Bank {
         return this.checkingList;
     }
 
+    public List<SecurityAccount> getSecurities() {
+        return this.securityList;
+    }
+
     /**
      * get the name of a customer or manager
+     *
      * @param userID
      * @param identity (customer or manager)
      * @return name
@@ -84,6 +98,7 @@ public class Bank {
 
     /**
      * add a new user (customer or manager)
+     *
      * @param userID
      * @param password
      * @param name
@@ -102,30 +117,60 @@ public class Bank {
 
     /**
      * open a new account for a user
+     *
      * @param userID
-     * @param accountType (checking, savings or security)
+     * @param accountType (checking, savings)
      * @return opened account id if succeed, or error message
      */
     public String openAccount(String userID, String accountType) {
         switch (accountType) {
             case SharedConstants.CK:
-                CheckingAccount newChecking = new CheckingAccount(this.bankID, userID, SharedConstants.CK, checkingCountMap.getOrDefault(userID, 0));
-                this.checkingList.add(newChecking);
-                this.checkingMap.put(newChecking.getAccountID(), newChecking);
+                CheckingAccount newCheckingAcc = new CheckingAccount(this.bankID, userID, SharedConstants.CK, checkingCountMap.getOrDefault(userID, 0));
+                this.checkingList.add(newCheckingAcc);
+                this.checkingMap.put(newCheckingAcc.getAccountID(), newCheckingAcc);
                 this.checkingCountMap.put(userID, this.checkingCountMap.getOrDefault(userID, 0) + 1);
-                return newChecking.getAccountID();
+                return newCheckingAcc.getAccountID();
             case SharedConstants.SAV:
-                SavingsAccount newSaving = new SavingsAccount(this.bankID, userID, SharedConstants.SAV, savingsCountMap.getOrDefault(userID, 0));
-                this.savingsList.add(newSaving);
-                this.savingsMap.put(newSaving.getAccountID(), newSaving);
+                SavingsAccount newSavingAcc = new SavingsAccount(this.bankID, userID, SharedConstants.SAV, savingsCountMap.getOrDefault(userID, 0));
+                this.savingsList.add(newSavingAcc);
+                this.savingsMap.put(newSavingAcc.getAccountID(), newSavingAcc);
                 this.savingsCountMap.put(userID, this.savingsCountMap.getOrDefault(userID, 0) + 1);
-                return newSaving.getAccountID();
+                return newSavingAcc.getAccountID();
+        }
+        return SharedConstants.ERR_OPEN_ACCOUNT;
+    }
+
+
+    /**
+     * open a new security account. This is an overloaded method
+     *
+     * @param userID
+     * @param accountType  (security)
+     * @param savAccountID
+     * @return opened account id if succeed, or error message
+     */
+    public String openAccount(String userID, String accountType, String savAccountID) {
+        switch (accountType) {
+            case SharedConstants.SEC:
+                SavingsAccount savingsAccount = getSavingsAccount(savAccountID);
+                if (savingsAccount != null) {
+                    if (savingsAccount.higherThanThreshold()) {
+                        SecurityAccount newSecurityAcc = new SecurityAccount(this.bankID, userID, SharedConstants.SEC,
+                                securityCountMap.getOrDefault(userID, 0), savAccountID);
+                        this.securityList.add(newSecurityAcc);
+                        this.securityMap.put(newSecurityAcc.getAccountID(), newSecurityAcc);
+                        this.securityCountMap.put(userID, this.securityCountMap.getOrDefault(userID, 0) + 1);
+                    } else {
+                        return SharedConstants.ERR_INSUFFICIENT_BALANCE;
+                    }
+                }
         }
         return SharedConstants.ERR_OPEN_ACCOUNT;
     }
 
     /**
      * close the corresponding account
+     *
      * @param userID
      * @param accountID
      * @param accountType
@@ -167,6 +212,7 @@ public class Bank {
 
     /**
      * make a deposit
+     *
      * @param accountID
      * @param amount
      * @param selectedCurrency
@@ -179,6 +225,7 @@ public class Bank {
 
     /**
      * make a withdraw
+     *
      * @param accountID
      * @param amount
      * @param selectedCurrency
@@ -195,6 +242,7 @@ public class Bank {
 
     /**
      * make a transfer from one account to another
+     *
      * @param sourceAccountID
      * @param targetAccountID
      * @param amount
@@ -213,6 +261,7 @@ public class Bank {
 
     /**
      * request a loan, success if user has collaterals
+     *
      * @param userID
      * @param amount
      * @param selectedCurrency
@@ -234,6 +283,7 @@ public class Bank {
 
     /**
      * pay off a loan
+     *
      * @param userID
      * @param loanID
      * @return message
@@ -246,6 +296,33 @@ public class Bank {
         }
         return SharedConstants.SUCCESS_TRANSACTION;
     }
+
+    /**
+     * buy stock
+     *
+     * @param secAccountID
+     * @param stockID
+     * @param unit
+     * @return
+     */
+    public String buyStock(String secAccountID, String stockID, int unit) {
+        for (SecurityAccount securityAccount : securityList) {
+            if (securityAccount.getAccountID().equals(secAccountID)) {
+                securityAccount.buyStock(stockID, unit);
+            }
+        }
+        return SharedConstants.SUCCESS_TRANSACTION;
+    }
+
+    public String sellStock(String secAccountID, String stockID, int unit) {
+        for (SecurityAccount securityAccount : securityList) {
+            if (securityAccount.getAccountID().equals(secAccountID)) {
+                securityAccount.sellStock(stockID, unit);
+            }
+        }
+        return SharedConstants.SUCCESS_TRANSACTION;
+    }
+
 
     public double getOperationFee() {
         return operationFee;
@@ -270,7 +347,13 @@ public class Bank {
         }
     }
 
-    // factory design pattern that returns a Currency obj given its balance and currency name
+    /**
+     * factory design pattern that returns a Currency obj given its balance and currency name
+     *
+     * @param balanceDiff
+     * @param selectedCurrency
+     * @return
+     */
     private Currency getCurrencyObj(double balanceDiff, String selectedCurrency) {
         switch (selectedCurrency) {
             case SharedConstants.CNY:
@@ -304,20 +387,37 @@ public class Bank {
     }
 
     public CheckingAccount getCheckingAccount(String accountID) {
-        return this.checkingMap.get(accountID);
+        return this.checkingMap.getOrDefault(accountID, null);
     }
 
     public SavingsAccount getSavingsAccount(String accountID) {
-        return this.savingsMap.get(accountID);
+        return this.savingsMap.getOrDefault(accountID, null);
     }
 
-    public String[] getAccountList() {
+    /**
+     * get a String array of accountID given a specific accountType
+     *
+     * @param accountType type of the account.
+     * @return array of accountID
+     */
+    public String[] getAccountList(String accountType) {
         List<String> accountList = new ArrayList<>();
-        for (CheckingAccount checking : checkingList) {
-            accountList.add(checking.getAccountID());
-        }
-        for (SavingsAccount saving : savingsList) {
-            accountList.add(saving.getAccountID());
+        switch (accountType) {
+            case SharedConstants.CK:
+                for (CheckingAccount checking : checkingList) {
+                    accountList.add(checking.getAccountID());
+                }
+                break;
+            case SharedConstants.SAV:
+                for (SavingsAccount saving : savingsList) {
+                    accountList.add(saving.getAccountID());
+                }
+                break;
+            case SharedConstants.SEC:
+                for (SecurityAccount securityAccount : securityList) {
+                    accountList.add(securityAccount.getAccountID());
+                }
+                break;
         }
         return accountList.toArray(new String[0]);
     }
@@ -338,9 +438,10 @@ public class Bank {
 
     /**
      * check if this account belongs to this user
+     *
      * @param userID
      * @param accountID
-     * @return true if it is, or false
+     * @return true if it does, false otherwise
      */
     public boolean isUserAccount(String userID, String accountID) {
         if (isCheckingAccount(accountID)) {
@@ -357,6 +458,7 @@ public class Bank {
 
     /**
      * get the number of collaterals owned by this user
+     *
      * @param userID
      * @return number of collaterals, or -1 if it fails
      */
@@ -371,6 +473,7 @@ public class Bank {
 
     /**
      * get the number of some type of accounts owned by this user
+     *
      * @param userID
      * @param accountType
      * @return the number, or -1 if it fails
@@ -387,6 +490,7 @@ public class Bank {
 
     /**
      * check if id matches password for both types of users
+     *
      * @param userID
      * @param password
      * @param identity (customer or manager)

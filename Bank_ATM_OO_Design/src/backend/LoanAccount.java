@@ -14,13 +14,13 @@ public class LoanAccount extends Account{
     private boolean isPaidOff;
 
     LoanAccount(String customerID, double amount, double interest, String selectedCurrency, int postfix) {
-        super(customerID + "_" + amount + "_" + postfix, SharedConstants.BANK_ID, customerID, SharedConstants.LOAN);
+        super(customerID + SharedConstants.DELIMITER + amount + SharedConstants.DELIMITER + postfix, SharedConstants.BANK_ID, customerID, SharedConstants.LOAN);
         this.customerID = customerID;
         this.amount = amount;
         this.interest = interest;
         this.isPaidOff = false;
         this.selectedCurrency = selectedCurrency;
-        this.loanID = customerID + "_" + amount + "_" + postfix;
+        this.loanID = customerID + SharedConstants.DELIMITER + amount + SharedConstants.DELIMITER + postfix;
     }
 
     private void setPaid() {
@@ -82,10 +82,10 @@ public class LoanAccount extends Account{
 
     @Override
     public String toString() {
-        String loanInfo = "";
-        loanInfo += "Loan ID: " + getLoanID() + "Customer ID: " + getCustomerID() + "Amount: " + getCurrencyName() +
+        String info = "";
+        info += "Loan ID: " + getLoanID() + "Customer ID: " + getCustomerID() + "Amount: " + getCurrencyName() +
                 getAmount();
-        return loanInfo;
+        return info;
     }
 
 }
