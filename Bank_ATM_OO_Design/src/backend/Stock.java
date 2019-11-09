@@ -1,25 +1,25 @@
 package backend;
 
-public class Stock {
+public class Stock implements Comparable<Stock>{
 
-    private String id;
+    private String stockID;
     private String company;
     private int unit;
     private double price;
 
-    public Stock(String id) {
-        this.id = id;
+    public Stock(String stockID) {
+        this.stockID = stockID;
     }
 
-    public Stock(String id, String company, int unit, double price) {
-        this.id = id;
+    public Stock(String stockID, String company, double price, int unit) {
+        this.stockID = stockID;
         this.company = company;
         this.unit = unit;
         this.price = price;
     }
 
-    public String getId() {
-        return id;
+    public String getID() {
+        return stockID;
     }
 
     public String getName() {
@@ -34,8 +34,8 @@ public class Stock {
         return price;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String stockID) {
+        this.stockID = stockID;
     }
 
     public void setName(String company) {
@@ -43,10 +43,6 @@ public class Stock {
     }
 
     public void setUnit(int unit) {
-        this.unit = unit;
-    }
-
-    public void addUnit(int unit) {
         this.unit += unit;
     }
 
@@ -54,13 +50,17 @@ public class Stock {
         this.price = price;
     }
 
-
     public boolean equals(Stock stock) {
-        return this.id.equals(stock.getId());
+        return this.stockID.equals(stock.getID());
+    }
+
+    @Override
+    public int compareTo(Stock s) {
+        return this.getID().compareTo(s.getID());
     }
 
     @Override
     public String toString() {
-        return "ID:" + id + " NAME:" + company + " UNIT:" + unit + " PRICE:" + price + System.lineSeparator();
+        return "StockID:" + stockID + " Company:" + company + " Unit:" + unit + " Price:" + price + System.lineSeparator();
     }
 }

@@ -10,6 +10,9 @@ public class SharedConstants {
 
     public static final String CK = "CK";
     public static final String SAV = "SAV";
+    public static final String SEC = "SEC";
+    public static final String DELIMITER = "_";
+
     public static final String LOAN = "Loan";
 
     public static final String USD = "USD";
@@ -19,18 +22,12 @@ public class SharedConstants {
     public static final String BANK_NAME = "Bank of Fools";
     public static final String BANK_ID = "BofF";
 
-    // Stock
-    public static final Map<String, String> stockIDtoCompany = new HashMap<String, String>() {{
-        put("AAPL", "Apple Inc.");
-        put("FB", "Facebook Inc");
-        put("AMZN", "Amazon.com Inc");
-    }};
-
     // Numeric values that can be modified
     public static double OPERATION_FEE = 2;   // 2 unit per currency
     public static double LOAN_INTEREST_RATE = 0.1; // 10% per day
     public static double SAVINGS_INTEREST_RATE = 0.0001; // 0.01% per day
-    public static double SAVINGS_AMOUNT_THRESHOLD = 1000; // one currency with 100000 units is eligible to earn interest
+    // SAV accounts that have more than 10000 dollars of balance is eligible to earn interest/open security accounts
+    public static double SAVINGS_AMOUNT_THRESHOLD = 10000;
 
     // Successfully executed operations
     public static final String SUCCESS_CLOSE_ACCOUNT = "SuccessCloseAccount";
@@ -40,6 +37,7 @@ public class SharedConstants {
     // Errors
     public static final String ERR_USER_NOT_EXIST = "ErrUserNotExist";
     public static final String ERR_ACCOUNT_NOT_EXIST = "ErrAccountNotExist";
+    public static final String ERR_STOCK_NOT_EXIST = "ErrStockNotExist";
     public static final String ERR_INVALID_ARGUMENT = "ErrInvalidArgument";
     public static final String ERR_WRONG_PASS = "ErrWrongPass";
     public static final String ERR_INSUFFICIENT_COLLATERAL = "ErrInsufficientCollateral";

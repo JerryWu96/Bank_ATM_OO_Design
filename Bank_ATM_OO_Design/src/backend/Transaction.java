@@ -11,7 +11,7 @@ public abstract class Transaction {
     private String selectedCurrency;
 
     Transaction(String accountID, String userID, int day, String selectedCurrency, String type) {
-        this.transactionID = accountID + "_" + userID;
+        this.transactionID = accountID + SharedConstants.DELIMITER + userID;
         this.accountID = accountID;
         this.userID = userID;
         this.day = day;
@@ -20,7 +20,7 @@ public abstract class Transaction {
     }
 
     Transaction(String userID, int day, String selectedCurrency, String type) {
-        this.transactionID = accountID + "_" + userID;
+        this.transactionID = accountID + SharedConstants.DELIMITER + userID;
         this.accountID = null;
         this.userID = userID;
         this.day = day;
