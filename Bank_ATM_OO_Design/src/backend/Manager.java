@@ -9,3 +9,4 @@ public class Manager extends User {
         super(name, userID, password, "Manager");
         this.bankID = bankID;
     }
+}
