@@ -384,13 +384,29 @@ public class Bank {
         return this.savingsMap.getOrDefault(accountID, null);
     }
 
-    public String[] getAccountList() {
+    /**
+     * get a String array of accountID given a specific accountType
+     * @param accountType type of the account.
+     * @return Array of accountID
+     */
+    public String[] getAccountList(String accountType) {
         List<String> accountList = new ArrayList<>();
-        for (CheckingAccount checking : checkingList) {
-            accountList.add(checking.getAccountID());
-        }
-        for (SavingsAccount saving : savingsList) {
-            accountList.add(saving.getAccountID());
+        switch (accountType) {
+            case SharedConstants.CK:
+                for (CheckingAccount checking : checkingList) {
+                    accountList.add(checking.getAccountID());
+                }
+                break;
+            case SharedConstants.SAV:
+                for (SavingsAccount saving : savingsList) {
+                    accountList.add(saving.getAccountID());
+                }
+                break;
+            case SharedConstants.SEC:
+                for (SecurityAccount securityAccount : securityList) {
+                    accountList.add(securityAccount.getAccountID());
+                }
+                break;
         }
         return accountList.toArray(new String[0]);
     }

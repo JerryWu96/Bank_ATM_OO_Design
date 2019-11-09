@@ -82,10 +82,10 @@ public class LoanAccount extends Account{
 
     @Override
     public String toString() {
-        String loanInfo = "";
-        loanInfo += "Loan ID: " + getLoanID() + "Customer ID: " + getCustomerID() + "Amount: " + getCurrencyName() +
+        String info = "";
+        info += "Loan ID: " + getLoanID() + "Customer ID: " + getCustomerID() + "Amount: " + getCurrencyName() +
                 getAmount();
-        return loanInfo;
+        return info;
     }
 
 }

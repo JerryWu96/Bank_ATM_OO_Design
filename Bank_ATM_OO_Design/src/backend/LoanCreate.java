@@ -20,5 +20,10 @@ public class LoanCreate extends Transaction {
     public double getLoanAmount() {
         return this.loanAmount;
     }
+
+    @Override
+    public String toString() {
+        String info = "";
+    }
 }
 
