@@ -42,11 +42,15 @@ public class Stock implements Comparable<Stock>{
         this.company = company;
     }
 
+    public String getCompany() {
+        return this.company;
+    }
+
     public void setUnit(int unit) {
         this.unit += unit;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

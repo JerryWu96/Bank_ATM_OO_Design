@@ -1,4 +1,5 @@
 package backend;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ public class Customer extends User {
     private int collateral;
 
     Customer(String name, String userID, String password) {
-        super(name, userID, password, "Customer");
+        super(name, userID, password, SharedConstants.CUSTOMER);
         this.loanList = new ArrayList<>();
         this.collateral = 3;
     }
@@ -21,7 +22,7 @@ public class Customer extends User {
     }
 
     public void addCollateral() {
-        this.collateral ++;
+        this.collateral++;
     }
 
     public void useCollateral() {
@@ -30,8 +31,9 @@ public class Customer extends User {
 
     /**
      * add a loan entry to this customer, and remove one collateral
+     *
      * @param amount
-     * @param interest (interest rate)
+     * @param interest         (interest rate)
      * @param selectedCurrency
      */
     public void addLoan(double amount, double interest, String selectedCurrency) {
@@ -42,6 +44,7 @@ public class Customer extends User {
 
     /**
      * pay off the loan with the corresponding ID
+     *
      * @param loanID
      */
     public void payoffLoan(String loanID) {
@@ -67,8 +70,7 @@ public class Customer extends User {
     }
 
     /**
-     * 
-     * @return  a list with all the loan entries this customer has
+     * @return a list with all the loan entries this customer has
      */
     public List<String> getLoans() {
         List<String> loanIDList = new ArrayList<>();

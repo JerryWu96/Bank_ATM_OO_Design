@@ -309,19 +309,21 @@ public class Bank {
     public String buyStock(String secAccountID, String stockID, int unit) {
         for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
-                securityAccount.buyStock(stockID, unit);
+                String result = securityAccount.buyStock(stockID, unit);
+                return result;
             }
         }
-        return SharedConstants.SUCCESS_TRANSACTION;
+        return SharedConstants.ERR_STOCK_NOT_EXIST;
     }
 
     public String sellStock(String secAccountID, String stockID, int unit) {
         for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
-                securityAccount.sellStock(stockID, unit);
+                String result = securityAccount.sellStock(stockID, unit);
+                return result;
             }
         }
-        return SharedConstants.SUCCESS_TRANSACTION;
+        return SharedConstants.ERR_ACCOUNT_NOT_EXIST;
     }
 
 
