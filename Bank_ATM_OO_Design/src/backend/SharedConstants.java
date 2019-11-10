@@ -18,6 +18,8 @@ public class SharedConstants {
     public static final String LOAN_PAY_OFF = "LoanPayOff";
     public static final String STOCK_PURCHASE = "StockPurchase";
     public static final String STOCK_SELL = "StockSell";
+    public static final String ACCOUNT_OPEN = "AccountOpen";
+    public static final String ACCOUNT_CLOSE = "AccountClose";
 
     public static final String USD = "USD";
     public static final String CNY = "CNY";
@@ -50,5 +52,6 @@ public class SharedConstants {
     public static final String ERR_INSUFFICIENT_BALANCE = "ErrInsufficientBalance";
     public static final String ERR_OPEN_ACCOUNT = "ErrOpenAccount";
     public static final String ERR_CLOSE_ACCOUNT = "ErrCloseAccount";
+    public static final String ERR_INVALID_DAY = "ErrInvalidDay";
 
 }
