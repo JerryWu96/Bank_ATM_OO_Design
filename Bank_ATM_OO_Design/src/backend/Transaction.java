@@ -11,7 +11,7 @@ public abstract class Transaction {
     private String selectedCurrency;
 
     Transaction(String accountID, String userID, int day, String selectedCurrency, String type) {
-        this.transactionID = accountID + SharedConstants.DELIMITER + userID;
+        this.transactionID = day + SharedConstants.DELIMITER + type + SharedConstants.DELIMITER + userID;
         this.accountID = accountID;
         this.userID = userID;
         this.day = day;
@@ -19,13 +19,26 @@ public abstract class Transaction {
         this.type = type;
     }
 
-    Transaction(String userID, int day, String selectedCurrency, String type) {
-        this.transactionID = accountID + SharedConstants.DELIMITER + userID;
-        this.accountID = null;
-        this.userID = userID;
-        this.day = day;
-        this.selectedCurrency = selectedCurrency;
-        this.type = type;
+
+    /**
+     * Constructor chaining. This constructor is called when the transaction does not include selectedCurrency
+     * @param userID
+     * @param day
+     * @param accountID
+     * @param type
+     */
+    Transaction(String userID, int day, String accountID, String type) {
+        this(accountID, userID, day, null, type);
+    }
+
+    /**
+     * Constructor chaining. This constructor is called when the transaction includes neither accountID nor currency type
+     * @param userID
+     * @param day
+     * @param type
+     */
+    Transaction(String userID, int day, String type) {
+        this(null, userID, day, null, type);
     }
 
     public int getDay() {

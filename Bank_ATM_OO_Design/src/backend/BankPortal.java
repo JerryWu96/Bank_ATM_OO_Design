@@ -58,15 +58,17 @@ public class BankPortal {
     }
 
     /**
-     * open a new account in backend
+     * open a new account (CK or SAV)
      *
      * @param bankID
      * @param userID
      * @param accountType
      */
-    public void openAccount(String bankID, String userID, String accountType) {
-        String newAccountID = this.bank.openAccount(userID, accountType);
-        BankLogger.getInstance().addAccount(newAccountID);
+    public String openAccount(String bankID, String userID, String accountType) {
+        AccountOpen accountOpen = new AccountOpen(userID, this.day, accountType);
+        String result = accountOpen.startTransaction();
+        BankLogger.getInstance().addTransaction(accountOpen);
+        return result;
     }
 
     /**
@@ -76,10 +78,13 @@ public class BankPortal {
      * @param userID
      * @param accountType
      * @param savAccountID The savings account ID with which the security account is going to interact.
+     * @return String indicates the transaction status
      */
-    public void openAccount(String bankID, String userID, String accountType, String savAccountID) {
-        String newAccountID = this.bank.openAccount(userID, accountType, savAccountID);
-        BankLogger.getInstance().addAccount(newAccountID);
+    public String openAccount(String bankID, String userID, String accountType, String savAccountID) {
+        AccountOpen accountOpen = new AccountOpen(userID, this.day, accountType, savAccountID);
+        String result = accountOpen.startTransaction();
+        BankLogger.getInstance().addTransaction(accountOpen);
+        return result;
     }
 
     /**
@@ -88,10 +93,13 @@ public class BankPortal {
      * @param userID
      * @param accountID
      * @param accountType
-     * @return message about success or failure
+     * @return String indicates the transaction status
      */
     public String closeAccount(String userID, String accountID, String accountType) {
-        return this.bank.closeAccount(userID, accountID, accountType);
+        AccountClose accountClose = new AccountClose(userID, this.day, accountID, accountType);
+        String result = accountClose.startTransaction();
+        BankLogger.getInstance().addTransaction(accountClose);
+        return result;
     }
 
     /**
@@ -102,10 +110,11 @@ public class BankPortal {
      * @param amount
      * @param selectedCurrency
      */
-    public void deposit(String userID, String accountID, double amount, String selectedCurrency) {
+    public String deposit(String userID, String accountID, double amount, String selectedCurrency) {
         Deposit deposit = new Deposit(accountID, userID, this.day, selectedCurrency, amount);
-        deposit.startTransaction();
+        String result = deposit.startTransaction();
         BankLogger.getInstance().addTransaction(deposit);
+        return result;
     }
 
     /**

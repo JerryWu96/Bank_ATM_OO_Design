@@ -1,4 +1,5 @@
 package backend;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class BankLogger {
 
     /**
      * return a new instance of BankLogger
+     *
      * @return
      */
     public static BankLogger getInstance() {
@@ -37,8 +39,8 @@ public class BankLogger {
     }
 
     public void addAccount(String newAccountID) {
-            this.newAccountIDMap.putIfAbsent(this.day, new ArrayList<String>());
-            this.newAccountIDMap.get(this.day).add(newAccountID);
+        this.newAccountIDMap.putIfAbsent(this.day, new ArrayList<String>());
+        this.newAccountIDMap.get(this.day).add(newAccountID);
     }
 
     public void closeAccount(String closedAccountID) {
@@ -51,30 +53,20 @@ public class BankLogger {
         this.transactions.get(this.day).add(transaction);
     }
 
-//    public void addDeposit(Deposit deposit) {
-//        this.deposits.putIfAbsent(this.day, new ArrayList<Deposit>());
-//        this.deposits.get(this.day).add(deposit);
+    /**
+     * Generate a report object with transactions and operations by a specific
+     *
+     * @param requestDay
+     * @return
+     */
+//    public Report generateReportByDay(int requestDay) {
+//        String reportContent = "";
+//        if (!newAccountIDMap.containsKey(requestDay)) {
+//            return new Report(day, SharedConstants.ERR_INVALID_DAY);
+//        }
+
 //    }
-//
-//    public void addNewLoan(Loan loan) {
-//        this.newLoans.putIfAbsent(this.day, new ArrayList<Loan>());
-//        this.newLoans.get(this.day).add(loan);
-//    }
-//
-//    public void payoffLoan(Loan loan) {
-//        this.closedLoans.putIfAbsent(this.day, new ArrayList<Loan>());
-//        this.closedLoans.get(this.day).add(loan);
-//    }
-//
-//    public void addWithdraw(Withdraw withdraw) {
-//        this.withdraws.putIfAbsent(this.day, new ArrayList<Withdraw>());
-//        this.withdraws.get(this.day).add(withdraw);
-//    }
-//
-//    public void addTransfer(Transfer transfer) {
-//        this.transfers.putIfAbsent(this.day, new ArrayList<>());
-//        this.transfers.get(this.day).add(transfer);
-//    }
+
 
 //    public Report generateReport(int requestDay) {
 //        String reportContent = "";

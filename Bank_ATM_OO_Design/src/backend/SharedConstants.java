@@ -53,5 +53,6 @@ public class SharedConstants {
     public static final String ERR_OPEN_ACCOUNT = "ErrOpenAccount";
     public static final String ERR_CLOSE_ACCOUNT = "ErrCloseAccount";
     public static final String ERR_INVALID_DAY = "ErrInvalidDay";
+    public static final String ERR_INVALID_TRANSACTION = "ErrInvalidTransaction";
 
 }
