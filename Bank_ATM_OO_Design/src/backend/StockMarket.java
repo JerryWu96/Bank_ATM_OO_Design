@@ -39,6 +39,13 @@ public class StockMarket {
 
     // TODO: We should add a SQL connection here to initialize stocks
     public void initStock() {
+        this.stockList = new ArrayList<Stock>() {{
+            add(new Stock("AAPL", "Apple Inc.", 260.0, 1));
+            add(new Stock("FB", "Facebook Inc", 190.0, 1));
+            add(new Stock("AMZN", "Amazon.com Inc", 1800.0, 1));
+            add(new Stock("GOOGL", "Google.com Inc", 1320.0, 1));
+        }};
+
         this.stockIDtoCompany = new HashMap<String, String>() {{
             put("AAPL", "Apple Inc.");
             put("FB", "Facebook Inc");
