@@ -387,12 +387,21 @@ public class Bank {
         return savingsMap.containsKey(accountID);
     }
 
+    public boolean isSecurityAccount(String accountID) {
+        return securityMap.containsKey(accountID);
+    }
+
+
     public CheckingAccount getCheckingAccount(String accountID) {
         return this.checkingMap.getOrDefault(accountID, null);
     }
 
     public SavingsAccount getSavingsAccount(String accountID) {
         return this.savingsMap.getOrDefault(accountID, null);
+    }
+
+    public SecurityAccount getSecurityAccount(String accountID) {
+        return this.securityMap.getOrDefault(accountID, null);
     }
 
     /**
@@ -445,12 +454,24 @@ public class Bank {
      * @return true if it does, false otherwise
      */
     public boolean isUserAccount(String userID, String accountID) {
-        if (isCheckingAccount(accountID)) {
-            if (getCheckingAccount(accountID).getUserID().equals(userID)) {
-                return true;
-            }
-        } else if (isSavingsAccount(accountID)) {
-            if (getSavingsAccount(accountID).getUserID().equals(userID)) {
+        if (isCheckingAccount(accountID) && getCheckingAccount(accountID).getUserID().equals(userID)) {
+            return true;
+        } else if (isSavingsAccount(accountID) && getSavingsAccount(accountID).getUserID().equals(userID)) {
+            return true;
+        } else if (isSecurityAccount(accountID) && getSecurityAccount(accountID).getUserID().equals(userID)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * check if the given user is a manager
+     * @param userID
+     * @return
+     */
+    public boolean isManager(String userID) {
+        for (Manager manager : managerList) {
+            if (manager.getUserID().equals(userID)) {
                 return true;
             }
         }

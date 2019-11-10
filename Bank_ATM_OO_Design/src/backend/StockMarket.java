@@ -2,10 +2,8 @@ package backend;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 
 public class StockMarket {
-    private static List<Stock> stocks;
     private static Map<String, String> stockIDtoCompany;
     private static Map<String, Double> stockIDtoPrice;
     private static StockMarket stockMarket = null;// Singleton design pattern
@@ -51,7 +49,23 @@ public class StockMarket {
         }};
     }
     // TODO: We should add a SQL connection here to update a single stock price and save it
-    public void updateStockPrice(String stockID, String newPrice) {
 
+    /**
+     * update a single stock with a new price
+     * @param stockID
+     * @param newPrice
+     */
+    public String updateStockPrice(String stockID, Double newPrice) {
+        if (stockIDtoPrice.containsKey(stockID)) {
+            stockIDtoPrice.put(stockID, newPrice);
+            return SharedConstants.SUCCESS_UPDATE_STOCK_PRICE;
+        } else {
+            return SharedConstants.ERR_STOCK_NOT_EXIST;
+        }
     }
+
+//    public String[] getStocks() {
+//
+//    }
+
 }
