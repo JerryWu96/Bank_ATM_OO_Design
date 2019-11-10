@@ -35,23 +35,23 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         int buttonWidth = 180;
         int buttonHeight = 25;
 
+        JButton securityButton = new JButton("Open a security account");
+        securityButton.setBounds(x, y + increment * 1, buttonWidth, buttonHeight);
+        add(securityButton);
+        securityButton.addActionListener(this);
+        
         JButton butStockButton = new JButton("Buy stock");
-        butStockButton.setBounds(x, y + increment, buttonWidth, buttonHeight);
+        butStockButton.setBounds(x, y + increment * 3, buttonWidth, buttonHeight);
         add(butStockButton);
         butStockButton.addActionListener(this);
 
         JButton sellStockButton = new JButton("Sell stock");
-        sellStockButton.setBounds(x, y + increment * 2, buttonWidth, buttonHeight);
+        sellStockButton.setBounds(x, y + increment * 4, buttonWidth, buttonHeight);
         add(sellStockButton);
         sellStockButton.addActionListener(this);
 
-        JButton securityButton = new JButton("Open a security account");
-        securityButton.setBounds(x, y + increment * 3, buttonWidth, buttonHeight);
-        add(securityButton);
-        securityButton.addActionListener(this);
-
         JButton returnButton = new JButton("Return");
-        returnButton.setBounds(x, y + increment * 4, buttonWidth, buttonHeight);
+        returnButton.setBounds(x, y + increment * 6, buttonWidth, buttonHeight);
         add(returnButton);
         returnButton.addActionListener(this);
 
@@ -75,7 +75,7 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         add(inquiryButton);
         inquiryButton.addActionListener(this);
 
-        JLabel stockInfoLabel = new JLabel("Stock Information:");
+        JLabel stockInfoLabel = new JLabel("Account Information:");
         stockInfoLabel.setBounds(x, y + increment * 4, textWidth, 25);
         add(stockInfoLabel);
 
@@ -135,6 +135,10 @@ public class InvestmentPanel extends JPanel implements ActionListener {
 
             }
 
+        }
+        
+        if( e.getActionCommand() == "Inquiry" ) {
+        	
         }
 
     }
