@@ -252,17 +252,21 @@ public class BankPortal {
     public String getUserInfo(String userID) {
         String displayContent = "";
         int CKCount = this.bank.getAccountNumber(userID, SharedConstants.CK);
-        int SAVCount = this.bank.getAccountNumber(userID, SharedConstants.SAV);
+        int SavCount = this.bank.getAccountNumber(userID, SharedConstants.SAV);
+        int SecCount = this.bank.getAccountNumber(userID, SharedConstants.SAV);
         displayContent += "Name: " + this.bank.getUserName(userID, SharedConstants.CUSTOMER) + "\n";
         displayContent += "ID: " + userID + "\n";
-        displayContent += "Total Accounts: " + (CKCount + SAVCount) + "\n";
+        displayContent += "Total Accounts: " + (CKCount + SavCount + SecCount) + "\n";
         displayContent += "Operation fee: 5 units for all currencies\n";
 
         if (CKCount == 0) {
-            displayContent += "You have not opened any Checking account yet!\n";
+            displayContent += "You have not opened any checking account yet!\n";
         }
-        if (SAVCount == 0) {
-            displayContent += "You have not opened any Savings account yet!\n";
+        if (SavCount == 0) {
+            displayContent += "You have not opened any savings account yet!\n";
+        }
+        if (SecCount == 0) {
+            displayContent += "You have not opened any security account yet!\n";
         }
 
         for (CheckingAccount account : this.bank.getCheckings()) {
@@ -275,6 +279,12 @@ public class BankPortal {
             if (account.getUserID().equals(userID)) {
                 displayContent += "\nSAV AccountID: " + account.getAccountID();
                 displayContent += "\nBalance: USD " + account.getBalance();
+            }
+        }
+        for (SecurityAccount account : this.bank.getSecurities()) {
+            if (account.getUserID().equals(userID)) {
+                displayContent += "\nSEC AccountID: " + account.getAccountID();
+                displayContent += "\nStocks: " + account.getStockList();
             }
         }
         return displayContent;

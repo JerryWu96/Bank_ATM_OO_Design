@@ -506,6 +506,8 @@ public class Bank {
                 return this.checkingCountMap.getOrDefault(userID, 0);
             case SharedConstants.SAV:
                 return this.savingsCountMap.getOrDefault(userID, 0);
+            case SharedConstants.SEC:
+                return this.securityCountMap.getOrDefault(userID, 0);
         }
         return -1;
     }
