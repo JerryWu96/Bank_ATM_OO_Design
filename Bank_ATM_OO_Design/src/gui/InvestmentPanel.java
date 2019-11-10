@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.InputMismatchException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,7 +30,7 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         int windowHeight = OperationFrame.getInstance().getHeight();
         int windowWidth = OperationFrame.getInstance().getWidth();
 
-        int x = windowWidth / 9 * 5;
+        int x = windowWidth / 10 * 6;
         int y = windowHeight / 15;
         int increment = 50;
         int buttonWidth = 180;
@@ -55,10 +56,10 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         add(returnButton);
         returnButton.addActionListener(this);
 
-        x = windowWidth / 9;
+        x = windowWidth / 14;
         y = windowHeight / 10;
         increment = 25;
-        int textWidth = 220;
+        int textWidth = 290;
 
         JLabel titleLabel = new JLabel("Security accounts: ");
         titleLabel.setBounds(x, y, textWidth, 25);
@@ -70,21 +71,17 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         add(securityAccountsList);
         updateSecurityAccountList();
 
-        JButton inquiryButton = new JButton("Inquire");
-        inquiryButton.setBounds(x + 140, y + increment * 2 + 5, 80, 25);
-        add(inquiryButton);
-        inquiryButton.addActionListener(this);
-
         JLabel stockInfoLabel = new JLabel("Account Information:");
         stockInfoLabel.setBounds(x, y + increment * 4, textWidth, 25);
         add(stockInfoLabel);
 
         accountTextArea = new JTextArea();
-        accountTextArea.setText("Account:\nAccount:\nAccount:\nAccount:\nAccount:\n");
+        accountTextArea.setLineWrap(true);
         accountTextArea.setEditable(false);
         JScrollPane jsp = new JScrollPane(accountTextArea);
         jsp.setBounds(x, y + increment * 5, textWidth, 200);
         add(jsp);
+        updateInfo();
     }
 
     private void updateSecurityAccountList() {
@@ -99,6 +96,15 @@ public class InvestmentPanel extends JPanel implements ActionListener {
             }
         }
     }
+    
+    public void updateInfo() {
+		accountTextArea.setText("");
+		String userID = OperationFrame.getInstance().getUserID();
+		String info = BankPortal.getInstance().getUserInfo(userID);
+		accountTextArea.append("\n\n");
+        accountTextArea.append(info);
+        accountTextArea.append("\n\n");
+	}
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -131,13 +137,54 @@ public class InvestmentPanel extends JPanel implements ActionListener {
                 } else {
                     BankPortal.getInstance().openAccount(SharedConstants.BANK_ID, userID, SharedConstants.SEC, selectedSavingAccount);
                     updateSecurityAccountList();
+                    updateInfo();
                 }
 
             }
 
         }
         
-        if( e.getActionCommand() == "Inquiry" ) {
+        if( e.getActionCommand() == "Buy stock" ) {
+        	String selectedSecurityAccount = securityAccountsList.getSelectedItem().toString();
+        	if( selectedSecurityAccount.contentEquals(selectOne) ) {
+        		JOptionPane.showMessageDialog(null, "Please select a security account!");
+        	}
+        	else {
+        		
+        		try {
+        			// select a stock
+            		String[] stocksList = BankPortal.getInstance().getAllStockID();
+            		Object selectedValue = JOptionPane.showInputDialog(null, "Choose one",
+                            "Input", JOptionPane.INFORMATION_MESSAGE, null, stocksList,
+                            stocksList[0]);
+        			String selectedStock = selectedValue.toString();  // NullPointerException
+        			
+        			// how many shares
+        			int shares = 0;       			
+        			String inputValue = JOptionPane.showInputDialog("How many shares would you like?");
+    				shares = Integer.parseInt(inputValue);    // InputMismatchException			       			       			                   
+                    String result = BankPortal.getInstance().buyStock(selectedStock, selectedSecurityAccount, shares);    
+                    if( result.equals(SharedConstants.SUCCESS_TRANSACTION) ) {
+                    	// Purchased successfully.
+                    	JOptionPane.showInputDialog("Purchased successfully!");
+                    	updateInfo();
+                    }
+                    else {
+                    	// Fail to buy
+                    }
+        		
+        		}
+        		catch(NullPointerException error) {
+        			System.out.println(error);
+        		}
+        		catch(NumberFormatException error) {
+        			System.out.println(error);
+        			JOptionPane.showMessageDialog(null, "Please select an integer!");
+        		}           
+        	}       	
+        }
+        
+        if( e.getActionCommand() == "Sell stock" ) {
         	
         }
 
