@@ -5,13 +5,13 @@ package backend;
  */
 public class StockPurchase extends Transaction {
     private String stockID;
-    private String savAccountID;
+    private String secAccountID;
     private int unit;
 
-    StockPurchase(String userID, int creationDay, String savAccountID, String stockID, int unit) {
-        super(userID, creationDay, null, "StockPurchase");
+    StockPurchase(String userID, int creationDay, String secAccountID, String stockID, int unit) {
+        super(userID, creationDay, SharedConstants.USD, SharedConstants.STOCK_PURCHASE);
         this.stockID = stockID;
-        this.savAccountID = savAccountID;
+        this.secAccountID = secAccountID;
         this.unit = unit;
     }
 
@@ -19,15 +19,15 @@ public class StockPurchase extends Transaction {
      * execute transaction: buy stock
      */
     public String startTransaction() {
-        return BankPortal.getInstance().getBank().buyStock(getSavAccountID(), getStockID(), getUnit());
+        return BankPortal.getInstance().getBank().buyStock(getSecAccountID(), getStockID(), getUnit());
     }
 
     public String getStockID() {
         return this.stockID;
     }
 
-    public String getSavAccountID() {
-        return this.savAccountID;
+    public String getSecAccountID() {
+        return this.secAccountID;
     }
 
     public int getUnit() {

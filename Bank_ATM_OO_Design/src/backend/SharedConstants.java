@@ -1,8 +1,5 @@
 package backend;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SharedConstants {
     // Constant String names
     public static final String CUSTOMER = "Customer";
@@ -14,6 +11,13 @@ public class SharedConstants {
     public static final String DELIMITER = "_";
 
     public static final String LOAN = "Loan";
+    public static final String DEPOSIT = "Deposit";
+    public static final String WITHDRAW = "Withdraw";
+    public static final String TRANSFER = "Transfer";
+    public static final String LOAN_CREATE = "LoanCreate";
+    public static final String LOAN_PAY_OFF = "LoanPayOff";
+    public static final String STOCK_PURCHASE = "StockPurchase";
+    public static final String STOCK_SELL = "StockSell";
 
     public static final String USD = "USD";
     public static final String CNY = "CNY";

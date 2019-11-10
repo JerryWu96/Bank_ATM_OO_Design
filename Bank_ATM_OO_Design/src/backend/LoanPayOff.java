@@ -6,7 +6,7 @@ public class LoanPayOff extends Transaction {
     private String loanID;
 
     LoanPayOff(String userID, int creationDay, String loanID) {
-        super(userID, creationDay, null, "LoanPayOff");
+        super(userID, creationDay, SharedConstants.USD, SharedConstants.LOAN_PAY_OFF);
         this.loanID = loanID;
     }
 

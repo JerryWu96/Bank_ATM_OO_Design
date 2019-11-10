@@ -70,12 +70,12 @@ public class BankPortal {
     }
 
     /**
-     * open a new Security account in backend
+     * open a new security account. This is an overloaded method that requires an extra param: savAccountID
      *
      * @param bankID
      * @param userID
      * @param accountType
-     * @param savAccountID
+     * @param savAccountID The savings account ID with which the security account is going to interact.
      */
     public void openAccount(String bankID, String userID, String accountType, String savAccountID) {
         String newAccountID = this.bank.openAccount(userID, accountType, savAccountID);
@@ -115,7 +115,7 @@ public class BankPortal {
      * @param accountID
      * @param amount
      * @param selectedCurrency
-     * @return message about success or failure
+     * @return String indicates the transaction status
      */
     public String withdraw(String userID, String accountID, double amount, String selectedCurrency) {
         Withdraw withdraw = new Withdraw(accountID, userID, this.day, selectedCurrency, amount);
@@ -132,7 +132,7 @@ public class BankPortal {
      * @param targetAccountID
      * @param amount
      * @param selectedCurrency
-     * @return message about success or failure
+     * @return String indicates the transaction status
      */
     public String transfer(String userID, String sourceAccountID, String targetAccountID, double amount, String selectedCurrency) {
         Transfer transfer = new Transfer(sourceAccountID, targetAccountID, userID, this.day, selectedCurrency, amount);
@@ -147,7 +147,7 @@ public class BankPortal {
      * @param userID
      * @param amount
      * @param selectedCurrency
-     * @return message about success or failure
+     * @return String indicates the transaction status
      */
     public String takeLoan(String userID, double amount, String selectedCurrency) {
         LoanCreate loanCreate = new LoanCreate(userID, this.day, selectedCurrency, amount);
@@ -160,12 +160,40 @@ public class BankPortal {
      * pay off loan
      *
      * @param loanID
-     * @return message about success or failure
+     * @return String indicates the transaction status
      */
     public String payoffLoan(String loanID) {
         LoanPayOff loanPayOff = new LoanPayOff(userID, this.day, loanID);
         String result = loanPayOff.startTransaction();
         BankLogger.getInstance().addTransaction(loanPayOff);
+        return result;
+    }
+
+    /**
+     * buy stock
+     * @param stockID
+     * @param secAccountID
+     * @param unit
+     * @return String indicates the transaction status
+     */
+    public String buyStock(String stockID, String secAccountID, int unit) {
+        StockPurchase stockPurchase = new StockPurchase(userID, this.day, secAccountID, stockID, unit);
+        String result = stockPurchase.startTransaction();
+        BankLogger.getInstance().addTransaction(stockPurchase);
+        return result;
+    }
+
+    /**
+     * sell stock given
+     * @param stockID
+     * @param secAccountID
+     * @param unit
+     * @return String indicates the transaction status
+     */
+    public String sellStock(String stockID, String secAccountID, int unit) {
+        StockSell stockSell = new StockSell(userID, this.day, secAccountID, stockID, unit);
+        String result = stockSell.startTransaction();
+        BankLogger.getInstance().addTransaction(stockSell);
         return result;
     }
 
@@ -184,6 +212,14 @@ public class BankPortal {
         } else {
             return SharedConstants.ERR_PERMISSION_DENIED;
         }
+    }
+
+    /**
+     * Get all stock IDs
+     * @return String array of IDs
+     */
+    public String[] getAllStockID() {
+        return StockMarket.getInstance().getAllStockID();
     }
 
     public String checkPermission(String userID) {

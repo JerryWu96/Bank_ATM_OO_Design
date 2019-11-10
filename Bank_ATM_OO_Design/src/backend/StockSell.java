@@ -2,13 +2,13 @@ package backend;
 
 public class StockSell extends Transaction{
     private String stockID;
-    private String savAccountID;
+    private String secAccountID;
     private int unit;
 
-    StockSell(String userID, int creationDay, String savAccountID, String stockID, int unit) {
-        super(userID, creationDay, null, "StockSell");
+    StockSell(String userID, int creationDay, String secAccountID, String stockID, int unit) {
+        super(userID, creationDay, SharedConstants.USD, SharedConstants.STOCK_SELL);
         this.stockID = stockID;
-        this.savAccountID = savAccountID;
+        this.secAccountID = secAccountID;
         this.unit = unit;
     }
 
@@ -16,15 +16,15 @@ public class StockSell extends Transaction{
      * execute transaction: sell stock
      */
     public String startTransaction() {
-        return BankPortal.getInstance().getBank().sellStock(getSavAccountID(), getStockID(), getUnit());
+        return BankPortal.getInstance().getBank().sellStock(getSecAccountID(), getStockID(), getUnit());
     }
 
     public String getStockID() {
         return this.stockID;
     }
 
-    public String getSavAccountID() {
-        return this.savAccountID;
+    public String getSecAccountID() {
+        return this.secAccountID;
     }
 
     public int getUnit() {

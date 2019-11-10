@@ -2,10 +2,14 @@ package backend;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class StockMarket {
-    private static Map<String, String> stockIDtoCompany;
-    private static Map<String, Double> stockIDtoPrice;
+    private List<Stock> stockList;
+    private Map<String, String> stockIDtoCompany;
+    private Map<String, Double> stockIDtoPrice;
+
     private static StockMarket stockMarket = null;// Singleton design pattern
 
     /**
@@ -52,6 +56,7 @@ public class StockMarket {
 
     /**
      * update a single stock with a new price
+     *
      * @param stockID
      * @param newPrice
      */
@@ -64,8 +69,15 @@ public class StockMarket {
         }
     }
 
-//    public String[] getStocks() {
-//
-//    }
-
+    /**
+     * Get all stock IDs
+     * @return String array of IDs
+     */
+    public String[] getAllStockID() {
+        List<String> stockIDList = new ArrayList<>();
+        for (Stock stock : stockList) {
+           stockIDList.add(stock.getID());
+        }
+        return stockIDList.toArray(new String[0]);
+    }
 }

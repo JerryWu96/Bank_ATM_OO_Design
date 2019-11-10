@@ -16,7 +16,7 @@ public class Deposit extends Transaction {
      * @param depositAmount
      */
     Deposit(String accountID, String userID, int creationDay, String selectedCurrency, double depositAmount) {
-        super(accountID, userID, creationDay, selectedCurrency, "Deposit");
+        super(accountID, userID, creationDay, selectedCurrency, SharedConstants.DEPOSIT);
         this.depositAmount = depositAmount;
     }
 
