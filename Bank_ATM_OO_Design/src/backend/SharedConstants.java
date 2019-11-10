@@ -32,12 +32,14 @@ public class SharedConstants {
     // Successfully executed operations
     public static final String SUCCESS_CLOSE_ACCOUNT = "SuccessCloseAccount";
     public static final String SUCCESS_AUTHENTICATE_USER = "SuccessAuthenticateUser";
+    public static final String SUCCESS_UPDATE_STOCK_PRICE = "SuccessUpdateStockPrice";
     public static final String SUCCESS_TRANSACTION = "SuccessTransaction";
 
     // Errors
     public static final String ERR_USER_NOT_EXIST = "ErrUserNotExist";
     public static final String ERR_ACCOUNT_NOT_EXIST = "ErrAccountNotExist";
     public static final String ERR_STOCK_NOT_EXIST = "ErrStockNotExist";
+    public static final String ERR_PERMISSION_DENIED = "ErrPermissionDenied";
     public static final String ERR_INVALID_ARGUMENT = "ErrInvalidArgument";
     public static final String ERR_WRONG_PASS = "ErrWrongPass";
     public static final String ERR_INSUFFICIENT_COLLATERAL = "ErrInsufficientCollateral";

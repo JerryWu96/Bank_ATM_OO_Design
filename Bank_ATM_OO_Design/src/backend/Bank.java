@@ -465,6 +465,20 @@ public class Bank {
     }
 
     /**
+     * check if the given user is a manager
+     * @param userID
+     * @return
+     */
+    public boolean isManager(String userID) {
+        for (Manager manager : managerList) {
+            if (manager.getUserID().equals(userID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * get the number of collaterals owned by this user
      *
      * @param userID
