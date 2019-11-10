@@ -13,6 +13,7 @@ public class OperationFrame extends JFrame {
 	private static LoanPanel loanPanel;
 	private static InvestmentPanel investmentPanel;
 	private static ManagerPanel managerPanel;
+	private static StockManipulatorPanel stockManipulatorPanel;
 	private static String userID;
 	// private static Manager manager;
 	
@@ -48,6 +49,7 @@ public class OperationFrame extends JFrame {
 		investmentPanel = new InvestmentPanel();
 		loanPanel = new LoanPanel();
 		managerPanel = new ManagerPanel();
+		stockManipulatorPanel = new StockManipulatorPanel();
 		
 		setVisible(true);
 	}
@@ -107,6 +109,12 @@ public class OperationFrame extends JFrame {
 		add(managerPanel);
 		managerPanel.setEnabled(true);
 		managerPanel.setVisible(true);
+	}
+	
+	public void setStockManipulatorPanel() {
+		add(stockManipulatorPanel);
+		stockManipulatorPanel.setEnabled(true);
+		stockManipulatorPanel.setVisible(true);
 	}
 	
 	/*
