@@ -95,6 +95,7 @@ public class OperationFrame extends JFrame {
 		
 	public void setInvestmentPanel() {
 		add(investmentPanel);
+		investmentPanel.updateInfo();
 		investmentPanel.setEnabled(true);
 		investmentPanel.setVisible(true);
 	}
