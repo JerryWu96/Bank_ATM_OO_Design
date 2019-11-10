@@ -199,7 +199,7 @@ public class BankPortal {
     }
 
     /**
-     * when new day comes, add the counter and calculate interests
+     * when new day comes, add the day counter and calculate interests
      */
     public void nextDay() {
         this.day++;
