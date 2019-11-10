@@ -52,5 +52,5 @@ public abstract class Transaction {
         return this.type;
     }
 
-    public abstract String startTransaction();
+    public abstract String startTransaction();//must be implemented by all transaction class
 }

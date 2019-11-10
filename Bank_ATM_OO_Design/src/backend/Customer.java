@@ -29,7 +29,7 @@ public class Customer extends User {
     }
 
     /**
-     * add a loan entry to this customer, and remove one collateral
+     * this customer requested a loan, and remove one collateral from him
      * @param amount
      * @param interest (interest rate)
      * @param selectedCurrency

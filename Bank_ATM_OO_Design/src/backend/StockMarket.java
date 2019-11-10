@@ -3,6 +3,9 @@ package backend;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * class for handling stock market
+ */
 public class StockMarket {
     private static Map<String, String> stockIDtoCompany;
     private static Map<String, Double> stockIDtoPrice;
