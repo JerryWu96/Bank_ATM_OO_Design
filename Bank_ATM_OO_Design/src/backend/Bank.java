@@ -73,10 +73,10 @@ public class Bank {
 
     /**
      * get the name of a customer or manager
-     *
-     * @param userID
-     * @param identity (customer or manager)
-     * @return name
+     * 
+     * @param userID (identification of a user)
+     * @param identity (whether customer or manager)
+     * @return name (user's name)
      */
     public String getUserName(String userID, String identity) {
         switch (identity) {
@@ -97,12 +97,12 @@ public class Bank {
     }
 
     /**
-     * add a new user (customer or manager)
-     *
-     * @param userID
+     * create a new user (customer or manager) and add it to the list
+     * 
+     * @param userID (identification of a user)
      * @param password
-     * @param name
-     * @param identity
+     * @param name (user's name)
+     * @param identity (whether customer or manager)
      */
     public void addUser(String userID, String password, String name, String identity) {
         switch (identity) {
@@ -117,8 +117,8 @@ public class Bank {
 
     /**
      * open a new account for a user
-     *
-     * @param userID
+     * 
+     * @param userID (identification of a user)
      * @param accountType (checking, savings)
      * @return opened account id if succeed, or error message
      */
@@ -261,7 +261,7 @@ public class Bank {
     }
 
     /**
-     * request a loan, success if user has collaterals
+     * request a loan, success if user has enough collaterals
      *
      * @param userID
      * @param amount
@@ -287,7 +287,7 @@ public class Bank {
      *
      * @param userID
      * @param loanID
-     * @return message
+     * @return success message
      */
     public String payoffLoan(String userID, String loanID) {
         for (Customer customer : customerList) {
@@ -304,7 +304,7 @@ public class Bank {
      * @param secAccountID
      * @param stockID
      * @param unit
-     * @return
+     * @return success message
      */
     public String buyStock(String secAccountID, String stockID, int unit) {
         for (SecurityAccount securityAccount : securityList) {
@@ -315,6 +315,14 @@ public class Bank {
         return SharedConstants.SUCCESS_TRANSACTION;
     }
 
+    /**
+     * sell some stock
+     * 
+     * @param secAccountID (security accout identification)
+     * @param stockID
+     * @param unit
+     * @return success message
+     */
     public String sellStock(String secAccountID, String stockID, int unit) {
         for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
