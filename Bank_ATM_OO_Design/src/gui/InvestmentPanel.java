@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.InputMismatchException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -109,13 +108,13 @@ public class InvestmentPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand() == "Return") {
+        if( e.getActionCommand() == "Return" ) {
             setEnabled(false);
             setVisible(false);
             OperationFrame.getInstance().setAccountsInfoPanel();
         }
 
-        if (e.getActionCommand() == "Open a security account") {
+        if( e.getActionCommand() == "Open a security account" ) {
             String userID = OperationFrame.getInstance().getUserID();
             String[] savingAccountList = BankPortal.getInstance().getBank().getAccountList(SharedConstants.SAV);
             // Whether there is a saving account
@@ -149,8 +148,7 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         	if( selectedSecurityAccount.contentEquals(selectOne) ) {
         		JOptionPane.showMessageDialog(null, "Please select a security account!");
         	}
-        	else {
-        		
+        	else {        		
         		try {
         			// select a stock
             		String[] stocksList = BankPortal.getInstance().getAllStockID();
@@ -162,17 +160,17 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         			// how many shares
         			int shares = 0;       			
         			String inputValue = JOptionPane.showInputDialog("How many shares would you like?");
-    				shares = Integer.parseInt(inputValue);    // InputMismatchException			       			       			                   
-                    String result = BankPortal.getInstance().buyStock(selectedStock, selectedSecurityAccount, shares);    
-                    if( result.equals(SharedConstants.SUCCESS_TRANSACTION) ) {
-                    	// Purchased successfully.
-                    	JOptionPane.showInputDialog("Purchased successfully!");
-                    	updateInfo();
-                    }
-                    else {
-                    	// Fail to buy
-                    }
-        		
+    				shares = Integer.parseInt(inputValue);    // NumberFormatException		       			       			                   
+                    String result = BankPortal.getInstance().buyStock(selectedStock, selectedSecurityAccount, shares);   
+                    switch(result) {
+                    	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
+                    		JOptionPane.showMessageDialog(null, "You do not have enough balance!");
+                    		break;
+                    	default:
+                    		// SharedConstants.SUCCESS_TRANSACTION
+                    		JOptionPane.showMessageDialog(null, "Purchased successfully!");
+                        	updateInfo();
+                    }    		
         		}
         		catch(NullPointerException error) {
         			System.out.println(error);
@@ -185,8 +183,48 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         }
         
         if( e.getActionCommand() == "Sell stock" ) {
-        	
+        	String selectedSecurityAccount = securityAccountsList.getSelectedItem().toString();
+        	if( selectedSecurityAccount.contentEquals(selectOne) ) {
+        		JOptionPane.showMessageDialog(null, "Please select a security account!");
+        	}
+        	else {
+        		try {
+        			// select your stock
+        			// Do you have a share of this stock?
+            		String[] stocksList = BankPortal.getInstance().getAllStockID();
+            		Object selectedValue = JOptionPane.showInputDialog(null, "Choose one",
+                            "Input", JOptionPane.INFORMATION_MESSAGE, null, stocksList,
+                            stocksList[0]);
+        			String selectedStock = selectedValue.toString();  // NullPointerException
+        			
+        			// How many shares would you like to sell?
+        			// Do you have enough shares of this stock?
+        			int shares = 0;       			
+        			String inputValue = JOptionPane.showInputDialog("How many shares would you like to sell?");
+    				shares = Integer.parseInt(inputValue);    // NumberFormatException		       			       			                   
+                    String result = BankPortal.getInstance().sellStock(selectedStock, selectedSecurityAccount, shares); 
+                    switch(result) {
+                    	case SharedConstants.ERR_STOCK_NOT_EXIST:
+                    		JOptionPane.showMessageDialog(null, "Are you sure you have purchased this stock?");
+                    		break;
+                    	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
+                    		JOptionPane.showMessageDialog(null, "Are you sure you have enough shares of this stock?");
+                    		break;
+                    	default:
+                    		// SharedConstants.SUCCESS_TRANSACTION
+                    		JOptionPane.showMessageDialog(null, "Sold successfully!");
+                        	updateInfo();
+                    }    		
+        			        			
+        		}
+        		catch(NullPointerException error) {
+        			System.out.println(error);
+        		}
+        		catch(NumberFormatException error) {
+        			System.out.println(error);
+        			JOptionPane.showMessageDialog(null, "Please select an integer!");
+        		}
+        	}
         }
-
     }
 }
