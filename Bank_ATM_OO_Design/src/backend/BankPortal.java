@@ -169,6 +169,31 @@ public class BankPortal {
         return result;
     }
 
+    /**
+     * update the stock price if the user has the permission.
+     *
+     * @param userID
+     * @param stockID
+     * @param price
+     * @return String representing the update result.
+     */
+    public String updateStockPrice(String userID, String stockID, double price) {
+        if (checkPermission(userID).equals(SharedConstants.MANAGER)) {
+            StockMarket.getInstance().updateStockPrice(stockID, price);
+            return SharedConstants.SUCCESS_UPDATE_STOCK_PRICE;
+        } else {
+            return SharedConstants.ERR_PERMISSION_DENIED;
+        }
+    }
+
+    public String checkPermission(String userID) {
+        if (getBank().isManager(userID)) {
+            return SharedConstants.MANAGER;
+        } else {
+            return SharedConstants.CUSTOMER;
+        }
+    }
+
     public int getCustomerCollateral() {
         return this.bank.getCustomerCollateral(userID);
     }
