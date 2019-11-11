@@ -319,6 +319,18 @@ public class BankPortal {
     public int getDay() {
         return this.day;
     }
+    
+    /**
+     * Method: getReportByDay.
+     * Function: A manager can get a report on a specific day.
+     * @author Ziqi Tan
+     * @param a specific day
+     * @return String 
+     * */
+    public String getReportByDay(int requestDay) {
+    	Report requestReport =  BankLogger.getInstance().generateReportByDay(requestDay);
+    	return requestReport.getContent();
+    }
 
     public static void main(String[] args) {
         BankPortal portal = new BankPortal();

@@ -45,17 +45,21 @@ public class BankLogger {
 
     /**
      * Generate a report object with transactions and operations by a specific
-     *
-     * @param requestDay
-     * @return
+     * @author Xiankang Wu
+     * @author Ziqi Tan modified on 11, Nov
+     * @param a specific day
+     * @return Object Report
      */
-//    public Report generateReportByDay(int requestDay) {
-//        String reportContent = "";
-//        if (!newAccountIDMap.containsKey(requestDay)) {
-//            return new Report(day, SharedConstants.ERR_INVALID_DAY);
-//        }
-//
-//    }
+     public Report generateReportByDay(int requestDay) {
+    	 
+    	 List<Transaction> transHistory = transactions.getOrDefault(requestDay, null);
+    	 
+    	 if( transHistory == null ) {
+    		 return new Report(requestDay, SharedConstants.ERR_INVALID_DAY);
+    	 }
+    	 
+    	 return new Report(requestDay, transHistory.toString());
+     }
 
 
 //    public Report generateReport(int requestDay) {
