@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 
 import backend.BankPortal;
 import backend.SharedConstants;
-import backend.StockMarket;
 
 /*
 Author: Ziqi Tan
