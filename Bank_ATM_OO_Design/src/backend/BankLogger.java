@@ -48,7 +48,7 @@ public class BankLogger {
      * Generate a report object with transactions and operations by a specific
      * @author Xiankang Wu
      * @author Ziqi Tan modified on 11, Nov
-     * @param a specific day
+     * @param requestDay: specific day that the manager is interested in
      * @return Object Report
      */
      public Report generateReportByDay(int requestDay) {
@@ -75,108 +75,4 @@ public class BankLogger {
     	 }
     	 return updateReport;
      }
-
-//    public Report generateReport(int requestDay) {
-//        String reportContent = "";
-//        for (Map.Entry<Integer, List<CheckingAccount>> entry : newCheckings.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (CheckingAccount checking : entry.getValue()) {
-//                    reportContent += "Customer " + checking.getUserID() + " opened a new Checking account " +
-//                            checking.getAccountID() + ".\n";
-//                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Integer, List<CheckingAccount>> entry : closedCheckings.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (CheckingAccount checking : entry.getValue()) {
-//                    reportContent += "Customer " + checking.getUserID() + " closed a Checking account " +
-//                            checking.getAccountID() + ".\n";
-//                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Integer, List<SavingsAccount>> entry : newSavings.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (SavingsAccount savings : entry.getValue()) {
-//                    reportContent += "Customer " + savings.getUserID() + " opened a new Savings account " +
-//                            savings.getAccountID() + ".\n";
-//                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Integer, List<SavingsAccount>> entry : closedSavings.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (SavingsAccount savings : entry.getValue()) {
-//                    reportContent += "Customer " + savings.getUserID() + " closed a Savings account " +
-//                            savings.getAccountID() + ".\n";
-//                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Integer, List<Deposit>> entry : deposits.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (Deposit deposit : entry.getValue()) {
-//                    reportContent += "Customer " + deposit.getAccountID() + " deposited " + deposit.getSelectedCurrency() +
-//                            deposit.getDepositAmount() + " from account " + deposit.getAccountID() + ".\n";
-//                }
-//            }
-//        }
-//        for (Map.Entry<Integer, List<Withdraw>> entry : withdraws.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (Withdraw withdraw : entry.getValue()) {
-//                    reportContent += "Customer " + withdraw.getAccountID() + " withdrew " + withdraw.getSelectedCurrency() +
-//                            withdraw.getWithdrawAmount() + " from account " + withdraw.getAccountID() + ".\n";
-//                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Integer, List<Transfer>> entry : transfers.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (Transfer transfer : entry.getValue()) {
-//                    reportContent += "Customer " + transfer.getAccountID() + " transferred " + transfer.getSelectedCurrency() +
-//                            transfer.getTransferAmount() + " from account " + transfer.getSourceAccountID() +
-//                            " to account " + transfer.getTargetAccountID() + ".\n";
-//                    reportContent += "Operation fee earned: USD" + BankPortal.getInstance().getBank().getOperationFee() + ".\n";
-//                }
-//            }
-//        }
-//
-//
-//        for (Map.Entry<Integer, List<Loan>> entry : newLoans.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (Loan loan : entry.getValue()) {
-//                    reportContent += "Customer " + loan.getCustomerID() + " made a  " + loan.getSelectedCurrency() +
-//                            loan.getAmount() + " loan\nInterest earned: " + loan.getSelectedCurrency() +
-//                            loan.computeInterest() + ".\n";
-//                }
-//            }
-//        }
-//
-//
-//        for (Map.Entry<Integer, List<Loan>> entry : closedLoans.entrySet()) {
-//            int day = entry.getKey();
-//            if (day == requestDay) {
-//                for (Loan loan : entry.getValue()) {
-//                    reportContent += "Customer " + loan.getCustomerID() + " paid off a  " + loan.getSelectedCurrency() +
-//                            loan.getAmount() + " loan.\n";
-//                }
-//            }
-//        }
-//
-//        return new Report(day, reportContent);
-//    }
 }
