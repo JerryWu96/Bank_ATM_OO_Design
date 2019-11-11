@@ -225,6 +225,10 @@ public class BankPortal {
         }
     }
 
+    public List<Stock> getStocks() {
+        return StockMarket.getInstance().getAllStockID().;
+    }
+
     /**
      * Get all stock IDs
      * @return String array of IDs

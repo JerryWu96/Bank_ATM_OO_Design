@@ -81,4 +81,12 @@ public class StockMarket {
         }
         return stockIDList.toArray(new String[0]);
     }
+
+    /**
+     * Get all stock objects.
+     * @return A list of stocks
+     */
+    public List<Stock> getAllStocks() {
+        return this.stockList;
+    }
 }
