@@ -37,6 +37,18 @@ public class SecurityAccount extends Account {
     }
 
     /**
+     * update savings balance given a stock price and units
+     * @param targetStockPrice
+     * @param unit
+     * @return
+     */
+    private String updateSavBalance(SavingsAccount savingsAccount, double targetStockPrice, int unit) {
+        double balanceDiff = targetStockPrice * unit;
+        USD usdDiff = new USD(balanceDiff);
+        return savingsAccount.setBalance(usdDiff);
+    }
+
+    /**
      * Update stock units as well as update savings account balance
      *
      * @param stockID
@@ -50,22 +62,19 @@ public class SecurityAccount extends Account {
 
         // update savings account balance
         if (tradeType.equals(SharedConstants.STOCK_PURCHASE)) {
-            double balanceDiff = -1 * targetStockPrice * unit;
-            USD usdDiff = new USD(balanceDiff);
-            savingsAccount.setBalance(usdDiff);
+            String result = updateSavBalance(savingsAccount, targetStockPrice, -unit);
+            if (result.equals(SharedConstants.ERR_INSUFFICIENT_BALANCE)) {
+                return SharedConstants.ERR_INSUFFICIENT_BALANCE;
+            }
         } else {
-            double balanceDiff = targetStockPrice * unit;
-            USD usdDiff = new USD(balanceDiff);
-            savingsAccount.setBalance(usdDiff);
+            updateSavBalance(savingsAccount, targetStockPrice, unit);
         }
 
         if (savingsAccount.lowerThanThreshold()) {
-            System.out.println("Status toggled to inactive in updateStock");
             // if the balance is no longer sufficient, deactivate security account.
             toggleStatus();
         } else if (!isActive) {
             // if balance is enough (for example, deposit some money) and it was inactive, then activate the account
-            System.out.println("Status toggled to active in updateStock");
             toggleStatus();
         }
         // update stock units
@@ -77,15 +86,11 @@ public class SecurityAccount extends Account {
                 break;
             case SharedConstants.STOCK_SELL:
                 int curUnit = stock.getUnit();
-                System.out.println("buyStock: " + getStockList());
                 if (curUnit < unit) {
-                    System.out.println("InSufficient stock");
                     return SharedConstants.ERR_INSUFFICIENT_STOCK;
                 }
                 stock.setUnit(-unit);
-                System.out.println("sellStock: " + getStockList());
                 if (stock.getUnit() == 0) {
-                    System.out.println("Remove stock");
                     stocks.remove(company);
                 }
         }
@@ -102,20 +107,17 @@ public class SecurityAccount extends Account {
     public String buyStock(String stockID, int unit, String company, double curStockPrice) {
         SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
         if (savingsAccount.lowerThanThreshold()) {
-            System.out.println("SAV Balance insufficient!!");
             return SharedConstants.ERR_INSUFFICIENT_BALANCE;
         } else if (!isActive) {
-            System.out.println("Status toggled to active in buyStock");
             // with enough balance and was set inactive, reactivate the account
             toggleStatus();
         }
 
         // If the current user has bought the stock.
         if (!stocks.containsKey(company)) {
-            System.out.println("stock not found!");
             Stock newStock = new Stock(stockID, company, curStockPrice, unit);
             stocks.put(company, newStock);
-            System.out.println("new stock added!");
+            updateSavBalance(savingsAccount, curStockPrice, -unit);
             return SharedConstants.SUCCESS_TRANSACTION;
         }
         // else, update the stock unit
@@ -144,7 +146,6 @@ public class SecurityAccount extends Account {
 //        for (Stock stock: stocks.values()) {
             allStocksList.addAll(stocks.values());
 //        }
-        System.out.println("getStockList: " + allStocksList);
         return allStocksList;
     }
 }

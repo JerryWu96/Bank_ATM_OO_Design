@@ -29,8 +29,8 @@ public class SavingsAccount extends Account {
         return this.getBalance() < SharedConstants.SAVINGS_AMOUNT_THRESHOLD;
     }
 
-    public void setBalance(Currency currency) {
-        this.usd.addBalance(currency.convertToUSD());
+    public String setBalance(Currency currency) {
+        return this.usd.addBalance(currency.convertToUSD());
     }
 
     public double getBalance() {

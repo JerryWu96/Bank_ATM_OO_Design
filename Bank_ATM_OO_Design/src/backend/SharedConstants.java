@@ -39,7 +39,9 @@ public class SharedConstants {
     public static final String SUCCESS_CLOSE_ACCOUNT = "SuccessCloseAccount";
     public static final String SUCCESS_AUTHENTICATE_USER = "SuccessAuthenticateUser";
     public static final String SUCCESS_UPDATE_STOCK_PRICE = "SuccessUpdateStockPrice";
+    public static final String SUCCESS_UPDATE_BALANCE = "SuccessUpdateBalance";
     public static final String SUCCESS_TRANSACTION = "SuccessTransaction";
+
 
     // Errors
     public static final String ERR_USER_NOT_EXIST = "ErrUserNotExist";

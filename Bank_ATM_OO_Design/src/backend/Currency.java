@@ -20,8 +20,12 @@ public class Currency {
         return Double.parseDouble(formatter.format(this.balance));
     }
 
-    public void addBalance(double amount) {
-        this.balance += amount ;
+    public String addBalance(double amount) {
+        if (amount < 0 && getBalance() < Math.abs(amount)) {
+            return SharedConstants.ERR_INSUFFICIENT_BALANCE;
+        }
+        this.balance += amount;
+        return SharedConstants.SUCCESS_UPDATE_BALANCE;
     }
 
     public double convertToUSD() { // to USD in default
