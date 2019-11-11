@@ -188,7 +188,8 @@ public class BankPortal {
      * @return String indicates the transaction status
      */
     public String buyStock(String stockID, String secAccountID, int unit) {
-        StockPurchase stockPurchase = new StockPurchase(userID, this.day, secAccountID, stockID, unit);
+        StockPurchase stockPurchase = new StockPurchase(userID, this.day, secAccountID, stockID, unit,
+                StockMarket.getInstance().getStockCompany(stockID),  StockMarket.getInstance().getStockPrice(stockID));
         String result = stockPurchase.startTransaction();
         BankLogger.getInstance().addTransaction(stockPurchase);
         return result;
@@ -226,7 +227,7 @@ public class BankPortal {
     }
 
     public List<Stock> getStocks() {
-        return StockMarket.getInstance().getAllStockID().;
+        return StockMarket.getInstance().getAllStocks();
     }
 
     /**

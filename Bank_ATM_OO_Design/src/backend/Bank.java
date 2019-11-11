@@ -304,10 +304,10 @@ public class Bank {
      * @param unit
      * @return
      */
-    public String buyStock(String secAccountID, String stockID, int unit) {
+    public String buyStock(String secAccountID, String stockID, int unit, String company, double price) {
         for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
-                String result = securityAccount.buyStock(stockID, unit);
+                String result = securityAccount.buyStock(stockID, unit, company, price);
                 return result;
             }
         }

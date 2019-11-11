@@ -99,7 +99,7 @@ public class SecurityAccount extends Account {
      * @param unit    stock units. It must be positive when calling this api
      * @return
      */
-    public String buyStock(String stockID, int unit) {
+    public String buyStock(String stockID, int unit, String company, double curStockPrice) {
         SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
         if (savingsAccount.lowerThanThreshold()) {
             return SharedConstants.ERR_INSUFFICIENT_BALANCE;
@@ -110,8 +110,6 @@ public class SecurityAccount extends Account {
         }
 
         StockMarket stockMarket = StockMarket.getInstance();
-        String company = stockMarket.getStockCompany(stockID);
-        Double curStockPrice = stockMarket.getStockPrice(stockID);
 
         // If the current user has bought the stock.
         if (!stocks.containsKey(company)) {
