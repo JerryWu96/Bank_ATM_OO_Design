@@ -29,7 +29,7 @@ public class Withdraw extends Transaction{
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " withdrew " + getSelectedCurrency() +
-                getWithdrawAmount() + " from account: " + getAccountID();
+        return "Day " + getDay() + ": customer " + getUserID() + " withdrew " + getSelectedCurrency() +
+                getWithdrawAmount() + " from account: " + getAccountID() + "\n";
     }
 }

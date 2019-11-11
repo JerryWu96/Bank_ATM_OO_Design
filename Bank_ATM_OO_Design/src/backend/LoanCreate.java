@@ -23,8 +23,8 @@ public class LoanCreate extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " got a " + getSelectedCurrency() +
-                getLoanAmount() + " loan.";
+        return "Day " + getDay() + ": customer " + getUserID() + " got a " + getSelectedCurrency() +
+                getLoanAmount() + " loan\n";
     }
 }
 

@@ -48,6 +48,6 @@ public class AccountOpen extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " opened a " + this.accountType + " account";
+        return "Day " + getDay() + ": customer " + getUserID() + " opened a " + this.accountType + " account\n";
     }
 }

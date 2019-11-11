@@ -33,6 +33,6 @@ public class Deposit extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " deposited " + getSelectedCurrency() + getDepositAmount() + " to account: " + getAccountID();
+        return "Day " + getDay() + ": customer " + getUserID() + " deposited " + getSelectedCurrency() + getDepositAmount() + " to account: " + getAccountID() + "\n";
     }
 }

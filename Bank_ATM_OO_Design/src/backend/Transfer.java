@@ -44,7 +44,8 @@ public class Transfer extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " transferred " + getSelectedCurrency() +
-                getTransferAmount() + " from account: " + getSourceAccountID() + " to account: " + getTargetAccountID();
+        return "Day " + getDay() + ": customer " + getUserID() + " transferred " + getSelectedCurrency() +
+                getTransferAmount() + " from account: " + getSourceAccountID() + " to account: " +
+                getTargetAccountID() + "\n";
     }
 }

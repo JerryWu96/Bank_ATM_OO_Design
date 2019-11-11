@@ -23,7 +23,7 @@ public class LoanPayOff extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " paid off a loan.";
+        return "Day " + getDay() + ": customer " + getUserID() + " paid off a loan\n";
     }
 }
 

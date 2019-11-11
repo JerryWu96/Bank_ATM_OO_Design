@@ -1,4 +1,5 @@
 package backend;
+
 /**
  * Transaction base class. Different transactions (deposit, withdraw, transfer) are created based on this class.
  */
@@ -22,6 +23,7 @@ public abstract class Transaction {
 
     /**
      * Constructor chaining. This constructor is called when the transaction does not include selectedCurrency
+     *
      * @param userID
      * @param day
      * @param accountID
@@ -33,6 +35,7 @@ public abstract class Transaction {
 
     /**
      * Constructor chaining. This constructor is called when the transaction includes neither accountID nor currency type
+     *
      * @param userID
      * @param day
      * @param type
@@ -57,7 +60,7 @@ public abstract class Transaction {
         return this.transactionID;
     }
 
-    public String   getSelectedCurrency() {
+    public String getSelectedCurrency() {
         return this.selectedCurrency;
     }
 

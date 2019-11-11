@@ -45,6 +45,6 @@ public class StockSell extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + " customer " + getUserID() + " sold " + unit + " units of " + getStockID() + "stock";
+        return "Day " + getDay() + ": customer " + getUserID() + " sold " + unit + " units of " + getStockID() + "stock\n";
     }
 }
