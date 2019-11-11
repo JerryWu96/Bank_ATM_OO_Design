@@ -160,24 +160,30 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         			// how many shares
         			int shares = 0;       			
         			String inputValue = JOptionPane.showInputDialog("How many shares would you like?");
-    				shares = Integer.parseInt(inputValue);    // NumberFormatException		       			       			                   
-                    String result = BankPortal.getInstance().buyStock(selectedStock, selectedSecurityAccount, shares);   
-                    switch(result) {
-                    	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
-                    		JOptionPane.showMessageDialog(null, "You do not have enough balance!");
-                    		break;
-                    	default:
-                    		// SharedConstants.SUCCESS_TRANSACTION
-                    		JOptionPane.showMessageDialog(null, "Purchased successfully!");
-                        	updateInfo();
-                    }    		
+    				shares = Integer.parseInt(inputValue);    // NumberFormatException	
+    				if( shares > 0 ) {
+    					String result = BankPortal.getInstance().buyStock(selectedStock, selectedSecurityAccount, shares);   
+                        switch(result) {
+                        	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
+                        		JOptionPane.showMessageDialog(null, "You do not have enough balance!");
+                        		break;
+                        	default:
+                        		// SharedConstants.SUCCESS_TRANSACTION
+                        		JOptionPane.showMessageDialog(null, "Purchased successfully!");
+                            	updateInfo();
+                        } 
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(null, "Please input a positive integer!");
+    				}
+                       		
         		}
         		catch(NullPointerException error) {
         			System.out.println(error);
         		}
         		catch(NumberFormatException error) {
         			System.out.println(error);
-        			JOptionPane.showMessageDialog(null, "Please select an integer!");
+        			JOptionPane.showMessageDialog(null, "Please input an integer!");
         		}           
         	}       	
         }
@@ -201,28 +207,35 @@ public class InvestmentPanel extends JPanel implements ActionListener {
         			// Do you have enough shares of this stock?
         			int shares = 0;       			
         			String inputValue = JOptionPane.showInputDialog("How many shares would you like to sell?");
-    				shares = Integer.parseInt(inputValue);    // NumberFormatException		       			       			                   
-                    String result = BankPortal.getInstance().sellStock(selectedStock, selectedSecurityAccount, shares); 
-                    switch(result) {
-                    	case SharedConstants.ERR_STOCK_NOT_EXIST:
-                    		JOptionPane.showMessageDialog(null, "Are you sure you have purchased this stock?");
-                    		break;
-                    	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
-                    		JOptionPane.showMessageDialog(null, "Are you sure you have enough shares of this stock?");
-                    		break;
-                    	default:
-                    		// SharedConstants.SUCCESS_TRANSACTION
-                    		JOptionPane.showMessageDialog(null, "Sold successfully!");
-                        	updateInfo();
-                    }    		
-        			        			
+    				shares = Integer.parseInt(inputValue);    // NumberFormatException	
+    				if( shares > 0 ) {
+    					String result = BankPortal.getInstance().sellStock(selectedStock, selectedSecurityAccount, shares); 
+                        switch(result) {
+                        	case SharedConstants.ERR_STOCK_NOT_EXIST:
+                        		JOptionPane.showMessageDialog(null, "Are you sure you have purchased this stock?");
+                        		break;
+                        	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
+                        		JOptionPane.showMessageDialog(null, "Are you sure you have enough shares of this stock?");
+                        		break;
+                        	case SharedConstants.ERR_INSUFFICIENT_STOCK:
+                        		JOptionPane.showMessageDialog(null, "You don't have sufficient stocks.");
+                        		break;
+                        	default:
+                        		// SharedConstants.SUCCESS_TRANSACTION
+                        		JOptionPane.showMessageDialog(null, "Sold successfully!");
+                            	updateInfo();
+                        }    		
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(null, "Please input a positive integer!");
+    				}                      			        			
         		}
         		catch(NullPointerException error) {
         			System.out.println(error);
         		}
         		catch(NumberFormatException error) {
         			System.out.println(error);
-        			JOptionPane.showMessageDialog(null, "Please select an integer!");
+        			JOptionPane.showMessageDialog(null, "Please input an integer!");
         		}
         	}
         }

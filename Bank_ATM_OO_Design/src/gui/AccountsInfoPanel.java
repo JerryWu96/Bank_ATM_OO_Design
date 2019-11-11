@@ -1,7 +1,6 @@
 package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -200,8 +199,6 @@ public class AccountsInfoPanel extends JPanel implements ActionListener {
 			OperationFrame.getInstance().setLoginPanel();
 			
 			JOptionPane.showMessageDialog(null,"Logout successfully!");
-		}
-		
+		}		
 	}
-
 }
