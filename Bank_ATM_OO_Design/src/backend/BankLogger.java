@@ -9,16 +9,12 @@ import java.util.TreeMap;
  * Class that stores information required to generate logs/reports.
  */
 public class BankLogger {
-    private Map<Integer, List<String>> newAccountIDMap;
-    private Map<Integer, List<String>> closedAccountIDMap;
     private Map<Integer, List<Transaction>> transactions;
     private int day;
     private static BankLogger logger = null;
 
     BankLogger(int day) {
         this.day = day;
-        this.newAccountIDMap = new TreeMap<>();
-        this.closedAccountIDMap = new TreeMap<>();
         this.transactions = new TreeMap<>();
     }
 
@@ -38,16 +34,10 @@ public class BankLogger {
         this.day++;
     }
 
-    public void addAccount(String newAccountID) {
-        this.newAccountIDMap.putIfAbsent(this.day, new ArrayList<String>());
-        this.newAccountIDMap.get(this.day).add(newAccountID);
-    }
-
-    public void closeAccount(String closedAccountID) {
-        this.closedAccountIDMap.putIfAbsent(this.day, new ArrayList<String>());
-        this.closedAccountIDMap.get(this.day).add(closedAccountID);
-    }
-
+    /**
+     * add a transaction to the transactions map which maps day to a list of transactions took place within that day.
+     * @param transaction
+     */
     public void addTransaction(Transaction transaction) {
         this.transactions.putIfAbsent(this.day, new ArrayList<Transaction>());
         this.transactions.get(this.day).add(transaction);
@@ -64,7 +54,7 @@ public class BankLogger {
 //        if (!newAccountIDMap.containsKey(requestDay)) {
 //            return new Report(day, SharedConstants.ERR_INVALID_DAY);
 //        }
-
+//
 //    }
 
 

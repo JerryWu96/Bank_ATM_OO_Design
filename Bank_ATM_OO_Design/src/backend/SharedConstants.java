@@ -50,6 +50,7 @@ public class SharedConstants {
     public static final String ERR_WRONG_PASS = "ErrWrongPass";
     public static final String ERR_INSUFFICIENT_COLLATERAL = "ErrInsufficientCollateral";
     public static final String ERR_INSUFFICIENT_BALANCE = "ErrInsufficientBalance";
+    public static final String ERR_INSUFFICIENT_STOCK = "ErrInsufficientStock";
     public static final String ERR_OPEN_ACCOUNT = "ErrOpenAccount";
     public static final String ERR_CLOSE_ACCOUNT = "ErrCloseAccount";
     public static final String ERR_INVALID_DAY = "ErrInvalidDay";

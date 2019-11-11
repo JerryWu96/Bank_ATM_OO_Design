@@ -188,7 +188,6 @@ public class Bank {
                 for (CheckingAccount checking : checkingList) {
                     if (checking.getAccountID().equals(accountID)) {
                         checkingList.remove(checking);
-                        BankLogger.getInstance().closeAccount(accountID);
                         break;
                     }
                 }
@@ -202,7 +201,6 @@ public class Bank {
                 for (SavingsAccount saving : savingsList) {
                     if (saving.getAccountID().equals(accountID)) {
                         savingsList.remove(saving);
-                        BankLogger.getInstance().closeAccount(accountID);
                         break;
                     }
                 }

@@ -2,6 +2,7 @@ package backend;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.concurrent.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class SecurityAccount extends Account {
     public SecurityAccount(String bankID, String userID, String accountType, Integer postfix, String savingsAccountID) {
         super(bankID + SharedConstants.DELIMITER + userID + SharedConstants.DELIMITER + SharedConstants.SEC + SharedConstants.DELIMITER + postfix, bankID, userID, accountType);
         this.savingsAccountID = savingsAccountID;
-        this.stocks = new HashMap<>();
+        this.stocks = new ConcurrentHashMap<>();
         this.isActive = true;
     }
 
@@ -24,8 +25,15 @@ public class SecurityAccount extends Account {
         return isActive;
     }
 
-    private void setInactive() {
-        this.isActive = false;
+    /**
+     * Toggle the status of the current sec account. If it was active, set inactive, vice versa
+     */
+    private void toggleStatus() {
+        if (!this.isActive) {
+            this.isActive = true;
+        } else {
+            this.isActive = false;
+        }
     }
 
     /**
@@ -33,22 +41,52 @@ public class SecurityAccount extends Account {
      *
      * @param stockID
      * @param curStockPrice
-     * @param unit positive if we buy stock, negative if we sell stock.
+     * @param unit          negative if we buy stock, positive if we sell stock.
      * @return
      */
-    private String updateStock(String stockID, String company, double curStockPrice, int unit) {
-        double balanceDiff = curStockPrice * unit;
-        USD usdDiff = new USD(balanceDiff);
+    private String updateStock(String stockID, String company, double curStockPrice, int unit, String tradeType) {
         // TODO: verify if the savingsAccount here is a reference.
         SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
-        savingsAccount.setBalance(usdDiff);
-        if (savingsAccount.lowerThanThreshold()) {
-            setInactive();
-            return SharedConstants.ERR_INSUFFICIENT_BALANCE;
+
+        // update savings account balance
+        if (tradeType.equals(SharedConstants.STOCK_PURCHASE)) {
+            double balanceDiff = -1 * curStockPrice * unit;
+            USD usdDiff = new USD(balanceDiff);
+            savingsAccount.setBalance(usdDiff);
+        } else {
+            double balanceDiff = curStockPrice * unit;
+            USD usdDiff = new USD(balanceDiff);
+            savingsAccount.setBalance(usdDiff);
         }
+
+        if (savingsAccount.lowerThanThreshold()) {
+            System.out.println("Status toggled to inactive in updateStock");
+            // if the balance is no longer sufficient, deactivate security account.
+            toggleStatus();
+        } else if (!isActive) {
+            // if balance is enough (for example, deposit some money) and it was inactive, then activate the account
+            System.out.println("Status toggled to active in updateStock");
+            toggleStatus();
+        }
+        // update stock units
         for (Stock stock : stocks.get(company)) {
             if (stock.getID().equals(stockID)) {
-                stock.setUnit(unit);
+                switch (tradeType) {
+                    case SharedConstants.STOCK_PURCHASE:
+                        stock.setUnit(unit);
+                        System.out.println("stock unit now = " + stock.getUnit());
+                    case SharedConstants.STOCK_SELL:
+                        int curUnit = stock.getUnit();
+                        if (curUnit < unit) {
+                            System.out.println("InSufficient stock");
+                            return SharedConstants.ERR_INSUFFICIENT_STOCK;
+                        }
+                        stock.setUnit(-unit);
+                        if (stock.getUnit() == 0) {
+                            System.out.println("Remove stock");
+                            stocks.get(company).remove(stock);
+                        }
+                }
             }
         }
         return SharedConstants.SUCCESS_TRANSACTION;
@@ -62,22 +100,33 @@ public class SecurityAccount extends Account {
      * @return
      */
     public String buyStock(String stockID, int unit) {
+        SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
+        if (savingsAccount.lowerThanThreshold()) {
+            return SharedConstants.ERR_INSUFFICIENT_BALANCE;
+        } else if (!isActive) {
+            System.out.println("Status toggled to active in buystock");
+            // with enough balance and was set inactive, reactivate the account
+            toggleStatus();
+        }
+
         StockMarket stockMarket = StockMarket.getInstance();
         String company = stockMarket.getStockCompany(stockID);
         Double curStockPrice = stockMarket.getStockPrice(stockID);
 
         // If the current user has bought the stock.
-        if (stocks.containsKey(company)) {
-            return updateStock(stockID, company, curStockPrice, unit);
-        } else {
+        if (!stocks.containsKey(company)) {
+            System.out.println("stock not found!");
             Stock newStock = new Stock(stockID, company, curStockPrice, unit);
             stocks.put(company, new ArrayList<Stock>() {
                 {
                     add(newStock);
                 }
             });
+            System.out.println("new stock added!");
             return SharedConstants.SUCCESS_TRANSACTION;
         }
+        // else, update the stock unit
+        return updateStock(stockID, company, curStockPrice, unit, SharedConstants.STOCK_PURCHASE);
     }
 
 
@@ -93,9 +142,9 @@ public class SecurityAccount extends Account {
         String company = stockMarket.getStockCompany(stockID);
         Double curStockPrice = stockMarket.getStockPrice(stockID);
 
-        // If the stockID is valid, update.
         if (stocks.containsKey(company)) {
-            return updateStock(stockID, company, curStockPrice, -1 * unit);
+            // If there is corresponding stock, then we should update its unit.
+            return updateStock(stockID, company, curStockPrice, unit, SharedConstants.STOCK_SELL);
         } else {
             return SharedConstants.ERR_STOCK_NOT_EXIST;
         }

@@ -2,6 +2,8 @@ package backend;
 
 import gui.OperationFrame;
 
+import java.util.List;
+
 /**
  * Class that serves as a centralized bank management interface that processes requests sent from GUI,
  * executed corresponding methods and decouples some operations from Bank class, which
@@ -253,6 +255,15 @@ public class BankPortal {
     }
 
     /**
+     * get stocks owned by a specific sec account
+     * @param secAccount
+     * @return
+     */
+    public List<Stock> getStockbySecAccount(String secAccount) {
+        return getBank().getSecurityAccount(secAccount).getStockList();
+    }
+
+    /**
      * return info of a user
      *
      * @param userID
@@ -266,7 +277,7 @@ public class BankPortal {
         displayContent += "Name: " + this.bank.getUserName(userID, SharedConstants.CUSTOMER) + "\n";
         displayContent += "ID: " + userID + "\n";
         displayContent += "Total Accounts: " + (CKCount + SavCount + SecCount) + "\n";
-        displayContent += "Operation fee: 5 units for all currencies\n";
+        displayContent += "Operation fee: " + SharedConstants.OPERATION_FEE + " units for all currencies\n";
 
         if (CKCount == 0) {
             displayContent += "You have not opened any checking account yet!\n";
