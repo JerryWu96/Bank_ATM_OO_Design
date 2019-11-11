@@ -11,8 +11,12 @@ public class Report {
         this.day = day;
         this.content = transactions;
     }
-
-    public String display() {
+    
+    /**
+     * Modified by Ziqi Tan on 11, Nov.
+     * Change the method name into "getContent" from "display".
+     * */
+    public String getContent() {
         String displayStr = "";
         displayStr += "Report for day " + this.day + "\n";
         displayStr += content;

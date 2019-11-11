@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import backend.BankPortal;
+
 /*
 Author: Ziqi Tan
 */
@@ -41,8 +43,13 @@ public class ManagerPanel extends JPanel implements ActionListener {
 		add(getReportButton);
 		getReportButton.addActionListener(this);
 		
+		JButton nextDayButton = new JButton("Next day");
+		nextDayButton.setBounds(x, y+increment*2, buttonWidth, buttonHeight);
+		add(nextDayButton);
+		nextDayButton.addActionListener(this);
+		
 		JButton stockManipultingButton = new JButton("Stock Manipultor");
-		stockManipultingButton.setBounds(x, y+increment*2, buttonWidth, buttonHeight);
+		stockManipultingButton.setBounds(x, y+increment*3, buttonWidth, buttonHeight);
 		add(stockManipultingButton);
 		stockManipultingButton.addActionListener(this);
 		
@@ -70,6 +77,11 @@ public class ManagerPanel extends JPanel implements ActionListener {
 		
 	}
 	
+	private void updateReportTextArea(String text) {
+		report.setText("");
+		report.append(text);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -86,13 +98,30 @@ public class ManagerPanel extends JPanel implements ActionListener {
 		
 		if( e.getActionCommand().equals("Get Daily Report") ) {
 			
+			// input which day you want to inquire
+			try {
+				String inputvalue = JOptionPane.showInputDialog("Input the day");
+				int day = Integer.parseInt(inputvalue);	
+				String text = BankPortal.getInstance().getReportByDay(day);
+				updateReportTextArea(text);				
+			}
+			catch(NullPointerException error) {
+    			System.out.println(error);
+    		}
+			catch(NumberFormatException error) {
+    			System.out.println(error);
+    			JOptionPane.showMessageDialog(null, "Please select an integer!");
+    		}  						
+		}
+		
+		if( e.getActionCommand().equals("Next day") ) {
+			BankPortal.getInstance().nextDay();
 		}
 		
 		if( e.getActionCommand().equals("Stock Manipultor") ) {
 			setEnabled(false);
 			setVisible(false);
 			OperationFrame.getInstance().setStockManipulatorPanel();
-			
 		}
 		
 	}
