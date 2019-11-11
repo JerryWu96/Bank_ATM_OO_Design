@@ -18,7 +18,7 @@ public class SavingsAccount extends Account {
     }
 
     /**
-     * check whether balance is above the threshold where there interests start to be calculated
+     * check whether balance is above the threshold where interests start to be calculated
      * @return
      */
     public boolean higherThanThreshold() {

@@ -1,5 +1,8 @@
 package backend;
 
+/**
+ * class for a single stock entry
+ */
 public class Stock implements Comparable<Stock>{
 
     private String stockID;

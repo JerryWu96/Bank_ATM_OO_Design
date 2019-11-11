@@ -1,6 +1,6 @@
 package backend;
 /**
- * Class that encapsulates a loan.
+ * Class that encapsulates a loan entry.
  */
 
 import java.text.DecimalFormat;

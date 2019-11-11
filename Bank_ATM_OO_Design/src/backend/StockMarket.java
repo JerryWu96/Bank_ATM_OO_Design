@@ -3,6 +3,9 @@ package backend;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * class for handling stock market
+ */
 public class StockMarket {
     private List<Stock> stockList;
 

@@ -5,6 +5,9 @@ import java.util.concurrent.*;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * class for handling security account
+ */
 public class SecurityAccount extends Account {
 
     private String savingsAccountID;
