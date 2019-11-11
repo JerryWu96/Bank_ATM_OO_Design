@@ -189,7 +189,7 @@ public class BankPortal {
      */
     public String buyStock(String stockID, String secAccountID, int unit) {
         StockPurchase stockPurchase = new StockPurchase(userID, this.day, secAccountID, stockID, unit,
-                StockMarket.getInstance().getStockCompany(stockID),  StockMarket.getInstance().getStockPrice(stockID));
+                StockMarket.getInstance().getStockCompany(stockID), StockMarket.getInstance().getStockPrice(stockID));
         String result = stockPurchase.startTransaction();
         BankLogger.getInstance().addTransaction(stockPurchase);
         return result;
@@ -200,10 +200,12 @@ public class BankPortal {
      * @param stockID
      * @param secAccountID
      * @param unit
+     * @param price combined with stockID, it helps us to find the correct Stock object to operate.
      * @return String indicates the transaction status
      */
-    public String sellStock(String stockID, String secAccountID, int unit) {
-        StockSell stockSell = new StockSell(userID, this.day, secAccountID, stockID, unit);
+    public String sellStock(String stockID, String secAccountID, int unit, double price) {
+        StockSell stockSell = new StockSell(userID, this.day, secAccountID, stockID, unit,
+                StockMarket.getInstance().getStockCompany(stockID), price);
         String result = stockSell.startTransaction();
         BankLogger.getInstance().addTransaction(stockSell);
         return result;

@@ -40,21 +40,21 @@ public class SecurityAccount extends Account {
      * Update stock units as well as update savings account balance
      *
      * @param stockID
-     * @param curStockPrice
-     * @param unit          negative if we buy stock, positive if we sell stock.
+     * @param targetStockPrice
+     * @param unit             negative if we buy stock, positive if we sell stock.
      * @return
      */
-    private String updateStock(String stockID, String company, double curStockPrice, int unit, String tradeType) {
+    private String updateStock(String stockID, String company, double targetStockPrice, int unit, String tradeType) {
         // TODO: verify if the savingsAccount here is a reference.
         SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
 
         // update savings account balance
         if (tradeType.equals(SharedConstants.STOCK_PURCHASE)) {
-            double balanceDiff = -1 * curStockPrice * unit;
+            double balanceDiff = -1 * targetStockPrice * unit;
             USD usdDiff = new USD(balanceDiff);
             savingsAccount.setBalance(usdDiff);
         } else {
-            double balanceDiff = curStockPrice * unit;
+            double balanceDiff = targetStockPrice * unit;
             USD usdDiff = new USD(balanceDiff);
             savingsAccount.setBalance(usdDiff);
         }
@@ -109,8 +109,6 @@ public class SecurityAccount extends Account {
             toggleStatus();
         }
 
-        StockMarket stockMarket = StockMarket.getInstance();
-
         // If the current user has bought the stock.
         if (!stocks.containsKey(company)) {
             System.out.println("stock not found!");
@@ -135,14 +133,10 @@ public class SecurityAccount extends Account {
      * @param unit    stock units. It must be positive when calling this api
      * @return
      */
-    public String sellStock(String stockID, int unit) {
-        StockMarket stockMarket = StockMarket.getInstance();
-        String company = stockMarket.getStockCompany(stockID);
-        Double curStockPrice = stockMarket.getStockPrice(stockID);
-
+    public String sellStock(String stockID, int unit, String company, double targetStockPrice) {
         if (stocks.containsKey(company)) {
             // If there is corresponding stock, then we should update its unit.
-            return updateStock(stockID, company, curStockPrice, unit, SharedConstants.STOCK_SELL);
+            return updateStock(stockID, company, targetStockPrice, unit, SharedConstants.STOCK_SELL);
         } else {
             return SharedConstants.ERR_STOCK_NOT_EXIST;
         }
