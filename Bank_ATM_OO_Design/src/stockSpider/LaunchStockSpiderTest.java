@@ -5,10 +5,9 @@ import java.util.ListIterator;
 /*
 Author: Ziqi Tan
 */
-public class Main {
+public class LaunchStockSpiderTest {
 
-	public static void main(String[] args) {
-
+	public  void launch() {
 		String url = "https://money.cnn.com/data/markets/";
 		StockSpider stockSpider = new StockSpider(url);
 		List<List<String>> stocks = stockSpider.getStockInfoList();
