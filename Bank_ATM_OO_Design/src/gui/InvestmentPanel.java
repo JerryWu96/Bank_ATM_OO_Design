@@ -217,6 +217,9 @@ public class InvestmentPanel extends JPanel implements ActionListener {
                         	case SharedConstants.ERR_INSUFFICIENT_BALANCE:
                         		JOptionPane.showMessageDialog(null, "Are you sure you have enough shares of this stock?");
                         		break;
+                        	case SharedConstants.ERR_INSUFFICIENT_STOCK:
+                        		JOptionPane.showMessageDialog(null, "You don't have sufficient stocks.");
+                        		break;
                         	default:
                         		// SharedConstants.SUCCESS_TRANSACTION
                         		JOptionPane.showMessageDialog(null, "Sold successfully!");
