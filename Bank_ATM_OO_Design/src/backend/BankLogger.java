@@ -45,7 +45,7 @@ public class BankLogger {
     }
 
     /**
-     * Generate a report object with transactions and operations by a specific
+     * Generate a report object with transactions and operations by a specific day
      * @author Xiankang Wu
      * @author Ziqi Tan modified on 11, Nov
      * @param requestDay: specific day that the manager is interested in

@@ -324,7 +324,7 @@ public class BankPortal {
      * Method: getReportByDay.
      * Function: A manager can get a report on a specific day.
      * @author Ziqi Tan
-     * @param a specific day
+     * @param requestDay: integer represents a day that the manager is interested in
      * @return String 
      * */
     public String getReportByDay(int requestDay) {
