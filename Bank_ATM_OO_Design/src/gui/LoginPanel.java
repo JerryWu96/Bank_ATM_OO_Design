@@ -129,6 +129,7 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
                 setVisible(false);
                 userText.setText("");
                 passwordText.setText("");
+                OperationFrame.getInstance().setUserID(user);
                 OperationFrame.getInstance().setManagerPanel();
             } else {
                 // JOptionPane.showMessageDialog(null,"Username and password do not match!");
