@@ -48,7 +48,7 @@ public class Bank {
 
         // initial customer/manager
         customerList.add(new Customer("a", "a", "a"));
-        managerList.add(new Manager("a", "a", "a", SharedConstants.BANK_ID));
+        managerList.add(new Manager("m", "m", "m", SharedConstants.BANK_ID));
     }
 
     public String getBankName() {
