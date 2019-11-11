@@ -63,16 +63,22 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
         add(rootButton);
         rootButton.addActionListener(this);
 
-        JLabel admin = new JLabel("Manager Login");
+        JLabel admin = new JLabel("Manager Username: m");
         admin.setBounds(10, 140, 130, 25);
         add(admin);
 
-        JLabel pass = new JLabel("Password: 123456789");
+        JLabel pass = new JLabel("Password: m");
         pass.setBounds(10, 170, 130, 25);
         add(pass);
 
         JTextArea sample = new JTextArea();
-        String text = "Have fun!\n";
+        String text = "Customer Username: a"
+        		+ "\n"
+        		+ "Password: a"
+        		+ "\n"
+        		+ "\n"
+        		+ "Have fun!"
+        		+ "\n";
         sample.setLineWrap(true);
         sample.setText(text);
         sample.setFont(new Font("", Font.BOLD, 13));

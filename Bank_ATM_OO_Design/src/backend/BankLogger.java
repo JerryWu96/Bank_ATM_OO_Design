@@ -11,6 +11,7 @@ import java.util.TreeMap;
 public class BankLogger {
     private Map<Integer, List<Transaction>> transactions;
     private int day;
+    private int lastReportDay;
     private static BankLogger logger = null;
 
     BankLogger(int day) {
@@ -57,10 +58,23 @@ public class BankLogger {
     	 if( transHistory == null ) {
     		 return new Report(requestDay, SharedConstants.ERR_INVALID_DAY);
     	 }
-    	 
+    	 this.lastReportDay = requestDay;
     	 return new Report(requestDay, transHistory.toString());
      }
-
+     
+     /**
+      * Method: generateReport
+      * @author Ziqi Tan
+      * */
+     public String generateReport() {
+    	 String updateReport = "";
+    	 for( Integer key: transactions.keySet() ) {
+    		 if( key > this.lastReportDay ) {
+    			 updateReport += transactions.get(key);
+    		 }
+    	 }
+    	 return updateReport;
+     }
 
 //    public Report generateReport(int requestDay) {
 //        String reportContent = "";

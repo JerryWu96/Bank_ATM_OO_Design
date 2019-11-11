@@ -331,7 +331,17 @@ public class BankPortal {
     	Report requestReport =  BankLogger.getInstance().generateReportByDay(requestDay);
     	return requestReport.getContent();
     }
-
+    
+    /**
+     * Method: getReport.
+     * Function: A manager can get a report update since from the last time he ran the report.
+     * @author Ziqi Tan
+     * @return String
+     * */
+    public String getReport() {
+    	return BankLogger.getInstance().generateReport();
+    }
+    
     public static void main(String[] args) {
         BankPortal portal = new BankPortal();
         portal.run();

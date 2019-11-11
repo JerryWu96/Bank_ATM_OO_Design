@@ -93,7 +93,8 @@ public class ManagerPanel extends JPanel implements ActionListener {
 		}
 		
 		if( e.getActionCommand().equals("Get Report") ) {
-			
+			String text = BankPortal.getInstance().getReport();
+			updateReportTextArea(text);
 		}
 		
 		if( e.getActionCommand().equals("Get Daily Report") ) {
