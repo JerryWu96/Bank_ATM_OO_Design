@@ -111,8 +111,8 @@ public class SecurityAccount extends Account {
      * @return
      */
     private String updateStock(String stockID, String company, double targetStockPrice, int unit, String tradeType) {
-        // TODO: verify if the savingsAccount here is a reference.
         SavingsAccount savingsAccount = BankPortal.getInstance().getBank().getSavingsAccount(savingsAccountID);
+        Stock stock = stocks.get(company);
 
         // update savings account balance
         if (tradeType.equals(SharedConstants.STOCK_PURCHASE)) {
@@ -120,7 +120,16 @@ public class SecurityAccount extends Account {
             if (result.equals(SharedConstants.ERR_INSUFFICIENT_BALANCE)) {
                 return SharedConstants.ERR_INSUFFICIENT_BALANCE;
             }
+            stock.setUnit(unit);
         } else {
+            int curUnit = stock.getUnit();
+            if (curUnit < unit) {
+                return SharedConstants.ERR_INSUFFICIENT_STOCK;
+            }
+            stock.setUnit(-unit);
+            if (stock.getUnit() == 0) {
+                stocks.remove(company);
+            }
             updateSavBalance(savingsAccount, targetStockPrice, unit);
         }
 
@@ -130,23 +139,6 @@ public class SecurityAccount extends Account {
         } else if (!isActive()) {
             // if balance is enough (for example, deposit some money) and it was inactive, then activate the account
             toggleStatus();
-        }
-        // update stock units
-        Stock stock = stocks.get(company);
-
-        switch (tradeType) {
-            case SharedConstants.STOCK_PURCHASE:
-                stock.setUnit(unit);
-                break;
-            case SharedConstants.STOCK_SELL:
-                int curUnit = stock.getUnit();
-                if (curUnit < unit) {
-                    return SharedConstants.ERR_INSUFFICIENT_STOCK;
-                }
-                stock.setUnit(-unit);
-                if (stock.getUnit() == 0) {
-                    stocks.remove(company);
-                }
         }
         return SharedConstants.SUCCESS_TRANSACTION;
     }
