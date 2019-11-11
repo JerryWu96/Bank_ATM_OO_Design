@@ -134,12 +134,11 @@ public class SecurityAccount extends Account {
      * @return
      */
     public String sellStock(String stockID, int unit, String company, double targetStockPrice) {
-        if (stocks.containsKey(company)) {
-            // If there is corresponding stock, then we should update its unit.
-            return updateStock(stockID, company, targetStockPrice, unit, SharedConstants.STOCK_SELL);
-        } else {
+        if (!stocks.containsKey(company)) {
             return SharedConstants.ERR_STOCK_NOT_EXIST;
+            // If there is corresponding stock, then we should update its unit.
         }
+        return updateStock(stockID, company, targetStockPrice, unit, SharedConstants.STOCK_SELL);
     }
 
 

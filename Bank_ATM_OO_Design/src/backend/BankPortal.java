@@ -200,12 +200,11 @@ public class BankPortal {
      * @param stockID
      * @param secAccountID
      * @param unit
-     * @param price combined with stockID, it helps us to find the correct Stock object to operate.
      * @return String indicates the transaction status
      */
-    public String sellStock(String stockID, String secAccountID, int unit, double price) {
+    public String sellStock(String stockID, String secAccountID, int unit) {
         StockSell stockSell = new StockSell(userID, this.day, secAccountID, stockID, unit,
-                StockMarket.getInstance().getStockCompany(stockID), price);
+                StockMarket.getInstance().getStockCompany(stockID), StockMarket.getInstance().getStockPrice(stockID));
         String result = stockSell.startTransaction();
         BankLogger.getInstance().addTransaction(stockSell);
         return result;

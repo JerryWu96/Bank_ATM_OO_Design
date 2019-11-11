@@ -5,15 +5,15 @@ public class StockSell extends Transaction {
     private String secAccountID;
     private String company;
     private int unit;
-    private double price;
+    private double targetPrice;
 
-    StockSell(String userID, int creationDay, String secAccountID, String stockID, int unit, String company, double price) {
+    StockSell(String userID, int creationDay, String secAccountID, String stockID, int unit, String company, double targetPrice) {
         super(userID, creationDay, SharedConstants.USD, SharedConstants.STOCK_SELL);
         this.stockID = stockID;
         this.secAccountID = secAccountID;
         this.unit = unit;
         this.company = company;
-        this.price = price;
+        this.targetPrice = targetPrice;
     }
 
     /**
@@ -40,7 +40,7 @@ public class StockSell extends Transaction {
     }
 
     public double getPrice() {
-        return this.price;
+        return this.targetPrice;
     }
 
     @Override

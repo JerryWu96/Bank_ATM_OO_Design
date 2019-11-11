@@ -314,10 +314,10 @@ public class Bank {
         return SharedConstants.ERR_STOCK_NOT_EXIST;
     }
 
-    public String sellStock(String secAccountID, String stockID, int unit, String company, double price) {
+    public String sellStock(String secAccountID, String stockID, int unit, String company, double targetPrice) {
         for (SecurityAccount securityAccount : securityList) {
             if (securityAccount.getAccountID().equals(secAccountID)) {
-                String result = securityAccount.sellStock(stockID, unit, company, price);
+                String result = securityAccount.sellStock(stockID, unit, company, targetPrice);
                 return result;
             }
         }
