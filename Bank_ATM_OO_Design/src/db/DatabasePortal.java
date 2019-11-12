@@ -714,7 +714,7 @@ public class DatabasePortal{
                     rs = stmt.getResultSet();
                     currency = rs.getInt("id");
 
-                    if(ao.getAccountType().equals(SharedConstants.SEC)) {
+                    if(!(ao.getAccountType().equals(SharedConstants.SEC))) {
                         update = "INSERT INTO accounts \n" +
                                 "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
                                 "VALUES (\"" + ao.getAccountID() + "\"," + customerID + ",\"" + ao.getAccountType() + "\"," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
