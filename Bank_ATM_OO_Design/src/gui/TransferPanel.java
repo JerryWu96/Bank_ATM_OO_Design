@@ -101,8 +101,7 @@ public class TransferPanel extends JPanel implements ActionListener {
             }
         }
 	}
-	
-	
+		
 	public void updateTargetAccountListBox() {
 		targetAccountList.removeAllItems();
 		targetAccountList.addItem(selectOne);

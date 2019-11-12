@@ -40,18 +40,23 @@ public class ManagerPanel extends JPanel implements ActionListener {
 		add(getReportButton);
 		getReportButton.addActionListener(this);
 		
+		JButton customerInfoButton = new JButton("Customer Info");
+		customerInfoButton.setBounds(x, y+increment*2, buttonWidth, buttonHeight);
+		add(customerInfoButton);
+		customerInfoButton.addActionListener(this);
+		
 		JButton nextDayButton = new JButton("Next day");
-		nextDayButton.setBounds(x, y+increment*2, buttonWidth, buttonHeight);
+		nextDayButton.setBounds(x, y+increment*3, buttonWidth, buttonHeight);
 		add(nextDayButton);
 		nextDayButton.addActionListener(this);
 		
 		JButton stockManipultingButton = new JButton("Stock Manipultor");
-		stockManipultingButton.setBounds(x, y+increment*3, buttonWidth, buttonHeight);
+		stockManipultingButton.setBounds(x, y+increment*4, buttonWidth, buttonHeight);
 		add(stockManipultingButton);
 		stockManipultingButton.addActionListener(this);
 		
 		JButton logoutButton = new JButton("Logout");
-		logoutButton.setBounds(x, y+increment*4, buttonWidth, buttonHeight);
+		logoutButton.setBounds(x, y+increment*6, buttonWidth, buttonHeight);
 		add(logoutButton);
 		logoutButton.addActionListener(this);
 		
@@ -120,6 +125,31 @@ public class ManagerPanel extends JPanel implements ActionListener {
 			setEnabled(false);
 			setVisible(false);
 			OperationFrame.getInstance().setStockManipulatorPanel();
+		}
+		
+		if( e.getActionCommand().equals("Customer Info") ) {
+			
+			
+			// A manager should input a customer ID
+			try {
+				String[] customerIDList = BankPortal.getInstance().getCustomerList();
+
+				Object selectedValue = JOptionPane.showInputDialog(null, "Choose one",
+                        "Input", JOptionPane.INFORMATION_MESSAGE, null, customerIDList,
+                        customerIDList[0]);
+				
+				String selectedCustomer = selectedValue.toString();
+				
+				report.setText("");
+				
+				String customerInfo = BankPortal.getInstance().getUserInfo(selectedCustomer);
+				
+				report.setText(customerInfo);
+				
+			}
+			catch(Exception error) {
+				System.out.println(error);
+			}
 		}
 		
 	}
