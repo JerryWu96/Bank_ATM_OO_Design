@@ -2,6 +2,7 @@ package backend;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Customer class that represents one of the system actors. A customer can open/close an account, request
@@ -49,9 +50,10 @@ public class Customer extends User {
      * @param loanID
      */
     public void payoffLoan(String loanID) {
-        for (LoanAccount loan : loanList) {
+        for (Iterator<LoanAccount> iterator = loanList.iterator(); iterator.hasNext();) {
+            LoanAccount loan = iterator.next();
             if (loan.getLoanID().equals(loanID)) {
-                loanList.remove(loan);
+                iterator.remove();
                 addCollateral();
             }
         }

@@ -101,7 +101,6 @@ public class LoginPanel extends JPanel implements ActionListener, KeyListener {
             boolean loginFlag = loginAuth(user, password, SharedConstants.CUSTOMER);
             if (loginFlag) {
                 JOptionPane.showMessageDialog(null, "Welcome!");
-                System.out.println("Welcome!");
                 setEnabled(false);
                 setVisible(false);
                 userText.setText("");

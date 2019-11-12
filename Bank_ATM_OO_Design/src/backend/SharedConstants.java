@@ -30,6 +30,7 @@ public class SharedConstants {
 
     // Numeric values that can be modified
     public static double OPERATION_FEE = 2;   // 2 unit per currency
+    public static double LOAN_INTEREST = 2;   // 2 unit per currency
     public static double LOAN_INTEREST_RATE = 0.1; // 10% per day
     public static double SAVINGS_INTEREST_RATE = 0.0001; // 0.01% per day
     // SAV accounts that have more than 10000 dollars of balance is eligible to earn interest/open security accounts

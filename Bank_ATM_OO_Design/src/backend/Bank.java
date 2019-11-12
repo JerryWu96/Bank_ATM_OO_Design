@@ -537,6 +537,7 @@ public class Bank {
                 }
                 for (Manager manager : managerList) {
                     if (manager.getUserID().equals(userID) && manager.getPassword().equals(password)) {
+                        BankPortal.getInstance().userLogin(userID);
                         return SharedConstants.SUCCESS_AUTHENTICATE_USER;
                     } else if (manager.getUserID().equals(userID) && !manager.getPassword().equals(password)) {
                         return SharedConstants.ERR_WRONG_PASS;
@@ -549,6 +550,7 @@ public class Bank {
                 }
                 for (Customer customer : customerList) {
                     if (customer.getUserID().equals(userID) && customer.getPassword().equals(password)) {
+                        BankPortal.getInstance().userLogin(userID);
                         return SharedConstants.SUCCESS_AUTHENTICATE_USER;
                     } else if (customer.getUserID().equals(userID) && !customer.getPassword().equals(password)) {
                         return SharedConstants.ERR_WRONG_PASS;
