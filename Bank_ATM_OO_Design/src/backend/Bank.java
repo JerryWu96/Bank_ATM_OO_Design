@@ -1,6 +1,9 @@
 package backend;
 
+import db.DatabasePortal;
+
 import javax.swing.plaf.synth.SynthEditorPaneUI;
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -46,9 +49,41 @@ public class Bank {
         this.securityCountMap = new HashMap<>();
         this.currencyList = new String[]{SharedConstants.USD, SharedConstants.YEN, SharedConstants.CNY};
 
+        readStateFromDB();
         // initial customer/manager
         customerList.add(new Customer("a", "a", "a"));
         managerList.add(new Manager("m", "m", "m", SharedConstants.BANK_ID));
+    }
+
+    private void readStateFromDB() {
+        DatabasePortal myDB = DatabasePortal.getInstance();
+        List<Account> accountList = myDB.getAccountList();
+
+        for (Account account : accountList)  {
+            String userID = account.getUserID();
+            String accountID = account.getAccountID();
+            switch (account.getAccountType()) {
+                case SharedConstants.CK:
+                    this.checkingList.add((CheckingAccount)account);
+                    this.checkingMap.put(accountID, (CheckingAccount)account);
+                    this.checkingCountMap.put(userID, this.checkingCountMap.getOrDefault(userID, 0) + 1);
+                case SharedConstants.SAV:
+                    this.savingsList.add((SavingsAccount)account);
+                    this.savingsMap.put(accountID, (SavingsAccount) account);
+                    this.savingsCountMap.put(userID, this.savingsCountMap.getOrDefault(userID, 0) + 1);
+                case SharedConstants.SEC:
+                    this.securityList.add((SecurityAccount) account);
+                    this.securityMap.put(accountID, (SecurityAccount) account);
+                    this.securityCountMap.put(userID, this.securityCountMap.getOrDefault(userID, 0) + 1);
+            }
+        }
+    }
+
+    /**
+     * save system states (day, accounts, users) to DB when system exits
+     */
+    public void saveStateToDB() {
+        
     }
 
     public String getBankName() {
@@ -208,6 +243,7 @@ public class Bank {
         }
         return SharedConstants.ERR_CLOSE_ACCOUNT;
     }
+
 
     /**
      * make a deposit

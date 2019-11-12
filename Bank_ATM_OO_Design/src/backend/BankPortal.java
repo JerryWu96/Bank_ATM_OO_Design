@@ -1,5 +1,6 @@
 package backend;
 
+import db.*;
 import gui.OperationFrame;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class BankPortal {
     private static BankPortal bankPortal = null;
 
     BankPortal() {
-        this.day = 0; // initial start day
+        this.day = db.DatabasePortal.getInstance().restoreSession(); // restore initial start day. In default it is 0
         this.bank = new Bank(); // set up our Bank
     }
 
@@ -244,6 +245,7 @@ public class BankPortal {
 
     /**
      * get all customer ID
+     *
      * @return String Array
      */
     public String[] getCustomerList() {
