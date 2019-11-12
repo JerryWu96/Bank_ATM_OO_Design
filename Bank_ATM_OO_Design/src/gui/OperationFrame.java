@@ -1,4 +1,7 @@
 package gui;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 /*
 Author: Ziqi Tan
@@ -19,7 +22,16 @@ public class OperationFrame extends JFrame {
 	private static OperationFrame operationFrame = null;
 	
 	// Constructor
-	private OperationFrame() {}
+	private OperationFrame() {		
+		addWindowListener(				
+			new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					// BankPortal.getInstance().saveStateToDB();
+					System.out.println("Data is being stored.");
+				}
+			}			
+		);		
+	}
 	
 	// Singleton Pattern
 	public static OperationFrame getInstance() {
