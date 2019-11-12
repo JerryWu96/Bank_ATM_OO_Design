@@ -160,7 +160,7 @@ public class DatabasePortal{
                 Customer c = new Customer(rs.getString("name"), rs.getString("username"), rs.getString("password"));
                 String selectAccs = "SELECT a.* from customers c INNER JOIN accounts a \n" +
                         "ON c.id = a.customer_id \n " +
-                        "WHERE c.id = " + id + " AND a.account_type = " + SharedConstants.LOAN + ";";
+                        "WHERE c.id = " + id + " AND a.account_type = \"" + SharedConstants.LOAN + "\";";
                 accs.execute(selectAccs);
                 ResultSet loans = accs.getResultSet();
                 while(loans.next()){
@@ -217,7 +217,7 @@ public class DatabasePortal{
                 ResultSet innerRs = innerStmt.getResultSet();
                 int custID = innerRs.getInt("customer_id");
                 String accName = innerRs.getString("account_name");
-                sql = "SELECT * FROM customers WHERE id = " + custID + ";";
+                sql = "SELECT * FROM customers WHERE id = \"" + custID + "\";";
                 innerStmt = _conn.createStatement();
                 innerStmt.execute(sql);
                 innerRs = innerStmt.getResultSet();
@@ -532,9 +532,9 @@ public class DatabasePortal{
             switch(t.getType()){
                 case SharedConstants.DEPOSIT:
                     Deposit d = (Deposit) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + d.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + d.getAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + d.getSelectedCurrency() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username =\" " + d.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + d.getAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + d.getSelectedCurrency() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -546,16 +546,16 @@ public class DatabasePortal{
                     currency = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + d.getTransactionID() + "," + d.getType() + "," + d.getDay() + "," + currency + "," + d.getDepositAmount() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + "," + d.getTransactionID() + "\",\"" + d.getType() + "\"," + d.getDay() + "," + currency + "," + d.getDepositAmount() + ");";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET balance = balance + " + d.getDepositAmount() + " WHERE id = " + srcAccountID + ";";
                     stmt.execute(update);
                     break;
                 case SharedConstants.WITHDRAW:
                     Withdraw w = (Withdraw) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + w.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + w.getAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + w.getSelectedCurrency() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + w.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + w.getAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + w.getSelectedCurrency() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -567,23 +567,23 @@ public class DatabasePortal{
                     currency = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + w.getTransactionID() + "," + w.getType() + "," + w.getDay() + "," + currency + "," + w.getWithdrawAmount() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + ",\"" + w.getTransactionID() + "\",\"" + w.getType() + "\"," + w.getDay() + "," + currency + "," + w.getWithdrawAmount() + ");";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET balance = balance - " + w.getWithdrawAmount() + " WHERE id = " + srcAccountID + ";";
                     stmt.execute(update);
                     break;
                 case SharedConstants.TRANSFER:
                     Transfer tr = (Transfer) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + tr.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + tr.getSourceAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + tr.getSelectedCurrency() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + tr.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + tr.getSourceAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + tr.getSelectedCurrency() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
                     stmt.execute(accountFetch);
                     rs = stmt.getResultSet();
                     srcAccountID = rs.getInt("id");
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + tr.getTargetAccountID() + ";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + tr.getTargetAccountID() + "\";";
                     stmt.execute(accountFetch);
                     rs = stmt.getResultSet();
                     targetAccountID = rs.getInt("id");
@@ -592,7 +592,7 @@ public class DatabasePortal{
                     currency = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, target_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + targetAccountID + "," + tr.getTransactionID() + "," + tr.getType() + "," + tr.getDay() + "," + currency + "," + tr.getTransferAmount() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + "," + targetAccountID + ",\"" + tr.getTransactionID() + "\",\"" + tr.getType() + "\"," + tr.getDay() + "," + currency + "," + tr.getTransferAmount() + ");";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET balance = balance + " + tr.getTransferAmount() + " WHERE id = " + targetAccountID + ";";
                     stmt.execute(update);
@@ -601,9 +601,9 @@ public class DatabasePortal{
                     break;
                 case SharedConstants.LOAN_CREATE:
                     LoanCreate lc = (LoanCreate) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + lc.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + lc.getAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + lc.getSelectedCurrency() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + lc.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + lc.getAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + lc.getSelectedCurrency() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -615,7 +615,7 @@ public class DatabasePortal{
                     currency = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + lc.getTransactionID() + "," + lc.getType() + "," + lc.getDay() + "," + currency + "," + lc.getLoanAmount() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + ",\"" + lc.getTransactionID() + "\",\"" + lc.getType() + "\"," + lc.getDay() + "," + currency + "," + lc.getLoanAmount() + ");";
                     stmt.execute(insert);
                     update = "INSERT INTO accounts \n" +
                             "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
@@ -624,8 +624,8 @@ public class DatabasePortal{
                     break;
                 case SharedConstants.LOAN_PAY_OFF:
                     LoanPayOff lpo = (LoanPayOff) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + lpo.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + lpo.getAccountID() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + lpo.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + lpo.getAccountID() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -634,17 +634,17 @@ public class DatabasePortal{
                     srcAccountID = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, transaction_name, transaction_type, timestamp)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + lpo.getTransactionID() + "," + lpo.getType() + "," + lpo.getDay() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + ",\"" + lpo.getTransactionID() + "\",\"" + lpo.getType() + "\"," + lpo.getDay() + ");";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET active = 0 WHERE id = " + srcAccountID + ";";
                     stmt.execute(update);
                     break;
                 case SharedConstants.STOCK_PURCHASE:
                     StockPurchase sp = (StockPurchase) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + sp.getUserID() + ";";
-                    accountFetch = "SELECT * FROM security_accounts WHERE account_name = " + sp.getSecAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + sp.getSelectedCurrency() + ";";
-                    stockFetch = "SELECT * FROM stock_info WHERE name = " + sp.getStockID() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + sp.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM security_accounts WHERE account_name = \"" + sp.getSecAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + sp.getSelectedCurrency() + "\";";
+                    stockFetch = "SELECT * FROM stock_info WHERE name = \"" + sp.getStockID() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -660,21 +660,21 @@ public class DatabasePortal{
                     int spID = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, target_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved, stock_id, count)\n" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + targetAccountID + "," + sp.getTransactionID() + "," + sp.getTransactionID() + "," + sp.getDay() + "," + currency + "," + sp.getPrice() + "," + sp.getUnit() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + "," + targetAccountID + ",\"" + sp.getTransactionID() + "\",\"" + sp.getType() + "\"," + sp.getDay() + "," + currency + "," + sp.getPrice() + "," + sp.getUnit() + ");";
                     stmt.execute(insert);
                     insert = "INSERT INTO stocks \n" +
                             "(account_id, stock_id, stock_name, purchase_price, count, active) VALUES \n" +
-                            "(" + srcAccountID + "," + spID + "," + sp.getStockID() + "," + sp.getPrice() + "," + sp.getUnit() + "1);";
+                            "(" + srcAccountID + "," + spID + ",\"" + sp.getStockID() + "\"," + sp.getPrice() + "," + sp.getUnit() + "1);";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET balance = balance - " + (sp.getPrice() * sp.getUnit()) + " WHERE id = " + targetAccountID + ";";
                     stmt.execute(update);
                     break;
                 case SharedConstants.STOCK_SELL:
                     StockSell ss = (StockSell) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + ss.getUserID() + ";";
-                    accountFetch = "SELECT * FROM security_accounts WHERE account_name = " + ss.getSecAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + ss.getSelectedCurrency() + ";";
-                    stockFetch = "SELECT * FROM stock_info WHERE name = " + ss.getStockID() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + ss.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM security_accounts WHERE account_name = \"" + ss.getSecAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + ss.getSelectedCurrency() + "\";";
+                    stockFetch = "SELECT * FROM stock_info WHERE name = \"" + ss.getStockID() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -690,49 +690,58 @@ public class DatabasePortal{
                     int ssID = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, target_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved, stock_id, count)\n" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + targetAccountID + "," + ss.getTransactionID() + "," + ss.getTransactionID() + "," + ss.getDay() + "," + currency + "," + ss.getPrice() + "," + ss.getUnit() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + "," + targetAccountID + ",\"" + ss.getTransactionID() + "\",\"" + ss.getType() + "\"," + ss.getDay() + "," + currency + "," + ss.getPrice() + "," + ss.getUnit() + ");";
                     stmt.execute(insert);
                     insert = "INSERT INTO stocks \n" +
                             "(account_id, stock_id, stock_name, purchase_price, count, active) VALUES \n" +
-                            "(" + srcAccountID + "," + ssID + "," + ss.getStockID() + "," + ss.getPrice() + "," + ss.getUnit() + "1);";
+                            "(" + srcAccountID + "," + ssID + ",\"" + ss.getStockID() + "\"," + ss.getPrice() + "," + ss.getUnit() + "1);";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET balance = balance + " + (ss.getPrice() * ss.getUnit()) + " WHERE id = " + targetAccountID + ";";
                     stmt.execute(update);
                     break;
                 case SharedConstants.ACCOUNT_OPEN:
                     AccountOpen ao = (AccountOpen) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + ao.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + ao.getAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + ao.getSelectedCurrency() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + ao.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + ao.getAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \''" + ao.getSelectedCurrency() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
-                    stmt.execute(accountFetch);
-                    rs = stmt.getResultSet();
-                    srcAccountID = rs.getInt("id");
+//                    stmt.execute(accountFetch);
+//                    rs = stmt.getResultSet();
+//                    srcAccountID = rs.getInt("id");
                     stmt.execute(currencyFetch);
                     rs = stmt.getResultSet();
                     currency = rs.getInt("id");
-                    insert = "INSERT INTO transactions \n" +
-                            "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + ao.getTransactionID() + "," + ao.getType() + "," + ao.getDay() + "," + currency + ");";
-                    stmt.execute(insert);
+
                     if(ao.getAccountType().equals(SharedConstants.SEC)) {
                         update = "INSERT INTO accounts \n" +
                                 "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
-                                "VALUES (" + ao.getAccountID() + "," + customerID + "," + ao.getAccountType() + "," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
+                                "VALUES (\"" + ao.getAccountID() + "\"," + customerID + ",\"" + ao.getAccountType() + "\"," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
                     } else {
+                        String getBackSav = "SELECT * FROM accounts WHERE account_name = \"" + ao.getSavAccountID() + "\";";
+                        Statement getBackStmt = _conn.createStatement();
+                        getBackStmt.execute(getBackSav);
+                        ResultSet getBackRs = getBackStmt.getResultSet();
                         update = "INSERT INTO security_accounts \n" +
                                 "(account_name, customer_id, savings_account_id, active) VALUES \n" +
-                                "(" + ao.getAccountID() + "," + customerID + "," + ao.getSavAccountID() + "," + "1);";
+                                "(\"" + ao.getAccountID() + "\"," + customerID + "," + getBackRs.getInt("id") + "," + "1);";
                     }
+                    String getSecId = "SELECT * FROM security_accounts WHERE account_name = \"" + ao.getAccountID() + "\";";
+                    Statement getSecStmt = _conn.createStatement();
+                    getSecStmt.execute(getSecId);
+                    ResultSet getSecRs = getSecStmt.getResultSet();
+                    insert = "INSERT INTO transactions \n" +
+                            "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
+                            "VALUES (" + customerID + "," + getSecRs.getInt("id") + ",\"" + ao.getTransactionID() + "\",\"" + ao.getType() + "\"," + ao.getDay() + "," + currency + ");";
+                    stmt.execute(insert);
                     stmt.execute(update);
                     break;
                 case SharedConstants.ACCOUNT_CLOSE:
                     AccountClose ac = (AccountClose) t;
-                    customerFetch = "SELECT * FROM customers WHERE username = " + ac.getUserID() + ";";
-                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + ac.getAccountID() + ";";
-                    currencyFetch = "SELECT * FROM currencies WHERE name = " + ac.getSelectedCurrency() + ";";
+                    customerFetch = "SELECT * FROM customers WHERE username = \"" + ac.getUserID() + "\";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = \"" + ac.getAccountID() + "\";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = \"" + ac.getSelectedCurrency() + "\";";
                     stmt.execute(customerFetch);
                     rs = stmt.getResultSet();
                     customerID = rs.getInt("id");
@@ -744,7 +753,7 @@ public class DatabasePortal{
                     currency = rs.getInt("id");
                     insert = "INSERT INTO transactions \n" +
                             "(customer_id, src_account_id, transaction_name, transaction_type, timestamp)\n" + "" +
-                            "VALUES (" + customerID + "," + srcAccountID + "," + ac.getTransactionID() + "," + ac.getType() + "," + ac.getDay() + ");";
+                            "VALUES (" + customerID + "," + srcAccountID + ",\"" + ac.getTransactionID() + "\",\"" + ac.getType() + "\"," + ac.getDay() + ");";
                     stmt.execute(insert);
                     update = "UPDATE accounts SET active = 0 WHERE id = " + srcAccountID + ";";
                     stmt.execute(update);
