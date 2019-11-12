@@ -3,6 +3,7 @@ package backend;
 public class AccountOpen extends Transaction {
     private String accountType;
     private String savAccountID;
+    private String accountID;
 
     /**
      * constructor for a checking/savings account
@@ -37,13 +38,20 @@ public class AccountOpen extends Transaction {
     public String startTransaction() {
         switch (accountType) {
             case SharedConstants.CK:
-                return BankPortal.getInstance().getBank().openAccount(getUserID(), accountType);
+                this.accountID = BankPortal.getInstance().getBank().openAccount(getUserID(), accountType);
+                return this.accountID;
             case SharedConstants.SAV:
-                return BankPortal.getInstance().getBank().openAccount(getUserID(), accountType);
+                this.accountID = BankPortal.getInstance().getBank().openAccount(getUserID(), accountType);
+                return this.accountID;
             case SharedConstants.SEC:
-                return BankPortal.getInstance().getBank().openAccount(getUserID(), accountType, savAccountID);
+                this.accountID = BankPortal.getInstance().getBank().openAccount(getUserID(), accountType, savAccountID);
+                return this.accountID;
         }
         return SharedConstants.ERR_INVALID_TRANSACTION;
+    }
+
+    public String getAccountID() {
+        return this.accountID;
     }
 
     @Override

@@ -272,8 +272,8 @@ public class Bank {
         } else {
             for (Customer customer : customerList) {
                 if (customer.getUserID().equals(userID)) {
-                    customer.addLoan(amount, loanInterestRate, selectedCurrency);
-                    return SharedConstants.SUCCESS_TRANSACTION;
+                    String loanID = customer.addLoan(amount, loanInterestRate, selectedCurrency);
+                    return loanID;
                 }
             }
         }

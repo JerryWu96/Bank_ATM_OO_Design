@@ -1,24 +1,37 @@
 package backend;
+
 /**
  * Transaction: request loan
  */
 public class LoanCreate extends Transaction {
     private double loanAmount;
+    private String loanID;
 
     LoanCreate(String userID, int creationDay, String selectedCurrency, double loanAmount) {
         super(userID, creationDay, selectedCurrency, SharedConstants.LOAN_CREATE);
         this.loanAmount = loanAmount;
+        this.loanID = null;
     }
 
     /**
      * execute transaction: request loan
      */
     public String startTransaction() {
-        return BankPortal.getInstance().getBank().takeLoan(getUserID(), getLoanAmount(), getSelectedCurrency());
+        String result = BankPortal.getInstance().getBank().takeLoan(getUserID(), getLoanAmount(), getSelectedCurrency());
+        if (result.equals(SharedConstants.ERR_INSUFFICIENT_COLLATERAL) || result.equals(SharedConstants.ERR_ACCOUNT_NOT_EXIST)) {
+            return result;
+        } else {
+            this.loanID = result;
+            return SharedConstants.SUCCESS_TRANSACTION;
+        }
     }
 
     public double getLoanAmount() {
         return this.loanAmount;
+    }
+
+    public String getLoanID() {
+        return this.loanID;
     }
 
     @Override

@@ -2,7 +2,7 @@ package backend;
 /**
  * Base class represents any user in the system. If we decide to add a banker, it can be inherited from this calss.
  */
-public class User {
+public abstract class User {
     private String name;
     private String userID;
     private String password;

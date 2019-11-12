@@ -36,10 +36,11 @@ public class Customer extends User {
      * @param interest         (interest rate)
      * @param selectedCurrency
      */
-    public void addLoan(double amount, double interest, String selectedCurrency) {
+    public String addLoan(double amount, double interest, String selectedCurrency) {
         LoanAccount loan = new LoanAccount(getUserID(), amount, interest, selectedCurrency, getLoanCount());
         this.loanList.add(loan);
         useCollateral();
+        return loan.getLoanID();
     }
 
     /**
