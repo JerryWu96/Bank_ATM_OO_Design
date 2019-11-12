@@ -56,6 +56,7 @@ public class AccountOpen extends Transaction {
 
     @Override
     public String toString() {
-        return "Day " + getDay() + ": customer " + getUserID() + " opened a " + this.accountType + " account\n";
+        return "Day " + getDay() + ": customer " + getUserID() + " opened a " + this.accountType +
+                " account with Operation Fee: " + SharedConstants.OPERATION_FEE + "\n";
     }
 }

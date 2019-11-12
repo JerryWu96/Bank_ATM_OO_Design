@@ -74,7 +74,7 @@ public class Bank {
     /**
      * get the name of a customer or manager
      *
-     * @param userID (identification of a user)
+     * @param userID   (identification of a user)
      * @param identity (whether customer or manager)
      * @return name (user's name)
      */
@@ -99,9 +99,9 @@ public class Bank {
     /**
      * create a new user (customer or manager) and add it to the list
      *
-     * @param userID (identification of a user)
+     * @param userID   (identification of a user)
      * @param password
-     * @param name (user's name)
+     * @param name     (user's name)
      * @param identity (whether customer or manager)
      */
     public void addUser(String userID, String password, String name, String identity) {
@@ -118,7 +118,7 @@ public class Bank {
     /**
      * open a new account for a user
      *
-     * @param userID (identification of a user)
+     * @param userID      (identification of a user)
      * @param accountType (checking, savings)
      * @return opened account id if succeed, or error message
      */
@@ -474,6 +474,7 @@ public class Bank {
 
     /**
      * check if the given user is a manager
+     *
      * @param userID
      * @return
      */
@@ -499,6 +500,18 @@ public class Bank {
             }
         }
         return -1;
+    }
+
+    /**
+     * get all customer ID
+     * @return String Array
+     */
+    public String[] getCustomerList() {
+        List<String> customerIDList = new ArrayList<>();
+        for (Customer customer : customerList) {
+            customerIDList.add(customer.getUserID());
+        }
+        return customerIDList.toArray(new String[0]);
     }
 
     /**

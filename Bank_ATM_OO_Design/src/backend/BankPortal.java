@@ -182,6 +182,7 @@ public class BankPortal {
 
     /**
      * buy stock
+     *
      * @param stockID
      * @param secAccountID
      * @param unit
@@ -197,6 +198,7 @@ public class BankPortal {
 
     /**
      * sell stock given
+     *
      * @param stockID
      * @param secAccountID
      * @param unit
@@ -233,10 +235,19 @@ public class BankPortal {
 
     /**
      * Get all stock IDs
+     *
      * @return String array of IDs
      */
     public String[] getAllStockID() {
         return StockMarket.getInstance().getAllStockID();
+    }
+
+    /**
+     * get all customer ID
+     * @return String Array
+     */
+    public String[] getCustomerList() {
+        return getBank().getCustomerList();
     }
 
     public String checkPermission(String userID) {
@@ -262,6 +273,7 @@ public class BankPortal {
 
     /**
      * get stocks owned by a specific sec account
+     *
      * @param secAccount
      * @return
      */
@@ -319,29 +331,31 @@ public class BankPortal {
     public int getDay() {
         return this.day;
     }
-    
+
     /**
      * Method: getReportByDay.
      * Function: A manager can get a report on a specific day.
-     * @author Ziqi Tan
+     *
      * @param requestDay: integer represents a day that the manager is interested in
-     * @return String 
-     * */
+     * @return String
+     * @author Ziqi Tan
+     */
     public String getReportByDay(int requestDay) {
-    	Report requestReport =  BankLogger.getInstance().generateReportByDay(requestDay);
-    	return requestReport.getContent();
+        Report requestReport = BankLogger.getInstance().generateReportByDay(requestDay);
+        return requestReport.getContent();
     }
-    
+
     /**
      * Method: getReport.
      * Function: A manager can get a report update since from the last time he ran the report.
-     * @author Ziqi Tan
+     *
      * @return String
-     * */
+     * @author Ziqi Tan
+     */
     public String getReport() {
-    	return BankLogger.getInstance().generateReport();
+        return BankLogger.getInstance().generateReport();
     }
-    
+
     public static void main(String[] args) {
         BankPortal portal = new BankPortal();
         portal.run();
