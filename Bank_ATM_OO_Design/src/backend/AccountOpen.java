@@ -56,6 +56,8 @@ public class AccountOpen extends Transaction {
 
     public String getAccountType() { return this.accountType; }
 
+    public String getSavAccountID() { return this.savAccountID; }
+
     @Override
     public String toString() {
         return "Day " + getDay() + ": customer " + getUserID() + " opened a " + this.accountType +

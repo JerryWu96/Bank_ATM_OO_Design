@@ -24,6 +24,16 @@ public class SecurityAccount extends Account {
         this.isActive = true;
     }
 
+    public SecurityAccount(String accountID, String bankID, String userID, String savingsAccountID) {
+        super(accountID, bankID, userID, SharedConstants.SAV);
+        this.savingsAccountID = savingsAccountID;
+        this.isActive = true;
+    }
+
+    public void restoreStock(String stockID, Stock s){
+        stocks.put(stockID, s);
+    }
+
     public boolean isActive() {
         return isActive;
     }

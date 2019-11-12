@@ -16,6 +16,12 @@ public class CheckingAccount extends Account {
         this.debitCardNumber = -1; // NOT REQUIRED YET
     }
 
+    public CheckingAccount(String accountID, String bankID, String userID, double fee, double balance) {
+        super(accountID, bankID, userID, SharedConstants.CK);
+        this.operationFee = fee;
+        this.usd = new USD(balance);
+    }
+
     public void setBalance(Currency currency) {
         this.usd.addBalance(currency.convertToUSD());
     }

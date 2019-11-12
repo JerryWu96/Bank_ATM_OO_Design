@@ -2,6 +2,7 @@ package db;
 
 import backend.*;
 
+import java.security.Security;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,7 @@ public class DatabasePortal{
 
         String security_accounts = "CREATE TABLE IF NOT EXISTS security_accounts (\n" +
                 "id INTEGER PRIMARY KEY NOT NULL,\n" +
+                "account_name TEXT,\n" +
                 "customer_id INTEGER REFERENCES customers(id),\n" +
                 "savings_account_id INTEGER REFERENCES accounts(id),\n" +
                 "active INTEGER);";
@@ -179,7 +181,7 @@ public class DatabasePortal{
         ArrayList<Account> ret = new ArrayList<Account>();
         try {
             Statement stmt = _conn.createStatement();
-            String getAccs = "SELECT * FROM accounts;";
+            String getAccs = "SELECT * FROM accounts WHERE active = 1;";
             stmt.execute(getAccs);
             ResultSet rs = stmt.getResultSet();
             while(rs.next()){
@@ -190,12 +192,51 @@ public class DatabasePortal{
                 ResultSet innerRs = innerStmt.getResultSet();
                 switch(accType){
                     case SharedConstants.SAV:
-                        SavingsAccount sa = new SavingsAccount(innerRs.getString("username"), )
+                        SavingsAccount sa = new SavingsAccount(rs.getString("account_name"), "", innerRs.getString("username"), rs.getDouble("fee"), rs.getDouble("balance"));
+                        ret.add(sa);
+                        break;
+                    case SharedConstants.CK:
+                        CheckingAccount ca = new CheckingAccount(rs.getString("account_name"), "", innerRs.getString("username"), rs.getDouble("fee"), rs.getDouble("balance"));
+                        ret.add(ca);
+                        break;
+                    default:break;
                 }
             }
-        } catch (Exception e) {
+            String getSecAccs = "SELECT * FROM security_accounts WHERE active = 1;";
+            stmt.execute(getSecAccs);
+            rs = stmt.getResultSet();
+            while(rs.next()){
+                String getStocks = "SELECT * FROM stocks WHERE account_id = " + rs.getInt("id") + ";";
+                Statement stockStmt = _conn.createStatement();
+                stockStmt.execute(getStocks);
+                ResultSet stockRs = stockStmt.getResultSet();
 
+                String sql = "SELECT * FROM accounts WHERE id = " + rs.getInt("savings_account_id") + ";";
+                Statement innerStmt = _conn.createStatement();
+                innerStmt.execute(sql);
+                ResultSet innerRs = innerStmt.getResultSet();
+                int custID = innerRs.getInt("customer_id");
+                String accName = innerRs.getString("account_name");
+                sql = "SELECT * FROM customers WHERE id = " + custID + ";";
+                innerStmt = _conn.createStatement();
+                innerStmt.execute(sql);
+                innerRs = innerStmt.getResultSet();
+                SecurityAccount seca = new SecurityAccount(rs.getString("account_name"), "", innerRs.getString("username"), accName);
+                while(stockRs.next()) {
+                    String stockName = stockRs.getString("stock_name");
+                    String stockinfo = "SELECT * FROM stock_info WHERE id = " + stockRs.getInt("stock_id");
+                    Statement infoStmt = _conn.createStatement();
+                    infoStmt.execute(stockinfo);
+                    ResultSet stockinfoRs = infoStmt.getResultSet();
+                    Stock s = new Stock(stockinfoRs.getString("symbol"), stockinfoRs.getString("name"), stockRs.getDouble("purchase_price"), stockRs.getInt("count"));
+                    seca.restoreStock(stockName, s);
+                }
+                ret.add(seca);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+        return ret;
     }
 
     /*
@@ -676,9 +717,15 @@ public class DatabasePortal{
                             "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
                             "VALUES (" + customerID + "," + srcAccountID + "," + ao.getTransactionID() + "," + ao.getType() + "," + ao.getDay() + "," + currency + ");";
                     stmt.execute(insert);
-                    update = "INSERT INTO accounts \n" +
-                            "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
-                            "VALUES (" + ao.getAccountID() + "," + customerID + "," + ao.getAccountType() + "," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
+                    if(ao.getAccountType().equals(SharedConstants.SEC)) {
+                        update = "INSERT INTO accounts \n" +
+                                "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
+                                "VALUES (" + ao.getAccountID() + "," + customerID + "," + ao.getAccountType() + "," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
+                    } else {
+                        update = "INSERT INTO securityy_accounts \n" +
+                                "(account_name, customer_id, savings_account_id, active) VALUES \n" +
+                                "(" + ao.getAccountID() + "," + customerID + "," + ao.getSavAccountID() + "," + "1);";
+                    }
                     stmt.execute(update);
                     break;
                 case SharedConstants.ACCOUNT_CLOSE:
@@ -717,6 +764,12 @@ public class DatabasePortal{
 //            "currency INTEGER REFERENCES currencies(id),\n" +
 //            "interest DECIMAL(19,2)),\n" +
 //            "active  INTEGER);";
+//String security_accounts = "CREATE TABLE IF NOT EXISTS security_accounts (\n" +
+//        "id INTEGER PRIMARY KEY NOT NULL,\n" +
+//        "account_name TEXT,\n" +
+//        "customer_id INTEGER REFERENCES customers(id),\n" +
+//        "savings_account_id INTEGER REFERENCES accounts(id),\n" +
+//        "active INTEGER);";
 
     /*
      * Adds a new customer
