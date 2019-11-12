@@ -17,6 +17,12 @@ public class SavingsAccount extends Account {
         this.usd = new USD(-operationFee);
     }
 
+    public SavingsAccount(String accountID, String bankID, String userID, double fee, double balance) {
+        super(accountID, bankID, userID, SharedConstants.SAV);
+        this.operationFee = fee;
+        this.usd = new USD(balance);
+    }
+
     /**
      * check whether balance is above the threshold where interests start to be calculated
      * @return

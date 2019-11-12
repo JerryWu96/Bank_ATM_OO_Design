@@ -158,7 +158,7 @@ public class DatabasePortal{
                 Customer c = new Customer(rs.getString("name"), rs.getString("username"), rs.getString("password"));
                 String selectAccs = "SELECT a.* from customer c INNER JOIN accounts a \n" +
                         "ON c.id = a.customer_id \n " +
-                        "WHERE c.id = " + id + " AND a.account_type = 3;";
+                        "WHERE c.id = " + id + " AND a.account_type = " + SharedConstants.LOAN + ";";
                 accs.execute(selectAccs);
                 ResultSet loans = accs.getResultSet();
                 while(loans.next()){
@@ -170,6 +170,32 @@ public class DatabasePortal{
             System.out.println(e.getMessage());
         }
         return ret;
+    }
+
+    /*
+    * Returns all non-loan accounts
+    * */
+    public List<Account> getAccountList(){
+        ArrayList<Account> ret = new ArrayList<Account>();
+        try {
+            Statement stmt = _conn.createStatement();
+            String getAccs = "SELECT * FROM accounts;";
+            stmt.execute(getAccs);
+            ResultSet rs = stmt.getResultSet();
+            while(rs.next()){
+                String accType = rs.getString("account_type");
+                String sql = "SELECT * FROM customers WHERE id = " + rs.getInt("customer_id") + ";";
+                Statement innerStmt = _conn.createStatement();
+                innerStmt.execute(sql);
+                ResultSet innerRs = innerStmt.getResultSet();
+                switch(accType){
+                    case SharedConstants.SAV:
+                        SavingsAccount sa = new SavingsAccount(innerRs.getString("username"), )
+                }
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     /*
@@ -261,7 +287,7 @@ public class DatabasePortal{
         try {
             String sql = "SELECT a.* from customers c INNER JOIN accounts a \n" +
                     "ON a.customer_id = c.id \n" +
-                    "WHERE c.username = ? AND a.account_type = 4;";
+                    "WHERE c.username = ? AND a.account_type = " + SharedConstants.SEC + ";";
             PreparedStatement ps = _conn.prepareStatement(sql);
             ps.setString(1, customerID);
             ps.execute();
@@ -552,7 +578,7 @@ public class DatabasePortal{
                     stmt.execute(insert);
                     update = "INSERT INTO accounts \n" +
                             "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
-                            "VALUES (" + lc.getLoanID() + "," + ")"
+                            "VALUES (" + lc.getLoanID() + "," + customerID + "," + SharedConstants.LOAN + "," + lc.getLoanAmount() + "," + currency + "," + SharedConstants.LOAN_INTEREST_RATE + "," + 1 + ");";
                     stmt.execute(update);
                     break;
                 case SharedConstants.LOAN_PAY_OFF:
@@ -634,9 +660,47 @@ public class DatabasePortal{
                     break;
                 case SharedConstants.ACCOUNT_OPEN:
                     AccountOpen ao = (AccountOpen) t;
+                    customerFetch = "SELECT * FROM customers WHERE username = " + ao.getUserID() + ";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + ao.getAccountID() + ";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = " + ao.getSelectedCurrency() + ";";
+                    stmt.execute(customerFetch);
+                    rs = stmt.getResultSet();
+                    customerID = rs.getInt("id");
+                    stmt.execute(accountFetch);
+                    rs = stmt.getResultSet();
+                    srcAccountID = rs.getInt("id");
+                    stmt.execute(currencyFetch);
+                    rs = stmt.getResultSet();
+                    currency = rs.getInt("id");
+                    insert = "INSERT INTO transactions \n" +
+                            "(customer_id, src_account_id, transaction_name, transaction_type, timestamp, currency_type, currency_moved)\n" + "" +
+                            "VALUES (" + customerID + "," + srcAccountID + "," + ao.getTransactionID() + "," + ao.getType() + "," + ao.getDay() + "," + currency + ");";
+                    stmt.execute(insert);
+                    update = "INSERT INTO accounts \n" +
+                            "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
+                            "VALUES (" + ao.getAccountID() + "," + customerID + "," + ao.getAccountType() + "," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
+                    stmt.execute(update);
                     break;
                 case SharedConstants.ACCOUNT_CLOSE:
                     AccountClose ac = (AccountClose) t;
+                    customerFetch = "SELECT * FROM customers WHERE username = " + ac.getUserID() + ";";
+                    accountFetch = "SELECT * FROM accounts WHERE account_name = " + ac.getAccountID() + ";";
+                    currencyFetch = "SELECT * FROM currencies WHERE name = " + ac.getSelectedCurrency() + ";";
+                    stmt.execute(customerFetch);
+                    rs = stmt.getResultSet();
+                    customerID = rs.getInt("id");
+                    stmt.execute(accountFetch);
+                    rs = stmt.getResultSet();
+                    srcAccountID = rs.getInt("id");
+                    stmt.execute(currencyFetch);
+                    rs = stmt.getResultSet();
+                    currency = rs.getInt("id");
+                    insert = "INSERT INTO transactions \n" +
+                            "(customer_id, src_account_id, transaction_name, transaction_type, timestamp)\n" + "" +
+                            "VALUES (" + customerID + "," + srcAccountID + "," + ac.getTransactionID() + "," + ac.getType() + "," + ac.getDay() + ");";
+                    stmt.execute(insert);
+                    update = "UPDATE accounts SET active = 0 WHERE id = " + srcAccountID + ";";
+                    stmt.execute(update);
                     break;
             }
         } catch (Exception e){
