@@ -41,7 +41,7 @@ public class DatabasePortal{
                 "id INTEGER PRIMARY KEY NOT NULL,\n" +
                 "day INTEGER);";
 
-        String initSession = "INSERT INTO TABLE session (day) values (0);";
+        String initSession = "INSERT INTO session (day) values (0);";
 
         String currencies = "CREATE TABLE IF NOT EXISTS currencies (\n" +
                 "id INTEGER PRIMARY KEY NOT NULL,\n" +
@@ -77,7 +77,7 @@ public class DatabasePortal{
                 "fee DECIMAL(19,2),\n" +
                 "balance DECIMAL(19,2),\n" +
                 "currency INTEGER REFERENCES currencies(id),\n" +
-                "interest DECIMAL(19,2)),\n" +
+                "interest DECIMAL(19,2),\n" +
                 "active  INTEGER);";
 
         String security_accounts = "CREATE TABLE IF NOT EXISTS security_accounts (\n" +
@@ -111,7 +111,7 @@ public class DatabasePortal{
                 "id INTEGER PRIMARY KEY NOT NULL,\n" +
                 "customer_id INTEGER REFERENCES customers(id),\n" +
                 "src_account_id INTEGER REFERENCES accounts(id),\n" +
-                "target_account_id INTEGER REFERENCES account(id),\n)" +
+                "target_account_id INTEGER REFERENCES account(id),\n" +
                 "transaction_name TEXT,\n" +
                 "transaction_type TEXT,\n" +
                 "timestamp INTEGER,\n" +
