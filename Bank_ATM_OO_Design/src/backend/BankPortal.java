@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class BankPortal {
     private int day;
-
     private String userID;
     private Bank bank; // Currently we only support one bank
 
@@ -47,6 +46,7 @@ public class BankPortal {
         return this.bank;
     }
 
+
     /**
      * bind the user who's interacting with GUI
      *
@@ -60,6 +60,21 @@ public class BankPortal {
         this.setUserID(userID);
     }
 
+    /**
+     * save system states (day, accounts, users) to DB when system exits
+     */
+    public void saveStateToDB() {
+        DatabasePortal myDB = DatabasePortal.getInstance();
+        // add customers
+        for (Customer customer : getBank().getCustomers()) {
+            myDB.addCustomer(customer);
+        }
+        // add managers
+        for (Manager manager : getBank().getManagers()) {
+            myDB.addManager(manager);
+        }
+        myDB.storeSession(getDay());
+    }
     /**
      * open a new account (CK or SAV)
      *
@@ -224,6 +239,7 @@ public class BankPortal {
     public String updateStockPrice(String userID, String stockID, double price) {
         if (checkPermission(userID).equals(SharedConstants.MANAGER)) {
             StockMarket.getInstance().updateStockPrice(stockID, price);
+            DatabasePortal.getInstance().updateStockPrice(stockID, price);
             return SharedConstants.SUCCESS_UPDATE_STOCK_PRICE;
         } else {
             return SharedConstants.ERR_PERMISSION_DENIED;
@@ -340,7 +356,6 @@ public class BankPortal {
      *
      * @param requestDay: integer represents a day that the manager is interested in
      * @return String
-     * @author Ziqi Tan
      */
     public String getReportByDay(int requestDay) {
         Report requestReport = BankLogger.getInstance().generateReportByDay(requestDay);
@@ -352,7 +367,6 @@ public class BankPortal {
      * Function: A manager can get a report update since from the last time he ran the report.
      *
      * @return String
-     * @author Ziqi Tan
      */
     public String getReport() {
         return BankLogger.getInstance().generateReport();

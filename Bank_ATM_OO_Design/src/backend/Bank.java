@@ -57,8 +57,9 @@ public class Bank {
 
     private void readStateFromDB() {
         DatabasePortal myDB = DatabasePortal.getInstance();
-        List<Account> accountList = myDB.getAccountList();
 
+        // read Accounts
+        List<Account> accountList = myDB.getAccountList();
         for (Account account : accountList)  {
             String userID = account.getUserID();
             String accountID = account.getAccountID();
@@ -77,14 +78,18 @@ public class Bank {
                     this.securityCountMap.put(userID, this.securityCountMap.getOrDefault(userID, 0) + 1);
             }
         }
+        // read customers
+        this.customerList.addAll(myDB.getCustomerList());
+        // read managers
+        this.managerList.addAll(myDB.getManagerList());
     }
 
-    /**
-     * save system states (day, accounts, users) to DB when system exits
-     */
     public void saveStateToDB() {
-        
+        DatabasePortal myDB = DatabasePortal.getInstance();
+
     }
+
+
 
     public String getBankName() {
         return this.bankName;
@@ -548,6 +553,14 @@ public class Bank {
             customerIDList.add(customer.getUserID());
         }
         return customerIDList.toArray(new String[0]);
+    }
+
+    public List<Customer> getCustomers() {
+        return customerList;
+    }
+
+    public List<Manager> getManagers() {
+        return managerList;
     }
 
     /**
