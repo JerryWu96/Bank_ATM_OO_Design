@@ -158,7 +158,7 @@ public class DatabasePortal{
                 Statement accs = _conn.createStatement();
                 int id = rs.getInt("id");
                 Customer c = new Customer(rs.getString("name"), rs.getString("username"), rs.getString("password"));
-                String selectAccs = "SELECT a.* from customer c INNER JOIN accounts a \n" +
+                String selectAccs = "SELECT a.* from customers c INNER JOIN accounts a \n" +
                         "ON c.id = a.customer_id \n " +
                         "WHERE c.id = " + id + " AND a.account_type = " + SharedConstants.LOAN + ";";
                 accs.execute(selectAccs);
@@ -722,7 +722,7 @@ public class DatabasePortal{
                                 "(account_name, customer_id, account_type, balance, currency, interest, active) \n" +
                                 "VALUES (" + ao.getAccountID() + "," + customerID + "," + ao.getAccountType() + "," + 0 + "," + currency + "," + SharedConstants.SAVINGS_INTEREST_RATE + "," + 1 + ");";
                     } else {
-                        update = "INSERT INTO securityy_accounts \n" +
+                        update = "INSERT INTO security_accounts \n" +
                                 "(account_name, customer_id, savings_account_id, active) VALUES \n" +
                                 "(" + ao.getAccountID() + "," + customerID + "," + ao.getSavAccountID() + "," + "1);";
                     }
