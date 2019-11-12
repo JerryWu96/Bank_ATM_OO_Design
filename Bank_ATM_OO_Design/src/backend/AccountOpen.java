@@ -12,7 +12,7 @@ public class AccountOpen extends Transaction {
      * @param creationDay
      * @param accountType
      */
-    AccountOpen(String userID, int creationDay, String accountType) {
+    public AccountOpen(String userID, int creationDay, String accountType) {
         super(userID, creationDay, SharedConstants.ACCOUNT_OPEN);
         this.accountType = accountType;
     }

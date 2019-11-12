@@ -14,7 +14,7 @@ public class Withdraw extends Transaction{
      * @param selectedCurrency
      * @param withdrawAmount
      */
-    Withdraw(String accountID, String userID, int creationDay, String selectedCurrency, double withdrawAmount) {
+    public Withdraw(String accountID, String userID, int creationDay, String selectedCurrency, double withdrawAmount) {
         super(accountID, userID, creationDay, selectedCurrency, SharedConstants.WITHDRAW);
         this.withdrawAmount = withdrawAmount;
     }

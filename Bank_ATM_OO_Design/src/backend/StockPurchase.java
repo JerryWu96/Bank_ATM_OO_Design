@@ -10,7 +10,7 @@ public class StockPurchase extends Transaction {
     private double curStockPrice;
     private int unit;
 
-    StockPurchase(String userID, int creationDay, String secAccountID, String stockID, int unit, String company, double curStockPrice) {
+    public StockPurchase(String userID, int creationDay, String secAccountID, String stockID, int unit, String company, double curStockPrice) {
         super(userID, creationDay, SharedConstants.USD, SharedConstants.STOCK_PURCHASE);
         this.stockID = stockID;
         this.secAccountID = secAccountID;

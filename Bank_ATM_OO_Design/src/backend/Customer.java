@@ -12,7 +12,7 @@ public class Customer extends User {
     private List<LoanAccount> loanList;
     private int collateral;
 
-    Customer(String name, String userID, String password) {
+    public Customer(String name, String userID, String password) {
         super(name, userID, password, SharedConstants.CUSTOMER);
         this.loanList = new ArrayList<>();
         this.collateral = 3;

@@ -7,7 +7,7 @@ public class StockSell extends Transaction {
     private int unit;
     private double targetPrice;
 
-    StockSell(String userID, int creationDay, String secAccountID, String stockID, int unit, String company, double targetPrice) {
+    public StockSell(String userID, int creationDay, String secAccountID, String stockID, int unit, String company, double targetPrice) {
         super(userID, creationDay, SharedConstants.USD, SharedConstants.STOCK_SELL);
         this.stockID = stockID;
         this.secAccountID = secAccountID;

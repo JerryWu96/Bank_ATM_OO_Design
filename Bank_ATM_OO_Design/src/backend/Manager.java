@@ -5,7 +5,7 @@ package backend;
 public class Manager extends User {
     private String bankID;
 
-    Manager(String name, String userID, String password, String bankID) {
+    public Manager(String name, String userID, String password, String bankID) {
         super(name, userID, password, SharedConstants.MANAGER);
         this.bankID = bankID;
     }

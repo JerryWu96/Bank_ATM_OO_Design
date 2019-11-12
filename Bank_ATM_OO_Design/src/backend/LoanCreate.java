@@ -7,7 +7,7 @@ public class LoanCreate extends Transaction {
     private double loanAmount;
     private String loanID;
 
-    LoanCreate(String userID, int creationDay, String selectedCurrency, double loanAmount) {
+    public LoanCreate(String userID, int creationDay, String selectedCurrency, double loanAmount) {
         super(userID, creationDay, selectedCurrency, SharedConstants.LOAN_CREATE);
         this.loanAmount = loanAmount;
         this.loanID = null;
