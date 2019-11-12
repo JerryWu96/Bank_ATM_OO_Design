@@ -97,7 +97,6 @@ public class RegisterPanel extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		
 		// Submit your information
 		if( e.getActionCommand().equals("Submit") ) {

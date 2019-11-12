@@ -51,13 +51,6 @@ public class TransactionPanel extends JPanel implements ActionListener {
         add(loanButton);
         loanButton.addActionListener(this);
         
-        /*
-        JButton historyButton = new JButton("History");
-        historyButton.setBounds(x, y+increment*5, 100, 25);
-        add(historyButton);
-        historyButton.addActionListener(this);
-        */
-        
         JButton logoutButton = new JButton("Return");
         logoutButton.setBounds(x, y+increment*5, 100, 25);
         add(logoutButton);
@@ -218,6 +211,5 @@ public class TransactionPanel extends JPanel implements ActionListener {
 			OperationFrame.getInstance().setLoanPanel();
 		}
 		
-
 	}	
 }
